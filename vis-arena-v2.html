@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://d3js.org/d3.v7.min.js"></script>
 
 <style>
 /* ===========================================
@@ -605,8 +606,8 @@ h2.subtitle {
 .protocol {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: clamp(0.18rem, 0.32vw, 0.28rem);
+    justify-content: flex-start;
+    gap: clamp(0.16rem, 0.28vw, 0.24rem);
     padding: clamp(0.55rem, 0.9vw, 0.8rem) clamp(0.6rem, 1vw, 0.9rem);
     border: 1px solid var(--line);
     border-radius: var(--panel-radius);
@@ -622,6 +623,18 @@ h2.subtitle {
     transform: translateY(-2px);
 }
 
+.protocol.foundation {
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0));
+}
+
+.protocol.current {
+    border-color: color-mix(in srgb, var(--proto-accent, var(--teal)) 48%, var(--line));
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--proto-accent, var(--teal)) 10%, transparent), transparent 48%),
+      var(--surface);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--proto-accent, var(--teal)) 18%, transparent);
+}
+
 .protocol::before {
     content: "";
     position: absolute;
@@ -630,6 +643,20 @@ h2.subtitle {
     width: clamp(1rem, 1.6vw, 1.4rem);
     height: 2px;
     background: var(--proto-accent, var(--teal));
+}
+
+.protocol .era {
+    align-self: flex-start;
+    margin-left: auto;
+    padding: 0.16rem 0.42rem;
+    border: 1px solid color-mix(in srgb, var(--proto-accent, var(--teal)) 45%, var(--line));
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: clamp(0.52rem, 0.62vw, 0.58rem);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--proto-accent, var(--teal));
+    line-height: 1;
 }
 
 .protocol .code {
@@ -648,6 +675,44 @@ h2.subtitle {
     color: var(--ink);
     line-height: 1.2;
     font-variation-settings: "opsz" 120, "SOFT" 30;
+}
+
+.protocol .meta {
+    margin-top: auto;
+    padding-top: clamp(0.34rem, 0.46vw, 0.42rem);
+    font-family: var(--font-mono);
+    font-size: clamp(0.56rem, 0.68vw, 0.64rem);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.3;
+}
+
+.protocol .meta a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px dotted currentColor;
+}
+
+.protocol .meta a:hover {
+    color: var(--proto-accent, var(--ink));
+    border-bottom-color: var(--proto-accent, var(--ink));
+}
+
+.protocol-note {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin-top: clamp(0.65rem, 1vw, 0.9rem);
+    font-family: var(--font-mono);
+    font-size: clamp(0.58rem, 0.7vw, 0.66rem);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.protocol-note .accent {
+    color: var(--teal);
 }
 
 /* ===========================================
@@ -749,25 +814,393 @@ h2.subtitle {
     font-size: 0.92em;
 }
 
-.bp-note {
-    grid-column: 1 / -1;
-    padding: clamp(0.7rem, 1vw, 0.9rem) clamp(0.9rem, 1.3vw, 1.1rem);
-    border: 1px solid var(--line);
-    border-radius: var(--panel-radius);
-    background: linear-gradient(135deg, var(--violet-dim), var(--amber-dim));
-    font-size: clamp(0.96rem, 1.15vw, 1.1rem);
-    color: var(--ink);
-    line-height: 1.5;
+/* ===========================================
+   BLUEPRINT SLIDE · ICML 2026 workshop landscape
+   =========================================== */
+.workshop-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.75rem, 1.2vw, 1.1rem);
+    min-height: 0;
 }
 
-.bp-note strong {
+/* Split: stacked workshops (left) + comparison table (right) */
+.blueprint-split {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: clamp(0.8rem, 1.3vw, 1.1rem);
+    min-height: 0;
+}
+
+.ws-stack {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.45rem, 0.75vw, 0.65rem);
+    min-height: 0;
+}
+
+.ws-row {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.25rem, 0.42vw, 0.35rem);
+    padding: clamp(0.6rem, 0.95vw, 0.85rem) clamp(0.8rem, 1.15vw, 1rem);
+    border: 1px solid var(--line);
+    border-radius: var(--panel-radius);
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+}
+
+.ws-row::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--ws-accent, var(--violet));
+}
+
+.ws-row.math     { --ws-accent: var(--teal); }
+.ws-row.science  { --ws-accent: var(--amber); }
+.ws-row.forecast { --ws-accent: var(--rose); }
+
+.ws-row .ws-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.ws-row .ws-label,
+.ws-row a.ws-label {
+    font-family: var(--font-display);
+    font-weight: 470;
+    font-size: clamp(0.9rem, 1.08vw, 1.02rem);
+    letter-spacing: -0.01em;
+    color: var(--ws-accent, var(--violet));
+    line-height: 1;
+    font-variation-settings: "opsz" 120, "SOFT" 30;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+.ws-row a.ws-label:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--ws-accent);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+}
+
+.ws-row .ws-platform,
+.ws-row .ws-platform a {
     font-family: var(--font-mono);
-    font-size: 0.82em;
-    letter-spacing: 0.14em;
+    font-size: clamp(0.58rem, 0.68vw, 0.66rem);
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    text-decoration: none;
+}
+
+.ws-row .ws-platform a:hover {
+    color: var(--ws-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.ws-row .ws-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.18rem, 0.32vw, 0.28rem);
+    margin-top: clamp(0.15rem, 0.25vw, 0.22rem);
+}
+
+.ws-row .ws-list li {
+    font-size: clamp(0.76rem, 0.9vw, 0.86rem);
+    line-height: 1.3;
+    color: var(--ink-dim);
+    padding-left: clamp(0.7rem, 0.9vw, 0.82rem);
+    position: relative;
+}
+
+.ws-row .ws-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: clamp(0.42rem, 0.52vw, 0.48rem);
+    width: clamp(0.3rem, 0.4vw, 0.35rem);
+    height: 1.2px;
+    background: var(--ws-accent);
+}
+
+.ws-row .ws-list li .track {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    margin-right: 0.3em;
+}
+
+/* Comparison table · Prophet Arena vs VIS Arena */
+.cmp-table-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.35rem, 0.6vw, 0.5rem);
+    padding: clamp(0.7rem, 1vw, 0.9rem) clamp(0.8rem, 1.1vw, 1rem);
+    border: 1px solid var(--line);
+    border-radius: var(--panel-radius);
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.cmp-table-wrap::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--violet), var(--amber));
+}
+
+.cmp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0 clamp(0.2rem, 0.35vw, 0.3rem);
+}
+
+.cmp-header .cmp-label {
+    font-family: var(--font-mono);
+    font-size: clamp(0.65rem, 0.78vw, 0.74rem);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 700;
+}
+
+.cmp-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.cmp-table thead th {
+    text-align: left;
+    padding: clamp(0.3rem, 0.48vw, 0.4rem) clamp(0.35rem, 0.55vw, 0.48rem);
+    font-family: var(--font-display);
+    font-size: clamp(0.9rem, 1.08vw, 1.02rem);
+    font-weight: 470;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    border-bottom: 1px solid rgba(235, 230, 220, 0.15);
+    font-variation-settings: "opsz" 120, "SOFT" 30;
+}
+
+.cmp-table thead th.prophet-col { color: var(--violet); }
+.cmp-table thead th.vis-col     { color: var(--amber); }
+
+.cmp-table tbody tr {
+    border-top: 1px dashed var(--line);
+}
+
+.cmp-table tbody tr:first-child {
+    border-top: none;
+}
+
+.cmp-table td {
+    padding: clamp(0.3rem, 0.48vw, 0.4rem) clamp(0.35rem, 0.55vw, 0.48rem);
+    vertical-align: top;
+    line-height: 1.35;
+    font-size: clamp(0.78rem, 0.92vw, 0.88rem);
+}
+
+.cmp-table td.k {
+    font-family: var(--font-mono);
+    font-size: clamp(0.64rem, 0.76vw, 0.72rem);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+    width: clamp(4.5rem, 7vw, 5.8rem);
+}
+
+.cmp-table td.v { color: var(--ink-dim); }
+
+.cmp-table td.v code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: rgba(235, 230, 220, 0.06);
+    padding: 0.05em 0.35em;
+    border-radius: 3px;
+    color: var(--ink);
+}
+
+/* Legacy 3-col grid kept for fallback; unused in current layout */
+.workshops-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(0.8rem, 1.4vw, 1.1rem);
+    min-height: 0;
+}
+
+.ws-col {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.55rem, 0.9vw, 0.75rem);
+    padding: clamp(0.85rem, 1.3vw, 1.1rem);
+    border: 1px solid var(--line);
+    border-radius: var(--panel-radius);
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.ws-col::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--ws-accent, var(--violet));
+}
+
+.ws-col.math     { --ws-accent: var(--teal); }
+.ws-col.science  { --ws-accent: var(--amber); }
+.ws-col.forecast { --ws-accent: var(--rose); }
+
+.ws-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.ws-label {
+    font-family: var(--font-display);
+    font-weight: 470;
+    font-size: clamp(0.98rem, 1.2vw, 1.15rem);
+    letter-spacing: -0.01em;
+    color: var(--ws-accent, var(--violet));
+    font-variation-settings: "opsz" 120, "SOFT" 30;
+}
+
+.ws-platform,
+.ws-platform a {
+    font-family: var(--font-mono);
+    font-size: clamp(0.62rem, 0.73vw, 0.72rem);
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+}
+
+.ws-platform a:hover {
+    color: var(--ws-accent, var(--ink-dim));
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.ws-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.35rem, 0.55vw, 0.48rem);
+}
+
+.ws-list li {
+    font-size: clamp(0.85rem, 1vw, 0.96rem);
+    line-height: 1.35;
+    color: var(--ink-dim);
+    padding-left: clamp(0.85rem, 1.1vw, 1rem);
+    position: relative;
+}
+
+.ws-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: clamp(0.5rem, 0.62vw, 0.57rem);
+    width: clamp(0.35rem, 0.5vw, 0.4rem);
+    height: 1.4px;
+    background: var(--ws-accent, var(--violet));
+}
+
+.ws-list li .track {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    margin-right: 0.35em;
+}
+
+.our-move {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.38rem, 0.6vw, 0.55rem);
+    padding: clamp(1rem, 1.5vw, 1.3rem);
+    border: 1px solid var(--line);
+    border-radius: var(--panel-radius);
+    background: linear-gradient(135deg, rgba(91, 213, 194, 0.08), rgba(232, 145, 66, 0.1));
+    position: relative;
+    overflow: hidden;
+}
+
+.our-move::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--teal), var(--amber));
+    box-shadow: 0 0 16px var(--amber);
+}
+
+.our-move .our-label {
+    font-family: var(--font-mono);
+    font-size: clamp(0.7rem, 0.82vw, 0.8rem);
+    font-weight: 700;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--amber);
-    display: block;
-    margin-bottom: 0.25em;
+}
+
+.our-move h2 {
+    font-family: var(--font-display);
+    font-weight: 440;
+    font-size: clamp(1.15rem, 1.7vw, 1.55rem);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+}
+
+.our-move h2 em {
+    font-style: italic;
+    color: var(--amber);
+    font-variation-settings: "opsz" 144, "SOFT" 80;
+}
+
+.our-move p {
+    font-size: clamp(0.92rem, 1.08vw, 1.03rem);
+    line-height: 1.5;
+    color: var(--ink-dim);
+    max-width: 92ch;
+}
+
+.our-move p b {
+    color: var(--teal);
+    font-weight: 600;
+}
+
+.our-move p em {
+    font-style: normal;
+    color: var(--amber);
+    font-weight: 500;
 }
 
 /* ===========================================
@@ -822,6 +1255,170 @@ h2.subtitle {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: clamp(0.8rem, 1.4vw, 1.2rem);
     min-height: 0;
+}
+
+/* Two-column: stacked commands on left, d3 chart on right */
+.cmd-plus-chart {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+    gap: clamp(0.9rem, 1.5vw, 1.3rem);
+    min-height: 0;
+}
+
+.cmd-stack {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.7rem, 1.1vw, 1rem);
+    min-height: 0;
+}
+
+.cmd-stack .cmd {
+    padding: clamp(0.7rem, 1.2vw, 1rem) clamp(0.9rem, 1.4vw, 1.15rem);
+    gap: clamp(0.35rem, 0.6vw, 0.5rem);
+}
+
+.cmd-stack .cmd-code {
+    font-size: clamp(0.78rem, 0.95vw, 0.92rem);
+    padding: clamp(0.3rem, 0.5vw, 0.45rem) clamp(0.5rem, 0.8vw, 0.7rem);
+}
+
+.cmd-stack .cmd-io {
+    font-size: clamp(0.86rem, 1vw, 0.98rem);
+    line-height: 1.4;
+}
+
+/* D3 chart pane */
+.chart-pane {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.45rem, 0.7vw, 0.65rem);
+    padding: clamp(0.9rem, 1.4vw, 1.2rem);
+    border: 1px solid var(--line);
+    border-radius: var(--panel-radius);
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.chart-pane::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--amber);
+    box-shadow: 0 0 14px var(--amber);
+}
+
+.chart-pane .chart-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+}
+
+.chart-pane .chart-title {
+    font-family: var(--font-display);
+    font-weight: 450;
+    font-size: clamp(0.98rem, 1.2vw, 1.15rem);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+}
+
+.chart-pane .chart-title em {
+    font-style: italic;
+    color: var(--amber);
+    font-variation-settings: "opsz" 144, "SOFT" 80;
+}
+
+.chart-pane .chart-meta {
+    font-family: var(--font-mono);
+    font-size: clamp(0.6rem, 0.72vw, 0.7rem);
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.chart-pane .chart-svg-wrap {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    display: flex;
+}
+
+.score-chart {
+    width: 100%;
+    height: 100%;
+}
+
+.score-chart text {
+    font-family: var(--font-mono);
+    fill: var(--muted);
+}
+
+.score-chart .axis-label {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    fill: var(--muted);
+}
+
+.score-chart .tick text {
+    font-size: 10px;
+    fill: var(--muted);
+}
+
+.score-chart .grid line {
+    stroke: rgba(235, 230, 220, 0.06);
+    stroke-dasharray: 2 3;
+}
+
+.score-chart .frontier-line {
+    fill: none;
+    stroke-width: 1.2;
+    stroke-dasharray: 4 3;
+    opacity: 0.55;
+}
+
+.score-chart .dot {
+    transition: r 0.2s ease;
+}
+
+.score-chart .dot.muted {
+    fill: rgba(235, 230, 220, 0.18);
+}
+
+.chart-pane .chart-legend {
+    display: flex;
+    gap: clamp(0.5rem, 0.9vw, 0.8rem);
+    font-family: var(--font-mono);
+    font-size: clamp(0.6rem, 0.72vw, 0.7rem);
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.chart-pane .chart-legend .sw {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+}
+
+.chart-pane .chart-legend .sw .pip {
+    display: inline-block;
+    width: 0.6em;
+    height: 0.6em;
+    border-radius: 999px;
+}
+
+.chart-pane .chart-legend .sw.muted .pip {
+    background: rgba(235, 230, 220, 0.2);
 }
 
 .cmd {
@@ -1392,41 +1989,82 @@ h2.subtitle {
 
       <aside class="cover-motif reveal reveal-5" aria-hidden="true">
         <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-          <!-- Four agent nodes in a ring, fully connected (cross-review graph) -->
+          <!-- Eight agent nodes in an octagon · K8 fully-connected (cross-review) -->
           <defs>
             <radialGradient id="nodeG" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#e89142" stop-opacity="0.9"/>
+              <stop offset="0%" stop-color="#e89142" stop-opacity="0.85"/>
               <stop offset="100%" stop-color="#e89142" stop-opacity="0"/>
             </radialGradient>
           </defs>
-          <!-- edges -->
-          <g stroke="#5bd5c2" stroke-width="0.6" opacity="0.45" fill="none">
-            <line x1="40" y1="55" x2="160" y2="55"/>
-            <line x1="40" y1="55" x2="40" y2="145"/>
-            <line x1="40" y1="55" x2="160" y2="145"/>
-            <line x1="160" y1="55" x2="40" y2="145"/>
-            <line x1="160" y1="55" x2="160" y2="145"/>
-            <line x1="40" y1="145" x2="160" y2="145"/>
+          <!-- K8 edges = 28 pairs (octagon perimeter + every diagonal) -->
+          <g stroke="#5bd5c2" stroke-width="0.45" opacity="0.32" fill="none">
+            <!-- From A (100,30) -->
+            <line x1="100" y1="30" x2="150" y2="50"/>
+            <line x1="100" y1="30" x2="170" y2="100"/>
+            <line x1="100" y1="30" x2="150" y2="150"/>
+            <line x1="100" y1="30" x2="100" y2="170"/>
+            <line x1="100" y1="30" x2="50" y2="150"/>
+            <line x1="100" y1="30" x2="30" y2="100"/>
+            <line x1="100" y1="30" x2="50" y2="50"/>
+            <!-- From B (150,50) -->
+            <line x1="150" y1="50" x2="170" y2="100"/>
+            <line x1="150" y1="50" x2="150" y2="150"/>
+            <line x1="150" y1="50" x2="100" y2="170"/>
+            <line x1="150" y1="50" x2="50" y2="150"/>
+            <line x1="150" y1="50" x2="30" y2="100"/>
+            <line x1="150" y1="50" x2="50" y2="50"/>
+            <!-- From C (170,100) -->
+            <line x1="170" y1="100" x2="150" y2="150"/>
+            <line x1="170" y1="100" x2="100" y2="170"/>
+            <line x1="170" y1="100" x2="50" y2="150"/>
+            <line x1="170" y1="100" x2="30" y2="100"/>
+            <line x1="170" y1="100" x2="50" y2="50"/>
+            <!-- From D (150,150) -->
+            <line x1="150" y1="150" x2="100" y2="170"/>
+            <line x1="150" y1="150" x2="50" y2="150"/>
+            <line x1="150" y1="150" x2="30" y2="100"/>
+            <line x1="150" y1="150" x2="50" y2="50"/>
+            <!-- From E (100,170) -->
+            <line x1="100" y1="170" x2="50" y2="150"/>
+            <line x1="100" y1="170" x2="30" y2="100"/>
+            <line x1="100" y1="170" x2="50" y2="50"/>
+            <!-- From F (50,150) -->
+            <line x1="50" y1="150" x2="30" y2="100"/>
+            <line x1="50" y1="150" x2="50" y2="50"/>
+            <!-- From G (30,100) -->
+            <line x1="30" y1="100" x2="50" y2="50"/>
           </g>
-          <!-- nodes -->
+          <!-- Nodes (halo + colored core) -->
           <g>
-            <circle cx="40" cy="55" r="18" fill="url(#nodeG)"/>
-            <circle cx="40" cy="55" r="5.5" fill="#e89142"/>
-            <circle cx="160" cy="55" r="18" fill="url(#nodeG)"/>
-            <circle cx="160" cy="55" r="5.5" fill="#5bd5c2"/>
-            <circle cx="40" cy="145" r="18" fill="url(#nodeG)"/>
-            <circle cx="40" cy="145" r="5.5" fill="#f06b5e"/>
-            <circle cx="160" cy="145" r="18" fill="url(#nodeG)"/>
-            <circle cx="160" cy="145" r="5.5" fill="#a78bfa"/>
+            <!-- A · top · teal -->
+            <circle cx="100" cy="30" r="15" fill="url(#nodeG)"/>
+            <circle cx="100" cy="30" r="5" fill="#5bd5c2"/>
+            <!-- B · upper-right · amber -->
+            <circle cx="150" cy="50" r="15" fill="url(#nodeG)"/>
+            <circle cx="150" cy="50" r="5" fill="#e89142"/>
+            <!-- C · right · rose -->
+            <circle cx="170" cy="100" r="15" fill="url(#nodeG)"/>
+            <circle cx="170" cy="100" r="5" fill="#f06b5e"/>
+            <!-- D · lower-right · violet -->
+            <circle cx="150" cy="150" r="15" fill="url(#nodeG)"/>
+            <circle cx="150" cy="150" r="5" fill="#a78bfa"/>
+            <!-- E · bottom · lime -->
+            <circle cx="100" cy="170" r="15" fill="url(#nodeG)"/>
+            <circle cx="100" cy="170" r="5" fill="#9ece72"/>
+            <!-- F · lower-left · cyan -->
+            <circle cx="50" cy="150" r="15" fill="url(#nodeG)"/>
+            <circle cx="50" cy="150" r="5" fill="#4fb5d2"/>
+            <!-- G · left · gold -->
+            <circle cx="30" cy="100" r="15" fill="url(#nodeG)"/>
+            <circle cx="30" cy="100" r="5" fill="#d4a64a"/>
+            <!-- H · upper-left · magenta -->
+            <circle cx="50" cy="50" r="15" fill="url(#nodeG)"/>
+            <circle cx="50" cy="50" r="5" fill="#d48db5"/>
           </g>
-          <!-- center label -->
-          <text x="100" y="96" text-anchor="middle" fill="#7a7368" font-family="'JetBrains Mono',monospace" font-size="6.5" letter-spacing="2">N × N</text>
-          <text x="100" y="110" text-anchor="middle" fill="#ebe6dc" font-family="'Fraunces',serif" font-size="10.5" font-style="italic" font-weight="450">cross-review</text>
-          <!-- agent labels -->
-          <text x="40" y="33" text-anchor="middle" fill="#7a7368" font-family="'JetBrains Mono',monospace" font-size="5.5" letter-spacing="1.4">AGENT·A</text>
-          <text x="160" y="33" text-anchor="middle" fill="#7a7368" font-family="'JetBrains Mono',monospace" font-size="5.5" letter-spacing="1.4">AGENT·B</text>
-          <text x="40" y="176" text-anchor="middle" fill="#7a7368" font-family="'JetBrains Mono',monospace" font-size="5.5" letter-spacing="1.4">AGENT·C</text>
-          <text x="160" y="176" text-anchor="middle" fill="#7a7368" font-family="'JetBrains Mono',monospace" font-size="5.5" letter-spacing="1.4">AGENT·D</text>
+          <!-- Center cross-review label (dark occluder so text reads over K8 crossings) -->
+          <rect x="70" y="88" width="60" height="26" fill="#14161a" opacity="0.88" rx="2"/>
+          <text x="100" y="99" text-anchor="middle" fill="#7a7368" font-family="'JetBrains Mono',monospace" font-size="6.5" letter-spacing="2">N × N</text>
+          <text x="100" y="111" text-anchor="middle" fill="#ebe6dc" font-family="'Fraunces',serif" font-size="10" font-style="italic" font-weight="450">cross-review</text>
         </svg>
       </aside>
     </div>
@@ -1503,57 +2141,78 @@ h2.subtitle {
       <div>
         <span class="kicker reveal reveal-2" style="--kicker-dot: var(--teal);"><span class="dot"></span>2026 · why this is solvable now</span>
         <h1 class="title reveal reveal-3" style="--accent: var(--teal); margin-top: 0.5em;">Built for <em>agents.</em></h1>
-        <p class="lede reveal reveal-4" style="margin-top: 0.6em; max-width: 72ch;">Live benchmarks — <b style="color: var(--teal);">Prophet Arena</b>, <b style="color: var(--teal);">LMSYS</b>, <b style="color: var(--teal);">Agent Arena</b> — are the agent-first rebuild of the evaluation layer. VIS Arena applies the same move to data storytelling. Twelve primitives make this possible:</p>
+        <p class="lede reveal reveal-4" style="margin-top: 0.6em; max-width: 72ch;">AI agents are evolving quickly, and each new layer of tooling opens more capability, more autonomy, and more room for interface and workflow design. Sorted by first public launch or proposal month:</p>
+        <div class="protocol-note reveal reveal-5">
+          <span>2026.04 ← 2020.09 timeline · newest first</span>
+          <span>dim = pre-Aug 2025 scaffolding</span>
+          <span class="accent">bright = post-Aug 2025 execution</span>
+        </div>
       </div>
 
-      <div class="protocol-grid reveal reveal-5">
-        <div class="protocol" style="--proto-accent: var(--teal);">
-          <span class="code">MCP</span>
-          <span class="name">Model Context Protocol</span>
-        </div>
-        <div class="protocol" style="--proto-accent: var(--amber);">
-          <span class="code">A2A</span>
-          <span class="name">Agent-to-Agent</span>
-        </div>
-        <div class="protocol" style="--proto-accent: var(--rose);">
-          <span class="code">ACP · AP2</span>
-          <span class="name">Agent payments</span>
-        </div>
-        <div class="protocol" style="--proto-accent: var(--violet);">
-          <span class="code">x402</span>
-          <span class="name">Pay-per-call</span>
-        </div>
-        <div class="protocol" style="--proto-accent: var(--lime);">
-          <span class="code">WebMCP</span>
-          <span class="name">Capability-first web</span>
-        </div>
-        <div class="protocol" style="--proto-accent: var(--teal);">
-          <span class="code">llms.txt</span>
-          <span class="name">Site manifests</span>
-        </div>
-        <div class="protocol" style="--proto-accent: var(--amber);">
+      <div class="protocol-grid reveal reveal-6">
+        <div class="protocol current" style="--proto-accent: var(--amber);">
+          <span class="era">2026+</span>
           <span class="code">Harness</span>
           <span class="name">Eval + sandboxing</span>
+          <span class="meta"><a href="https://openai.com/index/the-next-evolution-of-the-agents-sdk/" target="_blank" rel="noreferrer noopener">2026.04 · OpenAI</a></span>
         </div>
-        <div class="protocol" style="--proto-accent: var(--rose);">
-          <span class="code">Memory</span>
-          <span class="name">Persistent context</span>
+        <div class="protocol current" style="--proto-accent: var(--rose);">
+          <span class="era">2026+</span>
+          <span class="code">Browser Run</span>
+          <span class="name">Agent browser runtime</span>
+          <span class="meta"><a href="https://blog.cloudflare.com/browser-run-for-ai-agents/" target="_blank" rel="noreferrer noopener">2026.04 · Cloudflare</a></span>
         </div>
-        <div class="protocol" style="--proto-accent: var(--violet);">
-          <span class="code">Tools</span>
-          <span class="name">Typed callable skills</span>
+        <div class="protocol current" style="--proto-accent: var(--lime);">
+          <span class="era">2026+</span>
+          <span class="code">WebMCP</span>
+          <span class="name">Capability-first web</span>
+          <span class="meta"><a href="https://developer.chrome.com/blog/webmcp-epp" target="_blank" rel="noreferrer noopener">2026.02 · Chrome</a></span>
         </div>
-        <div class="protocol" style="--proto-accent: var(--lime);">
-          <span class="code">API</span>
-          <span class="name">Programmatic surfaces</span>
+        <div class="protocol current" style="--proto-accent: var(--violet);">
+          <span class="era">2025.10</span>
+          <span class="code">Skills</span>
+          <span class="name">Progressive disclosure</span>
+          <span class="meta"><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" target="_blank" rel="noreferrer noopener">2025.10 · Anthropic</a></span>
         </div>
-        <div class="protocol" style="--proto-accent: var(--teal);">
+        <div class="protocol foundation" style="--proto-accent: var(--violet);">
+          <span class="code">AGENTS.md</span>
+          <span class="name">Project instructions</span>
+          <span class="meta"><a href="https://openai.com/index/introducing-codex/" target="_blank" rel="noreferrer noopener">2025.05 · OpenAI</a></span>
+        </div>
+        <div class="protocol foundation" style="--proto-accent: var(--teal);">
           <span class="code">CLI</span>
           <span class="name">Agent-invocable</span>
+          <span class="meta"><a href="https://openai.com/index/introducing-codex/" target="_blank" rel="noreferrer noopener">2025.04 · OpenAI</a></span>
         </div>
-        <div class="protocol" style="--proto-accent: var(--amber);">
+        <div class="protocol foundation" style="--proto-accent: var(--amber);">
+          <span class="code">A2A</span>
+          <span class="name">Agent-to-Agent</span>
+          <span class="meta"><a href="https://developers.googleblog.com/pt-br/a2a-a-new-era-of-agent-interoperability" target="_blank" rel="noreferrer noopener">2025.04 · Google</a></span>
+        </div>
+        <div class="protocol foundation" style="--proto-accent: var(--amber);">
           <span class="code">SDKs</span>
           <span class="name">Agent frameworks</span>
+          <span class="meta"><a href="https://openai.com/index/new-tools-for-building-agents/" target="_blank" rel="noreferrer noopener">2025.03 · OpenAI</a></span>
+        </div>
+        <div class="protocol foundation" style="--proto-accent: var(--teal);">
+          <span class="code">MCP</span>
+          <span class="name">Model Context Protocol</span>
+          <span class="meta"><a href="https://www.anthropic.com/news/model-context-protocol" target="_blank" rel="noreferrer noopener">2024.11 · Anthropic</a></span>
+        </div>
+        <div class="protocol foundation" style="--proto-accent: var(--lime);">
+          <span class="code">Workflow</span>
+          <span class="name">Durable execution</span>
+          <span class="meta"><a href="https://developers.cloudflare.com/changelog/2024-10-24-workflows-beta/" target="_blank" rel="noreferrer noopener">2024.10 · Cloudflare</a></span>
+        </div>
+        <div class="protocol foundation" style="--proto-accent: var(--teal);">
+          <span class="code">llms.txt</span>
+          <span class="name">Site manifests</span>
+          <span class="meta"><a href="https://www.answer.ai/posts/2024-09-03-llmstxt" target="_blank" rel="noreferrer noopener">2024.09 · Answer.AI</a></span>
+        </div>
+        <div class="protocol foundation" style="--proto-accent: var(--rose);">
+          <span class="code">Memory</span>
+          <span class="name">Persistent context</span>
+          <span class="meta"><a href="https://blog.cloudflare.com/introducing-workers-durable-objects" target="_blank" rel="noreferrer noopener">2020.09 · Cloudflare</a></span>
         </div>
       </div>
     </div>
@@ -1570,99 +2229,109 @@ h2.subtitle {
       <span class="counter">04 <strong>/</strong> 06</span>
     </div>
 
-    <div style="display:flex; flex-direction:column; gap: clamp(0.8rem, 1.4vw, 1.2rem); margin-bottom: clamp(0.8rem, 1.4vw, 1.2rem);">
-      <span class="kicker reveal reveal-2" style="--kicker-dot: var(--violet);"><span class="dot"></span>Sibling benchmark · UChicago × Kalshi</span>
-      <h1 class="title reveal reveal-3" style="--accent: var(--violet); max-width: 30ch;">Borrow the <em>pattern.</em></h1>
-    </div>
+    <div class="workshop-wrap">
+      <div style="display:flex; flex-direction:column; gap: clamp(0.25rem, 0.45vw, 0.4rem);">
+        <span class="kicker reveal reveal-2" style="--kicker-dot: var(--violet);"><span class="dot"></span>Positioning · ICML 2026 workshop landscape</span>
+        <h1 class="title reveal reveal-3" style="--accent: var(--violet); max-width: 34ch;">Neighbors at the workshop — <em>our angle</em>.</h1>
+      </div>
 
-    <div class="bp-grid">
-      <div class="bp-col source reveal reveal-4">
-        <span class="label">Prophet Arena</span>
-        <h3>Forecasting live <em>events</em>.</h3>
-        <span class="tag-line">Calibrated probabilities · real markets</span>
-        <div class="spec">
-          <div class="spec-row"><span class="k">Task</span><span class="v">Predict live prediction-market outcomes</span></div>
-          <div class="spec-row"><span class="k">Ground truth</span><span class="v">Kalshi / Polymarket resolution</span></div>
-          <div class="spec-row"><span class="k">Two boards</span><span class="v"><code>/leaderboard</code> · <code>/agent-leaderboard</code></span></div>
-          <div class="spec-row"><span class="k">Metrics</span><span class="v">Brier score · Average Return</span></div>
-          <div class="spec-row"><span class="k">Submission</span><span class="v"><code>prophet forecast submit</code></span></div>
+      <div class="our-move reveal reveal-4">
+        <span class="our-label">OUR NOVEL MOVE · VIS Arena</span>
+        <h2>Agent-to-agent <em>arena</em>.</h2>
+        <p>Every submission both <b>generates</b> a report and <b>peer-reviews</b> others.</p>
+      </div>
+
+      <div class="blueprint-split reveal reveal-5">
+        <!-- Left: stacked workshop briefs -->
+        <div class="ws-stack">
+          <div class="ws-row math">
+            <div class="ws-head">
+              <a class="ws-label" href="https://ai4math2026.github.io/" target="_blank" rel="noreferrer noopener">AI4Math</a>
+              <span class="ws-platform">Codabench</span>
+            </div>
+            <ul class="ws-list">
+              <li><span class="track">T1 ·</span>Semantic Alignment for Autoformalization</li>
+              <li><span class="track">T2 ·</span>TCS Proving in Lean 4</li>
+              <li><span class="track">T3 ·</span>Visual Grounded Physics Problem Solving</li>
+            </ul>
+          </div>
+          <div class="ws-row science">
+            <div class="ws-head">
+              <a class="ws-label" href="https://ai4sciencecommunity.github.io/" target="_blank" rel="noreferrer noopener">AI for Science</a>
+              <span class="ws-platform">OpenReview</span>
+            </div>
+            <ul class="ws-list">
+              <li>Dataset Proposal Competition</li>
+              <li>AI Scientist Competition</li>
+            </ul>
+          </div>
+          <div class="ws-row forecast">
+            <div class="ws-head">
+              <a class="ws-label" href="https://forecasting-workshop.github.io/" target="_blank" rel="noreferrer noopener">Forecasting</a>
+              <span class="ws-platform"><a href="https://www.prophethacks.com/" target="_blank" rel="noreferrer noopener">prophethacks.com</a></span>
+            </div>
+            <ul class="ws-list">
+              <li>AI Forecasting Hackathon <span style="color: var(--muted); font-family: var(--font-mono); font-size: 0.82em;">(Prophet Hacks)</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Right: Prophet Arena vs VIS Arena blueprint table -->
+        <div class="cmp-table-wrap">
+          <div class="cmp-header">
+            <span class="cmp-label">Blueprint · arena comparison</span>
+          </div>
+          <table class="cmp-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th class="prophet-col">Prophet Arena</th>
+                <th class="vis-col">VIS Arena</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="k">Task</td>
+                <td class="v">Predict live market outcomes</td>
+                <td class="v">Interactive report on streaming data</td>
+              </tr>
+              <tr>
+                <td class="k">Truth</td>
+                <td class="v">Kalshi / Polymarket</td>
+                <td class="v">Archived bundles + human preference</td>
+              </tr>
+              <tr>
+                <td class="k">Boards</td>
+                <td class="v">Leaderboard · Agent</td>
+                <td class="v">Constrained · Open</td>
+              </tr>
+              <tr>
+                <td class="k">Metrics</td>
+                <td class="v">Brier · Avg Return</td>
+                <td class="v">Faithfulness · Utility · Consensus</td>
+              </tr>
+              <tr>
+                <td class="k">Submit</td>
+                <td class="v"><code>prophet forecast</code></td>
+                <td class="v"><code>vis-arena gen + review</code></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
-      <div class="bp-col sink reveal reveal-5">
-        <span class="label">VIS Arena</span>
-        <h3>Reviewing data <em>reports</em>.</h3>
-        <span class="tag-line">Streaming datasets · peer review</span>
-        <div class="spec">
-          <div class="spec-row"><span class="k">Task</span><span class="v">Generate an interactive report on a streaming dataset</span></div>
-          <div class="spec-row"><span class="k">Ground truth</span><span class="v">Archived bundles + deferred human preference</span></div>
-          <div class="spec-row"><span class="k">Two boards</span><span class="v">Constrained harness · Open harness</span></div>
-          <div class="spec-row"><span class="k">Metrics</span><span class="v">Faithfulness · Reader-utility · Consensus</span></div>
-          <div class="spec-row"><span class="k">Submission</span><span class="v"><code>vis-arena generate</code> + <code>review</code></span></div>
-        </div>
-      </div>
-
-      <div class="bp-note reveal reveal-6">
-        <strong>The novel move</strong>
-        Prophet gives every model the same context to isolate retrieval. We go further — <b>every agent both generates reports and reviews peers</b>. Review behavior becomes an observable signal.
-      </div>
     </div>
   </div>
 </section>
 
 <!-- ===========================================
-     SLIDE 5 · PROPOSAL
-     =========================================== -->
-<section class="slide slide-amber">
-  <div class="slide-content">
-    <div class="masthead reveal reveal-1">
-      <span class="slug"><span class="mark">VIS Arena</span> · Proposal</span>
-      <span class="counter">05 <strong>/</strong> 06</span>
-    </div>
-
-    <div class="prop-wrap">
-      <div class="prop-head" style="grid-template-columns: 1fr;">
-        <div>
-          <span class="kicker reveal reveal-2"><span class="dot"></span>Submission format</span>
-          <h1 class="title reveal reveal-3" style="margin-top: 0.5em; max-width: 20ch;">One submission. <em>Two modes.</em></h1>
-        </div>
-      </div>
-
-      <div class="cmd-grid">
-        <article class="cmd gen reveal reveal-5">
-          <div class="cmd-head">
-            <span class="n">Mode 01</span>
-            <span class="name">Generate</span>
-          </div>
-          <code class="cmd-code">vis-arena generate --dataset &lt;slug&gt;</code>
-          <div class="cmd-io"><span class="k">In</span><span class="v">Streaming dataset + task prompt.</span></div>
-          <div class="cmd-io"><span class="k">Out</span><span class="v">An <b style="color: var(--teal);">interactive HTML report</b>.</span></div>
-          <div class="cmd-io"><span class="k">Role</span><span class="v">Produce a report and declare what it sees.</span></div>
-        </article>
-
-        <article class="cmd review reveal reveal-6">
-          <div class="cmd-head">
-            <span class="n">Mode 02</span>
-            <span class="name">Review</span>
-          </div>
-          <code class="cmd-code">vis-arena review --bundle &lt;peer&gt;</code>
-          <div class="cmd-io"><span class="k">In</span><span class="v">A peer's report bundle.</span></div>
-          <div class="cmd-io"><span class="k">Out</span><span class="v">Structured critique along the agent's <b style="color: var(--rose);">own dimensions</b>, with rationale anchored to regions of the report.</span></div>
-          <div class="cmd-io"><span class="k">Role</span><span class="v">Score peers and explain every score.</span></div>
-        </article>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===========================================
-     SLIDE 6 · PIPELINE / TICK
+     SLIDE 5 · PIPELINE / TICK
      =========================================== -->
 <section class="slide slide-teal" style="--slide-padding: clamp(0.8rem, 2vw, 2rem);">
   <div class="slide-content">
     <div class="masthead reveal reveal-1">
       <span class="slug"><span class="mark">VIS Arena</span> · Flow</span>
-      <span class="counter">06 <strong>/</strong> 06</span>
+      <span class="counter">05 <strong>/</strong> 06</span>
     </div>
 
     <div class="pipe-wrap" style="gap: clamp(0.4rem, 0.8vw, 0.8rem);">
@@ -1672,79 +2341,168 @@ h2.subtitle {
       </div>
 
       <div class="flow-frame reveal reveal-4">
-        <svg class="flow-svg" viewBox="0 0 800 510" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="VIS Arena flow: submissions to arena pipeline to public showcase, with a separate human-feedback loop below.">
+        <svg class="flow-svg" viewBox="0 0 820 510" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="VIS Arena flow: submissions to arena pipeline to public showcase, with a separate human-feedback loop below.">
 
-          <!-- Column headers -->
-          <text x="88" y="18" font-family="'JetBrains Mono',monospace" font-size="9" fill="#7a7368" text-anchor="middle" font-weight="600" letter-spacing="2">SUBMISSIONS</text>
-          <text x="310" y="18" font-family="'JetBrains Mono',monospace" font-size="9" fill="#7a7368" text-anchor="middle" font-weight="600" letter-spacing="2">ARENA PIPELINE</text>
-          <text x="625" y="18" font-family="'JetBrains Mono',monospace" font-size="9" fill="#7a7368" text-anchor="middle" font-weight="600" letter-spacing="2">PUBLIC SHOWCASE</text>
+          <!-- Column headers (prominent · color-coded per column) -->
+          <text x="88" y="24" font-family="'JetBrains Mono',monospace" font-size="11" fill="#b8b1a3" text-anchor="middle" font-weight="700" letter-spacing="2.5">AGENTIC DESIGNS</text>
+          <text x="330" y="24" font-family="'JetBrains Mono',monospace" font-size="11" fill="#5bd5c2" text-anchor="middle" font-weight="700" letter-spacing="2.5">ARENA PIPELINE</text>
+          <text x="645" y="24" font-family="'JetBrains Mono',monospace" font-size="11" fill="#e89142" text-anchor="middle" font-weight="700" letter-spacing="2.5">PUBLIC SHOWCASE</text>
 
           <!-- Agent A · teal -->
-          <rect x="14" y="30" width="148" height="46" rx="4" fill="#1c1f25" stroke="rgba(235,230,220,0.1)" stroke-width="1"/>
-          <circle cx="34" cy="53" r="10" fill="#5bd5c2" opacity="0.22"/>
-          <text x="34" y="57" font-size="10" fill="#5bd5c2" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">A</text>
-          <text x="110" y="57" font-size="10.5" fill="#ebe6dc" text-anchor="middle" font-weight="500">Agent A</text>
+          <rect x="14" y="70" width="148" height="34" rx="4" fill="#1c1f25" stroke="rgba(235,230,220,0.1)" stroke-width="1"/>
+          <circle cx="32" cy="87" r="9" fill="#5bd5c2" opacity="0.22"/>
+          <text x="32" y="91" font-size="9.5" fill="#5bd5c2" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">A</text>
+          <text x="108" y="91" font-size="10" fill="#ebe6dc" text-anchor="middle" font-weight="500">Design A</text>
 
           <!-- Agent B · amber -->
-          <rect x="14" y="86" width="148" height="46" rx="4" fill="#1c1f25" stroke="rgba(235,230,220,0.1)" stroke-width="1"/>
-          <circle cx="34" cy="109" r="10" fill="#e89142" opacity="0.22"/>
-          <text x="34" y="113" font-size="10" fill="#e89142" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">B</text>
-          <text x="110" y="113" font-size="10.5" fill="#ebe6dc" text-anchor="middle" font-weight="500">Agent B</text>
+          <rect x="14" y="110" width="148" height="34" rx="4" fill="#1c1f25" stroke="rgba(235,230,220,0.1)" stroke-width="1"/>
+          <circle cx="32" cy="127" r="9" fill="#e89142" opacity="0.22"/>
+          <text x="32" y="131" font-size="9.5" fill="#e89142" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">B</text>
+          <text x="108" y="131" font-size="10" fill="#ebe6dc" text-anchor="middle" font-weight="500">Design B</text>
 
           <!-- Agent C · rose -->
-          <rect x="14" y="142" width="148" height="46" rx="4" fill="#1c1f25" stroke="rgba(235,230,220,0.1)" stroke-width="1"/>
-          <circle cx="34" cy="165" r="10" fill="#f06b5e" opacity="0.22"/>
-          <text x="34" y="169" font-size="10" fill="#f06b5e" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">C</text>
-          <text x="110" y="169" font-size="10.5" fill="#ebe6dc" text-anchor="middle" font-weight="500">Agent C</text>
+          <rect x="14" y="150" width="148" height="34" rx="4" fill="#1c1f25" stroke="rgba(235,230,220,0.1)" stroke-width="1"/>
+          <circle cx="32" cy="167" r="9" fill="#f06b5e" opacity="0.22"/>
+          <text x="32" y="171" font-size="9.5" fill="#f06b5e" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">C</text>
+          <text x="108" y="171" font-size="10" fill="#ebe6dc" text-anchor="middle" font-weight="500">Design C</text>
 
           <!-- Agent D · violet -->
-          <rect x="14" y="198" width="148" height="46" rx="4" fill="#1c1f25" stroke="rgba(235,230,220,0.1)" stroke-width="1"/>
-          <circle cx="34" cy="221" r="10" fill="#a78bfa" opacity="0.22"/>
-          <text x="34" y="225" font-size="10" fill="#a78bfa" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">D</text>
-          <text x="110" y="225" font-size="10.5" fill="#ebe6dc" text-anchor="middle" font-weight="500">Agent D</text>
+          <rect x="14" y="190" width="148" height="34" rx="4" fill="#1c1f25" stroke="rgba(235,230,220,0.1)" stroke-width="1"/>
+          <circle cx="32" cy="207" r="9" fill="#a78bfa" opacity="0.22"/>
+          <text x="32" y="211" font-size="9.5" fill="#a78bfa" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">D</text>
+          <text x="108" y="211" font-size="10" fill="#ebe6dc" text-anchor="middle" font-weight="500">Design D</text>
+
+          <!-- Agent E · lime -->
+          <rect x="14" y="230" width="148" height="34" rx="4" fill="#1c1f25" stroke="rgba(235,230,220,0.1)" stroke-width="1"/>
+          <circle cx="32" cy="247" r="9" fill="#9ece72" opacity="0.22"/>
+          <text x="32" y="251" font-size="9.5" fill="#9ece72" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">E</text>
+          <text x="108" y="251" font-size="10" fill="#ebe6dc" text-anchor="middle" font-weight="500">Design E</text>
 
           <!-- Open submissions indicator -->
-          <text x="88" y="268" font-size="12" fill="#7a7368" text-anchor="middle">· · ·</text>
-          <text x="88" y="284" font-size="8" fill="#7a7368" text-anchor="middle" font-style="italic" font-family="'Fraunces',serif">open submissions</text>
+          <text x="88" y="282" font-size="11" fill="#7a7368" text-anchor="middle">· · ·</text>
+          <text x="88" y="296" font-size="7.5" fill="#7a7368" text-anchor="middle" font-style="italic" font-family="'Fraunces',serif">open submissions</text>
 
-          <!-- Arrows agent → arena -->
-          <line x1="162" y1="53" x2="214" y2="134" stroke="#5bd5c2" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#mTeal)"/>
-          <line x1="162" y1="109" x2="214" y2="142" stroke="#e89142" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#mAmber)"/>
-          <line x1="162" y1="165" x2="214" y2="152" stroke="#f06b5e" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#mRose)"/>
-          <line x1="162" y1="221" x2="214" y2="162" stroke="#a78bfa" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#mViolet)"/>
+          <!-- Arrows agent → arena (horizontal, padded from both boxes) -->
+          <line x1="172" y1="87" x2="192" y2="87" stroke="#5bd5c2" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#mTeal)"/>
+          <line x1="172" y1="127" x2="192" y2="127" stroke="#e89142" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#mAmber)"/>
+          <line x1="172" y1="167" x2="192" y2="167" stroke="#f06b5e" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#mRose)"/>
+          <line x1="172" y1="207" x2="192" y2="207" stroke="#a78bfa" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#mViolet)"/>
+          <line x1="172" y1="247" x2="192" y2="247" stroke="#9ece72" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#mLime)"/>
 
-          <!-- Arena box -->
-          <rect x="212" y="54" width="196" height="326" rx="6" fill="rgba(91,213,194,0.04)" stroke="#5bd5c2" stroke-width="1.6"/>
-          <text x="310" y="74" font-size="10" fill="#5bd5c2" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace" letter-spacing="1.4">VIS ARENA</text>
-          <line x1="228" y1="82" x2="392" y2="82" stroke="#5bd5c2" stroke-width="0.5" opacity="0.35"/>
+          <!-- Arena box · square 260 × 260 -->
+          <rect x="200" y="54" width="260" height="260" rx="6" fill="rgba(91,213,194,0.04)" stroke="#5bd5c2" stroke-width="1.6"/>
+          <text x="330" y="74" font-size="10" fill="#5bd5c2" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace" letter-spacing="1.4">VIS ARENA</text>
+          <line x1="216" y1="82" x2="444" y2="82" stroke="#5bd5c2" stroke-width="0.5" opacity="0.35"/>
 
-          <!-- Dataset chip -->
-          <rect x="232" y="92" width="156" height="22" rx="4" fill="rgba(91,213,194,0.14)"/>
-          <text x="310" y="107" font-size="9" fill="#5bd5c2" text-anchor="middle" font-weight="500">Streaming dataset</text>
+          <!-- Row flow · Dataset → ① Generate → ② Peer review -->
+          <rect x="212" y="92" width="86" height="20" rx="4" fill="rgba(91,213,220,0.14)"/>
+          <text x="255" y="106" font-size="8" fill="#5bd5c2" text-anchor="middle" font-weight="500">Streaming dataset</text>
 
-          <!-- Step 1 -->
-          <rect x="228" y="124" width="164" height="50" rx="5" fill="#1c1f25" stroke="rgba(235,230,220,0.09)" stroke-width="1"/>
-          <text x="310" y="142" font-size="9" fill="#ebe6dc" text-anchor="middle" font-weight="600">① Agents generate</text>
-          <text x="310" y="156" font-size="8" fill="#7a7368" text-anchor="middle">interactive report</text>
-          <text x="310" y="168" font-size="8" fill="#7a7368" text-anchor="middle">+ insights manifest</text>
+          <text x="308" y="107" font-size="10" fill="#7a7368" text-anchor="middle" font-family="'JetBrains Mono',monospace">→</text>
 
-          <line x1="310" y1="174" x2="310" y2="186" stroke="#7a7368" stroke-width="1" marker-end="url(#mDim)"/>
+          <text x="342" y="106" font-size="7" fill="#5bd5c2" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace" letter-spacing="1.2">① GENERATE</text>
 
-          <!-- Step 2 -->
-          <rect x="228" y="186" width="164" height="50" rx="5" fill="#1c1f25" stroke="rgba(235,230,220,0.09)" stroke-width="1"/>
-          <text x="310" y="204" font-size="9" fill="#ebe6dc" text-anchor="middle" font-weight="600">② Cross-review</text>
-          <text x="310" y="218" font-size="8" fill="#7a7368" text-anchor="middle">every agent reviews</text>
-          <text x="310" y="230" font-size="8" fill="#7a7368" text-anchor="middle">every peer</text>
+          <text x="380" y="107" font-size="10" fill="#7a7368" text-anchor="middle" font-family="'JetBrains Mono',monospace">→</text>
 
-          <line x1="310" y1="236" x2="310" y2="248" stroke="#7a7368" stroke-width="1" marker-end="url(#mDim)"/>
+          <text x="420" y="106" font-size="7" fill="#5bd5c2" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace" letter-spacing="1.2">② PEER REVIEW</text>
 
-          <!-- Step 3 (highlight) -->
-          <rect x="228" y="248" width="164" height="46" rx="5" fill="rgba(91,213,194,0.14)" stroke="#5bd5c2" stroke-width="1"/>
-          <text x="310" y="268" font-size="9" fill="#5bd5c2" text-anchor="middle" font-weight="700">③ Consensus ranking</text>
-          <text x="310" y="282" font-size="8" fill="#5bd5c2" text-anchor="middle" opacity="0.8">column means · audit trail</text>
+          <!-- K5 cross-review connections (5 pentagon edges + 5 pentagram diagonals) -->
+          <g stroke="#5bd5c2" stroke-width="0.55" opacity="0.38" fill="none" stroke-dasharray="2 2">
+            <!-- Pentagon edges -->
+            <line x1="330" y1="147" x2="382" y2="185"/>
+            <line x1="382" y1="185" x2="362" y2="247"/>
+            <line x1="362" y1="247" x2="298" y2="247"/>
+            <line x1="298" y1="247" x2="278" y2="185"/>
+            <line x1="278" y1="185" x2="330" y2="147"/>
+            <!-- Pentagram diagonals -->
+            <line x1="330" y1="147" x2="362" y2="247"/>
+            <line x1="330" y1="147" x2="298" y2="247"/>
+            <line x1="382" y1="185" x2="298" y2="247"/>
+            <line x1="382" y1="185" x2="278" y2="185"/>
+            <line x1="362" y1="247" x2="278" y2="185"/>
+          </g>
 
-          <!-- Output arrow to showcase -->
-          <line x1="392" y1="270" x2="460" y2="180" stroke="#e89142" stroke-width="1.4" marker-end="url(#mAmber)"/>
+          <!-- Agent A (top) · teal · report above badge -->
+          <rect x="314" y="125" width="32" height="10" rx="1.5" fill="#1c1f25" stroke="#5bd5c2" stroke-opacity="0.6" stroke-width="0.5"/>
+          <rect x="316" y="127" width="14" height="0.8" fill="#7a7368" opacity="0.7"/>
+          <rect x="316" y="130" width="1.2" height="3" fill="#5bd5c2" opacity="0.9"/>
+          <rect x="318" y="129" width="1.2" height="4" fill="#5bd5c2" opacity="0.9"/>
+          <rect x="320" y="131" width="1.2" height="2" fill="#5bd5c2" opacity="0.9"/>
+          <rect x="322" y="128" width="1.2" height="5" fill="#5bd5c2" opacity="0.9"/>
+          <rect x="324" y="130" width="1.2" height="3" fill="#5bd5c2" opacity="0.9"/>
+          <circle cx="330" cy="147" r="8" fill="#0b0c0e"/>
+          <circle cx="330" cy="147" r="8" fill="#5bd5c2" opacity="0.22"/>
+          <circle cx="330" cy="147" r="8" fill="none" stroke="#5bd5c2" stroke-width="1.4"/>
+          <text x="330" y="151" font-size="9" fill="#5bd5c2" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">A</text>
+
+          <!-- Agent B (upper-right) · amber · report upper-right -->
+          <rect x="393" y="160" width="32" height="10" rx="1.5" fill="#1c1f25" stroke="#e89142" stroke-opacity="0.6" stroke-width="0.5"/>
+          <rect x="395" y="162" width="14" height="0.8" fill="#7a7368" opacity="0.7"/>
+          <polyline points="395,168 398,166 401,167 404,164 407,165 410,163 413,164 416,162 419,163" fill="none" stroke="#e89142" stroke-width="0.7" opacity="0.95"/>
+          <circle cx="382" cy="185" r="8" fill="#0b0c0e"/>
+          <circle cx="382" cy="185" r="8" fill="#e89142" opacity="0.22"/>
+          <circle cx="382" cy="185" r="8" fill="none" stroke="#e89142" stroke-width="1.4"/>
+          <text x="382" y="189" font-size="9" fill="#e89142" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">B</text>
+
+          <!-- Agent C (lower-right) · rose · report below-right -->
+          <rect x="352" y="265" width="32" height="10" rx="1.5" fill="#1c1f25" stroke="#f06b5e" stroke-opacity="0.6" stroke-width="0.5"/>
+          <rect x="354" y="267" width="14" height="0.8" fill="#7a7368" opacity="0.7"/>
+          <circle cx="356" cy="272" r="0.8" fill="#f06b5e" opacity="0.9"/>
+          <circle cx="360" cy="270" r="0.8" fill="#f06b5e" opacity="0.9"/>
+          <circle cx="364" cy="273" r="0.8" fill="#f06b5e" opacity="0.9"/>
+          <circle cx="368" cy="271" r="0.8" fill="#f06b5e" opacity="0.9"/>
+          <circle cx="372" cy="272" r="0.8" fill="#f06b5e" opacity="0.9"/>
+          <circle cx="376" cy="270" r="0.8" fill="#f06b5e" opacity="0.9"/>
+          <circle cx="380" cy="272" r="0.8" fill="#f06b5e" opacity="0.9"/>
+          <circle cx="362" cy="247" r="8" fill="#0b0c0e"/>
+          <circle cx="362" cy="247" r="8" fill="#f06b5e" opacity="0.22"/>
+          <circle cx="362" cy="247" r="8" fill="none" stroke="#f06b5e" stroke-width="1.4"/>
+          <text x="362" y="251" font-size="9" fill="#f06b5e" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">C</text>
+
+          <!-- Agent D (lower-left) · violet · report below-left -->
+          <rect x="276" y="265" width="32" height="10" rx="1.5" fill="#1c1f25" stroke="#a78bfa" stroke-opacity="0.6" stroke-width="0.5"/>
+          <rect x="278" y="267" width="14" height="0.8" fill="#7a7368" opacity="0.7"/>
+          <rect x="278" y="271" width="1.6" height="3" fill="#a78bfa" opacity="0.9"/>
+          <rect x="281" y="269" width="1.6" height="5" fill="#a78bfa" opacity="0.9"/>
+          <rect x="284" y="272" width="1.6" height="2" fill="#a78bfa" opacity="0.9"/>
+          <rect x="287" y="268" width="1.6" height="6" fill="#a78bfa" opacity="0.9"/>
+          <rect x="290" y="270" width="1.6" height="4" fill="#a78bfa" opacity="0.9"/>
+          <rect x="293" y="271" width="1.6" height="3" fill="#a78bfa" opacity="0.9"/>
+          <circle cx="298" cy="247" r="8" fill="#0b0c0e"/>
+          <circle cx="298" cy="247" r="8" fill="#a78bfa" opacity="0.22"/>
+          <circle cx="298" cy="247" r="8" fill="none" stroke="#a78bfa" stroke-width="1.4"/>
+          <text x="298" y="251" font-size="9" fill="#a78bfa" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">D</text>
+
+          <!-- Agent E (upper-left) · lime · report upper-left -->
+          <rect x="235" y="160" width="32" height="10" rx="1.5" fill="#1c1f25" stroke="#9ece72" stroke-opacity="0.6" stroke-width="0.5"/>
+          <rect x="237" y="162" width="14" height="0.8" fill="#7a7368" opacity="0.7"/>
+          <rect x="237" y="166" width="1.4" height="3" fill="#9ece72" opacity="0.9"/>
+          <rect x="240" y="164" width="1.4" height="5" fill="#9ece72" opacity="0.9"/>
+          <rect x="243" y="167" width="1.4" height="2" fill="#9ece72" opacity="0.9"/>
+          <rect x="246" y="163" width="1.4" height="6" fill="#9ece72" opacity="0.9"/>
+          <rect x="249" y="166" width="1.4" height="3" fill="#9ece72" opacity="0.9"/>
+          <rect x="252" y="165" width="1.4" height="4" fill="#9ece72" opacity="0.9"/>
+          <rect x="255" y="167" width="1.4" height="2" fill="#9ece72" opacity="0.9"/>
+          <rect x="258" y="164" width="1.4" height="5" fill="#9ece72" opacity="0.9"/>
+          <rect x="261" y="166" width="1.4" height="3" fill="#9ece72" opacity="0.9"/>
+          <circle cx="278" cy="185" r="8" fill="#0b0c0e"/>
+          <circle cx="278" cy="185" r="8" fill="#9ece72" opacity="0.22"/>
+          <circle cx="278" cy="185" r="8" fill="none" stroke="#9ece72" stroke-width="1.4"/>
+          <text x="278" y="189" font-size="9" fill="#9ece72" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">E</text>
+
+          <!-- Central N×N tag (occludes crossing K5 lines) -->
+          <rect x="318" y="201" width="24" height="14" rx="2" fill="#0b0c0e" stroke="#5bd5c2" stroke-opacity="0.45" stroke-width="0.5"/>
+          <text x="330" y="212" font-size="7" fill="#5bd5c2" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace" letter-spacing="1">N×N</text>
+
+          <!-- Consensus chip (highlighted output) -->
+          <rect x="230" y="286" width="200" height="22" rx="5" fill="rgba(91,213,194,0.14)" stroke="#5bd5c2" stroke-width="1"/>
+          <text x="330" y="301" font-size="9" fill="#5bd5c2" text-anchor="middle" font-weight="700">③ Consensus ranking</text>
+
+          <!-- Output arrow · Arena → Showcase (horizontal, in the gap between boxes) -->
+          <line x1="464" y1="172" x2="478" y2="172" stroke="#e89142" stroke-width="1.6" marker-end="url(#mAmber)"/>
+
+          <!-- ═══ SHOWCASE + HP shifted right by 20 to create arrow gap ═══ -->
+          <g transform="translate(20, 0)">
 
           <!-- Showcase panel (top-right · Gallery + Leaderboard only) -->
           <rect x="462" y="54" width="326" height="236" rx="6" fill="rgba(232,145,66,0.04)" stroke="#e89142" stroke-width="1.6"/>
@@ -1836,40 +2594,49 @@ h2.subtitle {
           <text x="782" y="208" font-size="6.5" fill="#7a7368" text-anchor="end" font-family="'JetBrains Mono',monospace" letter-spacing="1.5">SCORE</text>
 
           <!-- Row 1 · A · teal (winner) -->
-          <text x="482" y="224" font-size="8" fill="#ebe6dc" font-family="'JetBrains Mono',monospace" font-weight="700">01</text>
-          <circle cx="508" cy="221" r="6" fill="#5bd5c2" opacity="0.22"/>
-          <text x="508" y="224" font-size="7.5" fill="#5bd5c2" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">A</text>
-          <text x="520" y="224" font-size="8.5" fill="#ebe6dc">Agent A</text>
-          <rect x="586" y="219" width="144" height="5" rx="1" fill="rgba(235,230,220,0.06)"/>
-          <rect x="586" y="219" width="125" height="5" rx="1" fill="#5bd5c2" opacity="0.9"/>
-          <text x="782" y="224" font-size="8.5" fill="#ebe6dc" text-anchor="end" font-family="'JetBrains Mono',monospace" font-weight="700">87.2</text>
+          <text x="482" y="220" font-size="8" fill="#ebe6dc" font-family="'JetBrains Mono',monospace" font-weight="700">01</text>
+          <circle cx="508" cy="217" r="6" fill="#5bd5c2" opacity="0.22"/>
+          <text x="508" y="220" font-size="7.5" fill="#5bd5c2" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">A</text>
+          <text x="520" y="220" font-size="8.5" fill="#ebe6dc">Design A</text>
+          <rect x="586" y="215" width="144" height="5" rx="1" fill="rgba(235,230,220,0.06)"/>
+          <rect x="586" y="215" width="125" height="5" rx="1" fill="#5bd5c2" opacity="0.9"/>
+          <text x="782" y="220" font-size="8.5" fill="#ebe6dc" text-anchor="end" font-family="'JetBrains Mono',monospace" font-weight="700">87.2</text>
 
           <!-- Row 2 · B · amber -->
-          <text x="482" y="238" font-size="8" fill="#b8b1a3" font-family="'JetBrains Mono',monospace" font-weight="500">02</text>
-          <circle cx="508" cy="235" r="6" fill="#e89142" opacity="0.22"/>
-          <text x="508" y="238" font-size="7.5" fill="#e89142" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">B</text>
-          <text x="520" y="238" font-size="8.5" fill="#b8b1a3">Agent B</text>
-          <rect x="586" y="233" width="144" height="5" rx="1" fill="rgba(235,230,220,0.06)"/>
-          <rect x="586" y="233" width="119" height="5" rx="1" fill="#e89142" opacity="0.85"/>
-          <text x="782" y="238" font-size="8.5" fill="#b8b1a3" text-anchor="end" font-family="'JetBrains Mono',monospace" font-weight="500">82.6</text>
+          <text x="482" y="234" font-size="8" fill="#b8b1a3" font-family="'JetBrains Mono',monospace" font-weight="500">02</text>
+          <circle cx="508" cy="231" r="6" fill="#e89142" opacity="0.22"/>
+          <text x="508" y="234" font-size="7.5" fill="#e89142" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">B</text>
+          <text x="520" y="234" font-size="8.5" fill="#b8b1a3">Design B</text>
+          <rect x="586" y="229" width="144" height="5" rx="1" fill="rgba(235,230,220,0.06)"/>
+          <rect x="586" y="229" width="119" height="5" rx="1" fill="#e89142" opacity="0.85"/>
+          <text x="782" y="234" font-size="8.5" fill="#b8b1a3" text-anchor="end" font-family="'JetBrains Mono',monospace" font-weight="500">82.6</text>
 
           <!-- Row 3 · C · rose -->
-          <text x="482" y="252" font-size="8" fill="#b8b1a3" font-family="'JetBrains Mono',monospace" font-weight="500">03</text>
-          <circle cx="508" cy="249" r="6" fill="#f06b5e" opacity="0.22"/>
-          <text x="508" y="252" font-size="7.5" fill="#f06b5e" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">C</text>
-          <text x="520" y="252" font-size="8.5" fill="#b8b1a3">Agent C</text>
-          <rect x="586" y="247" width="144" height="5" rx="1" fill="rgba(235,230,220,0.06)"/>
-          <rect x="586" y="247" width="112" height="5" rx="1" fill="#f06b5e" opacity="0.85"/>
-          <text x="782" y="252" font-size="8.5" fill="#b8b1a3" text-anchor="end" font-family="'JetBrains Mono',monospace" font-weight="500">78.1</text>
+          <text x="482" y="248" font-size="8" fill="#b8b1a3" font-family="'JetBrains Mono',monospace" font-weight="500">03</text>
+          <circle cx="508" cy="245" r="6" fill="#f06b5e" opacity="0.22"/>
+          <text x="508" y="248" font-size="7.5" fill="#f06b5e" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">C</text>
+          <text x="520" y="248" font-size="8.5" fill="#b8b1a3">Design C</text>
+          <rect x="586" y="243" width="144" height="5" rx="1" fill="rgba(235,230,220,0.06)"/>
+          <rect x="586" y="243" width="112" height="5" rx="1" fill="#f06b5e" opacity="0.85"/>
+          <text x="782" y="248" font-size="8.5" fill="#b8b1a3" text-anchor="end" font-family="'JetBrains Mono',monospace" font-weight="500">78.1</text>
 
           <!-- Row 4 · D · violet -->
-          <text x="482" y="266" font-size="8" fill="#7a7368" font-family="'JetBrains Mono',monospace" font-weight="500">04</text>
-          <circle cx="508" cy="263" r="6" fill="#a78bfa" opacity="0.22"/>
-          <text x="508" y="266" font-size="7.5" fill="#a78bfa" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">D</text>
-          <text x="520" y="266" font-size="8.5" fill="#7a7368">Agent D</text>
-          <rect x="586" y="261" width="144" height="5" rx="1" fill="rgba(235,230,220,0.06)"/>
-          <rect x="586" y="261" width="107" height="5" rx="1" fill="#a78bfa" opacity="0.85"/>
-          <text x="782" y="266" font-size="8.5" fill="#7a7368" text-anchor="end" font-family="'JetBrains Mono',monospace" font-weight="500">74.4</text>
+          <text x="482" y="262" font-size="8" fill="#7a7368" font-family="'JetBrains Mono',monospace" font-weight="500">04</text>
+          <circle cx="508" cy="259" r="6" fill="#a78bfa" opacity="0.22"/>
+          <text x="508" y="262" font-size="7.5" fill="#a78bfa" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">D</text>
+          <text x="520" y="262" font-size="8.5" fill="#7a7368">Design D</text>
+          <rect x="586" y="257" width="144" height="5" rx="1" fill="rgba(235,230,220,0.06)"/>
+          <rect x="586" y="257" width="107" height="5" rx="1" fill="#a78bfa" opacity="0.85"/>
+          <text x="782" y="262" font-size="8.5" fill="#7a7368" text-anchor="end" font-family="'JetBrains Mono',monospace" font-weight="500">74.4</text>
+
+          <!-- Row 5 · E · lime -->
+          <text x="482" y="276" font-size="8" fill="#7a7368" font-family="'JetBrains Mono',monospace" font-weight="500">05</text>
+          <circle cx="508" cy="273" r="6" fill="#9ece72" opacity="0.22"/>
+          <text x="508" y="276" font-size="7.5" fill="#9ece72" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">E</text>
+          <text x="520" y="276" font-size="8.5" fill="#7a7368">Design E</text>
+          <rect x="586" y="271" width="144" height="5" rx="1" fill="rgba(235,230,220,0.06)"/>
+          <rect x="586" y="271" width="102" height="5" rx="1" fill="#9ece72" opacity="0.85"/>
+          <text x="782" y="276" font-size="8.5" fill="#7a7368" text-anchor="end" font-family="'JetBrains Mono',monospace" font-weight="500">70.8</text>
 
           <!-- ═══════════════════════════════════════════════════════════
                SEPARATE PANEL · HUMAN FEEDBACK LOOP (below Showcase)
@@ -1880,54 +2647,51 @@ h2.subtitle {
           <line x1="625" y1="290" x2="625" y2="316" stroke="#e89142" stroke-width="1.4" marker-end="url(#mAmber)" opacity="0.85"/>
           <text x="640" y="306" font-size="7" fill="#7a7368" font-style="italic" font-family="'Fraunces',serif">async</text>
 
-          <!-- HP panel -->
-          <rect x="462" y="322" width="326" height="166" rx="6" fill="rgba(232,145,66,0.08)" stroke="#e89142" stroke-width="1.6"/>
+          <!-- HP panel (compact · height reduced 122 → 88) -->
+          <rect x="462" y="322" width="326" height="88" rx="6" fill="rgba(232,145,66,0.08)" stroke="#e89142" stroke-width="1.6"/>
 
-          <!-- Faint corner tag showing this is a sibling external system -->
+          <!-- Faint corner tag -->
           <text x="462" y="314" font-family="'JetBrains Mono',monospace" font-size="7" fill="#7a7368" letter-spacing="1.8" font-weight="600">— EXTERNAL —</text>
 
           <!-- Header marker -->
-          <circle cx="478" cy="342" r="3" fill="#e89142"/>
-          <circle cx="478" cy="342" r="6" fill="none" stroke="#e89142" stroke-width="0.8" opacity="0.5"/>
-          <text x="492" y="345" font-size="7.5" fill="#e89142" font-family="'JetBrains Mono',monospace" font-weight="700" letter-spacing="2">HUMAN FEEDBACK LOOP</text>
+          <circle cx="478" cy="338" r="2.5" fill="#e89142"/>
+          <circle cx="478" cy="338" r="5.5" fill="none" stroke="#e89142" stroke-width="0.8" opacity="0.5"/>
+          <text x="490" y="341" font-size="7" fill="#e89142" font-family="'JetBrains Mono',monospace" font-weight="700" letter-spacing="2">HUMAN FEEDBACK LOOP</text>
 
           <!-- Description -->
-          <text x="478" y="364" font-size="8" fill="#b8b1a3">A jury picks between report pairs — async, RLHF-style.</text>
+          <text x="478" y="356" font-size="7.5" fill="#b8b1a3">Experts pick between report pairs — async, RLHF-style.</text>
 
           <!-- Pairwise widget 1 · A beats B -->
-          <circle cx="516" cy="404" r="9" fill="#5bd5c2" opacity="0.22"/>
-          <circle cx="516" cy="404" r="9" fill="none" stroke="#5bd5c2" stroke-width="1.4"/>
-          <text x="516" y="408" font-size="10" fill="#5bd5c2" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">A</text>
-          <text x="536" y="408" font-size="7.5" fill="#7a7368" text-anchor="middle" font-style="italic">vs</text>
-          <circle cx="556" cy="404" r="9" fill="none" stroke="#7a7368" stroke-width="0.9" opacity="0.5"/>
-          <text x="556" y="408" font-size="10" fill="#7a7368" text-anchor="middle" font-weight="500" font-family="'JetBrains Mono',monospace">B</text>
-          <text x="516" y="426" font-size="10" fill="#e89142" text-anchor="middle" font-weight="700">✓</text>
+          <circle cx="518" cy="380" r="7" fill="#5bd5c2" opacity="0.22"/>
+          <circle cx="518" cy="380" r="7" fill="none" stroke="#5bd5c2" stroke-width="1.2"/>
+          <text x="518" y="383" font-size="8.5" fill="#5bd5c2" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">A</text>
+          <text x="534" y="383" font-size="6.5" fill="#7a7368" text-anchor="middle" font-style="italic">vs</text>
+          <circle cx="550" cy="380" r="7" fill="none" stroke="#7a7368" stroke-width="0.8" opacity="0.5"/>
+          <text x="550" y="383" font-size="8.5" fill="#7a7368" text-anchor="middle" font-weight="500" font-family="'JetBrains Mono',monospace">B</text>
+          <text x="518" y="400" font-size="8.5" fill="#e89142" text-anchor="middle" font-weight="700">✓</text>
 
           <!-- Pairwise widget 2 · D beats C -->
-          <circle cx="625" cy="404" r="9" fill="#a78bfa" opacity="0.22"/>
-          <circle cx="625" cy="404" r="9" fill="none" stroke="#a78bfa" stroke-width="1.4"/>
-          <text x="625" y="408" font-size="10" fill="#a78bfa" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">D</text>
-          <text x="645" y="408" font-size="7.5" fill="#7a7368" text-anchor="middle" font-style="italic">vs</text>
-          <circle cx="665" cy="404" r="9" fill="none" stroke="#7a7368" stroke-width="0.9" opacity="0.5"/>
-          <text x="665" y="408" font-size="10" fill="#7a7368" text-anchor="middle" font-weight="500" font-family="'JetBrains Mono',monospace">C</text>
-          <text x="625" y="426" font-size="10" fill="#e89142" text-anchor="middle" font-weight="700">✓</text>
+          <circle cx="625" cy="380" r="7" fill="#a78bfa" opacity="0.22"/>
+          <circle cx="625" cy="380" r="7" fill="none" stroke="#a78bfa" stroke-width="1.2"/>
+          <text x="625" y="383" font-size="8.5" fill="#a78bfa" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">D</text>
+          <text x="641" y="383" font-size="6.5" fill="#7a7368" text-anchor="middle" font-style="italic">vs</text>
+          <circle cx="657" cy="380" r="7" fill="none" stroke="#7a7368" stroke-width="0.8" opacity="0.5"/>
+          <text x="657" y="383" font-size="8.5" fill="#7a7368" text-anchor="middle" font-weight="500" font-family="'JetBrains Mono',monospace">C</text>
+          <text x="625" y="400" font-size="8.5" fill="#e89142" text-anchor="middle" font-weight="700">✓</text>
 
           <!-- Pairwise widget 3 · A beats C -->
-          <circle cx="734" cy="404" r="9" fill="#5bd5c2" opacity="0.22"/>
-          <circle cx="734" cy="404" r="9" fill="none" stroke="#5bd5c2" stroke-width="1.4"/>
-          <text x="734" y="408" font-size="10" fill="#5bd5c2" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">A</text>
-          <text x="754" y="408" font-size="7.5" fill="#7a7368" text-anchor="middle" font-style="italic">vs</text>
-          <circle cx="774" cy="404" r="9" fill="none" stroke="#7a7368" stroke-width="0.9" opacity="0.5"/>
-          <text x="774" y="408" font-size="10" fill="#7a7368" text-anchor="middle" font-weight="500" font-family="'JetBrains Mono',monospace">C</text>
-          <text x="734" y="426" font-size="10" fill="#e89142" text-anchor="middle" font-weight="700">✓</text>
+          <circle cx="732" cy="380" r="7" fill="#5bd5c2" opacity="0.22"/>
+          <circle cx="732" cy="380" r="7" fill="none" stroke="#5bd5c2" stroke-width="1.2"/>
+          <text x="732" y="383" font-size="8.5" fill="#5bd5c2" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">A</text>
+          <text x="748" y="383" font-size="6.5" fill="#7a7368" text-anchor="middle" font-style="italic">vs</text>
+          <circle cx="764" cy="380" r="7" fill="none" stroke="#7a7368" stroke-width="0.8" opacity="0.5"/>
+          <text x="764" y="383" font-size="8.5" fill="#7a7368" text-anchor="middle" font-weight="500" font-family="'JetBrains Mono',monospace">C</text>
+          <text x="732" y="400" font-size="8.5" fill="#e89142" text-anchor="middle" font-weight="700">✓</text>
 
-          <!-- Output rail within HP -->
-          <line x1="478" y1="452" x2="772" y2="452" stroke="#e89142" stroke-width="0.5" opacity="0.25"/>
-          <text x="625" y="472" font-size="9" fill="#ebe6dc" text-anchor="middle" font-weight="500">→ Reviewer calibration · round N+1</text>
+          </g>
 
-          <!-- Feedback arrow: HP back to Arena (cross-review step) -->
-          <path d="M462 430 Q 260 500 180 340 Q 160 220 212 210" stroke="#e89142" stroke-width="1.1" stroke-dasharray="5 3" fill="none" opacity="0.65" marker-end="url(#mAmber)"/>
-          <text x="182" y="500" font-size="7.5" fill="#7a7368" text-anchor="middle" font-style="italic" font-family="'Fraunces',serif">feedback loop</text>
+          <!-- Feedback loop arrow hidden for now -->
+
 
           <!-- Arrow markers -->
           <defs>
@@ -1935,11 +2699,75 @@ h2.subtitle {
             <marker id="mAmber" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0, 6 3, 0 6" fill="#e89142"/></marker>
             <marker id="mRose" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0, 6 3, 0 6" fill="#f06b5e"/></marker>
             <marker id="mViolet" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0, 6 3, 0 6" fill="#a78bfa"/></marker>
+            <marker id="mLime" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0, 6 3, 0 6" fill="#9ece72"/></marker>
             <marker id="mDim" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0, 6 3, 0 6" fill="#7a7368"/></marker>
           </defs>
         </svg>
       </div>
 
+    </div>
+  </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 6 · PROPOSAL
+     =========================================== -->
+<section class="slide slide-amber">
+  <div class="slide-content">
+    <div class="masthead reveal reveal-1">
+      <span class="slug"><span class="mark">VIS Arena</span> · Proposal</span>
+      <span class="counter">06 <strong>/</strong> 06</span>
+    </div>
+
+    <div class="prop-wrap">
+      <div class="prop-head" style="grid-template-columns: 1fr;">
+        <div>
+          <span class="kicker reveal reveal-2"><span class="dot"></span>Submission format</span>
+          <h1 class="title reveal reveal-3" style="margin-top: 0.5em; max-width: 20ch;">One submission. <em>Two modes.</em></h1>
+        </div>
+      </div>
+
+      <div class="cmd-plus-chart">
+        <div class="cmd-stack">
+          <article class="cmd gen reveal reveal-5">
+            <div class="cmd-head">
+              <span class="n">Mode 01</span>
+              <span class="name">Generate</span>
+            </div>
+            <code class="cmd-code">vis-arena generate --dataset &lt;slug&gt;</code>
+            <div class="cmd-io"><span class="k">In</span><span class="v">Streaming dataset + task prompt.</span></div>
+            <div class="cmd-io"><span class="k">Out</span><span class="v">An <b style="color: var(--teal);">interactive HTML report</b>.</span></div>
+          </article>
+
+          <article class="cmd review reveal reveal-6">
+            <div class="cmd-head">
+              <span class="n">Mode 02</span>
+              <span class="name">Review</span>
+            </div>
+            <code class="cmd-code">vis-arena review --bundle &lt;peer&gt;</code>
+            <div class="cmd-io"><span class="k">In</span><span class="v">A peer's report bundle.</span></div>
+            <div class="cmd-io"><span class="k">Out</span><span class="v">Structured critique with <b style="color: var(--rose);">own-dimension rationale</b>.</span></div>
+          </article>
+        </div>
+
+        <article class="chart-pane reveal reveal-6">
+          <div class="chart-head">
+            <span class="chart-title">Peer-graded <em>frontier</em></span>
+            <span class="chart-meta">mock · 12 ticks · 5 agents</span>
+          </div>
+          <div class="chart-svg-wrap">
+            <svg class="score-chart" id="peerFrontierChart" viewBox="0 0 560 280" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+          <div class="chart-legend">
+            <span class="sw"><span class="pip" style="background: #5bd5c2;"></span>A</span>
+            <span class="sw"><span class="pip" style="background: #e89142;"></span>B</span>
+            <span class="sw"><span class="pip" style="background: #f06b5e;"></span>C</span>
+            <span class="sw"><span class="pip" style="background: #a78bfa;"></span>D</span>
+            <span class="sw"><span class="pip" style="background: #9ece72;"></span>E</span>
+            <span class="sw muted"><span class="pip"></span>not a record</span>
+          </div>
+        </article>
+      </div>
     </div>
   </div>
 </section>
@@ -2034,7 +2862,195 @@ class Deck {
     }
 }
 
-window.addEventListener("DOMContentLoaded", () => new Deck());
+window.addEventListener("DOMContentLoaded", () => {
+    new Deck();
+    renderPeerFrontierChart();
+});
+
+/* ===========================================
+   D3 · PEER-GRADED FRONTIER SCATTER
+   12 ticks × 5 agents. Each dot = one artifact.
+   Coloured dot = new running best (frontier).
+   Gray dot    = not a record.
+   =========================================== */
+function renderPeerFrontierChart() {
+    const host = document.getElementById("peerFrontierChart");
+    if (!host || typeof d3 === "undefined") return;
+
+    // Mock data: tick × agent × score
+    const raw = [
+        [1, "A", 62], [1, "B", 58], [1, "C", 71], [1, "D", 55], [1, "E", 64],
+        [2, "A", 68], [2, "B", 63], [2, "C", 69], [2, "D", 61], [2, "E", 66],
+        [3, "A", 74], [3, "B", 70], [3, "C", 72], [3, "D", 65], [3, "E", 69],
+        [4, "A", 73], [4, "B", 78], [4, "C", 76], [4, "D", 70], [4, "E", 72],
+        [5, "A", 79], [5, "B", 75], [5, "C", 77], [5, "D", 72], [5, "E", 74],
+        [6, "A", 80], [6, "B", 78], [6, "C", 82], [6, "D", 74], [6, "E", 76],
+        [7, "A", 85], [7, "B", 80], [7, "C", 81], [7, "D", 76], [7, "E", 79],
+        [8, "A", 83], [8, "B", 82], [8, "C", 84], [8, "D", 80], [8, "E", 81],
+        [9, "A", 87], [9, "B", 84], [9, "C", 86], [9, "D", 82], [9, "E", 83],
+        [10, "A", 86], [10, "B", 88], [10, "C", 89], [10, "D", 85], [10, "E", 84],
+        [11, "A", 90], [11, "B", 87], [11, "C", 88], [11, "D", 86], [11, "E", 85],
+        [12, "A", 89], [12, "B", 92], [12, "C", 91], [12, "D", 88], [12, "E", 87]
+    ];
+
+    const colors = {
+        A: "#5bd5c2",
+        B: "#e89142",
+        C: "#f06b5e",
+        D: "#a78bfa",
+        E: "#9ece72"
+    };
+
+    // Mark each artifact as a running-best if it beats the previous max
+    let runningMax = -Infinity;
+    const data = raw.map(([tick, agent, score]) => {
+        const isBest = score > runningMax;
+        if (isBest) runningMax = score;
+        return { tick, agent, score, isBest };
+    });
+
+    // Frontier: the sequence of new bests only
+    const frontier = data.filter((d) => d.isBest);
+
+    // Dimensions (match viewBox on the SVG)
+    const W = 560;
+    const H = 280;
+    const m = { top: 12, right: 18, bottom: 36, left: 44 };
+    const iw = W - m.left - m.right;
+    const ih = H - m.top - m.bottom;
+
+    const svg = d3.select(host);
+    svg.selectAll("*").remove();
+
+    const g = svg.append("g").attr("transform", `translate(${m.left}, ${m.top})`);
+
+    // Scales
+    const xMax = d3.max(data, (d) => d.tick);
+    const x = d3
+        .scaleLinear()
+        .domain([0.5, xMax + 0.5])
+        .range([0, iw]);
+
+    const y = d3
+        .scaleLinear()
+        .domain([50, 100])
+        .range([ih, 0]);
+
+    // Grid lines (horizontal)
+    const yTicks = y.ticks(5);
+    g.append("g")
+        .attr("class", "grid")
+        .selectAll("line")
+        .data(yTicks)
+        .enter()
+        .append("line")
+        .attr("x1", 0)
+        .attr("x2", iw)
+        .attr("y1", (d) => y(d))
+        .attr("y2", (d) => y(d));
+
+    // X-axis (ticks)
+    const xAxis = d3.axisBottom(x)
+        .tickValues(d3.range(1, xMax + 1))
+        .tickFormat((d) => `T${d}`)
+        .tickSize(4)
+        .tickPadding(6);
+    const xg = g
+        .append("g")
+        .attr("class", "x-axis")
+        .attr("transform", `translate(0, ${ih})`)
+        .call(xAxis);
+    xg.select(".domain").attr("stroke", "rgba(235,230,220,0.18)");
+    xg.selectAll(".tick line").attr("stroke", "rgba(235,230,220,0.25)");
+
+    // Y-axis (scores)
+    const yAxis = d3.axisLeft(y).tickValues(yTicks).tickSize(4).tickPadding(6);
+    const yg = g.append("g").attr("class", "y-axis").call(yAxis);
+    yg.select(".domain").attr("stroke", "rgba(235,230,220,0.18)");
+    yg.selectAll(".tick line").attr("stroke", "rgba(235,230,220,0.25)");
+
+    // Axis labels
+    g.append("text")
+        .attr("class", "axis-label")
+        .attr("x", iw / 2)
+        .attr("y", ih + 30)
+        .attr("text-anchor", "middle")
+        .text("tick → time");
+
+    g.append("text")
+        .attr("class", "axis-label")
+        .attr("transform", `rotate(-90)`)
+        .attr("x", -ih / 2)
+        .attr("y", -32)
+        .attr("text-anchor", "middle")
+        .text("peer-graded score");
+
+    // Frontier line (connecting running-best dots)
+    const line = d3
+        .line()
+        .x((d) => x(d.tick))
+        .y((d) => y(d.score))
+        .curve(d3.curveStepAfter);
+
+    g.append("path")
+        .datum(frontier)
+        .attr("class", "frontier-line")
+        .attr("stroke", "#e89142")
+        .attr("d", line);
+
+    // Jitter non-best dots slightly on x to avoid perfect overlap
+    const agentOrder = { A: -0.22, B: -0.11, C: 0, D: 0.11, E: 0.22 };
+
+    // Dots: muted for non-best
+    g.append("g")
+        .selectAll("circle.muted-dot")
+        .data(data.filter((d) => !d.isBest))
+        .enter()
+        .append("circle")
+        .attr("class", "dot muted")
+        .attr("cx", (d) => x(d.tick + agentOrder[d.agent]))
+        .attr("cy", (d) => y(d.score))
+        .attr("r", 2.3);
+
+    // Dots: coloured for running-best
+    const bestDots = g.append("g")
+        .selectAll("circle.best-dot")
+        .data(frontier)
+        .enter()
+        .append("g");
+
+    // Halo
+    bestDots
+        .append("circle")
+        .attr("class", "dot halo")
+        .attr("cx", (d) => x(d.tick + agentOrder[d.agent]))
+        .attr("cy", (d) => y(d.score))
+        .attr("r", 7)
+        .attr("fill", (d) => colors[d.agent])
+        .attr("opacity", 0.18);
+
+    // Core
+    bestDots
+        .append("circle")
+        .attr("class", "dot best")
+        .attr("cx", (d) => x(d.tick + agentOrder[d.agent]))
+        .attr("cy", (d) => y(d.score))
+        .attr("r", 3.6)
+        .attr("fill", (d) => colors[d.agent])
+        .attr("stroke", "#0b0c0e")
+        .attr("stroke-width", 0.8);
+
+    // Tiny agent-letter tag next to each record dot
+    bestDots
+        .append("text")
+        .attr("x", (d) => x(d.tick + agentOrder[d.agent]) + 7)
+        .attr("y", (d) => y(d.score) + 3)
+        .attr("fill", (d) => colors[d.agent])
+        .attr("font-size", 9)
+        .attr("font-weight", 700)
+        .attr("font-family", "'JetBrains Mono',monospace")
+        .text((d) => d.agent);
+}
 </script>
 </body>
 </html>
