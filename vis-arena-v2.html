@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIS Arena</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ===========================================
+   THEME · dark-academic terminal
+   =========================================== */
+:root {
+    --bg:        #0b0c0e;
+    --surface:   #14161a;
+    --surface-2: #1c1f25;
+    --ink:       #ebe6dc;
+    --ink-dim:   #b8b1a3;
+    --muted:     #7a7368;
+    --line:      rgba(235, 230, 220, 0.09);
+    --line-strong: rgba(235, 230, 220, 0.18);
+
+    --amber:     #e89142;
+    --amber-dim: rgba(232, 145, 66, 0.16);
+    --teal:      #5bd5c2;
+    --teal-dim:  rgba(91, 213, 194, 0.14);
+    --rose:      #f06b5e;
+    --rose-dim:  rgba(240, 107, 94, 0.14);
+    --violet:    #a78bfa;
+    --violet-dim: rgba(167, 139, 250, 0.14);
+    --lime:      #9ece72;
+    --lime-dim:  rgba(158, 206, 114, 0.14);
+
+    --font-display: "Fraunces", "Times New Roman", serif;
+    --font-body:    "Geist", ui-sans-serif, system-ui, sans-serif;
+    --font-mono:    "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --dur: 0.7s;
+
+    --slide-padding: clamp(1.4rem, 3.4vw, 3.6rem);
+    --panel-radius:  clamp(0.4rem, 0.7vw, 0.6rem);
+    --content-gap:   clamp(0.8rem, 1.5vw, 1.5rem);
+}
+
+/* ===========================================
+   RESET
+   =========================================== */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    overflow-x: hidden;
+}
+
+html {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    background: var(--bg);
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--ink);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "ss01", "cv11";
+}
+
+/* Terminal-y ambient grain — very subtle */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent 0,
+            transparent 2px,
+            rgba(235, 230, 220, 0.010) 2px,
+            rgba(235, 230, 220, 0.010) 3px
+        );
+    mix-blend-mode: overlay;
+    opacity: 0.5;
+}
+
+img { max-width: 100%; display: block; }
+
+/* ===========================================
+   SLIDE CHASSIS
+   =========================================== */
+html { height: auto; min-height: 100%; }
+body { height: auto; min-height: 100%; overflow-y: auto; }
+
+.slide {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    scroll-snap-align: start;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.slide-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--slide-padding);
+    max-height: 100%;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+/* Subtle radial vignette per slide, per accent */
+.slide::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+        radial-gradient(circle at 8% 12%, var(--slide-tint, var(--amber-dim)) 0%, transparent 30%),
+        radial-gradient(circle at 92% 88%, rgba(91, 213, 194, 0.06) 0%, transparent 35%);
+    pointer-events: none;
+}
+
+.slide-amber  { --slide-tint: var(--amber-dim); }
+.slide-teal   { --slide-tint: var(--teal-dim); }
+.slide-rose   { --slide-tint: var(--rose-dim); }
+.slide-violet { --slide-tint: var(--violet-dim); }
+
+/* ===========================================
+   TYPOGRAPHY
+   =========================================== */
+.kicker {
+    font-family: var(--font-mono);
+    font-size: clamp(0.66rem, 0.78vw, 0.8rem);
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+}
+
+.kicker .dot {
+    width: 0.38em;
+    height: 0.38em;
+    background: var(--kicker-dot, var(--amber));
+    border-radius: 999px;
+    box-shadow: 0 0 8px var(--kicker-dot, var(--amber));
+}
+
+.display {
+    font-family: var(--font-display);
+    font-weight: 360;
+    font-size: clamp(2.6rem, 7.2vw, 6.8rem);
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+    line-height: 0.96;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+}
+
+.display em {
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 80;
+    color: var(--accent, var(--amber));
+}
+
+h1.title {
+    font-family: var(--font-display);
+    font-weight: 380;
+    font-size: clamp(1.9rem, 4.2vw, 3.6rem);
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    max-width: 24ch;
+    color: var(--ink);
+}
+
+h1.title em {
+    font-style: italic;
+    color: var(--accent, var(--amber));
+    font-variation-settings: "opsz" 144, "SOFT" 80;
+}
+
+h2.subtitle {
+    font-family: var(--font-display);
+    font-weight: 420;
+    font-size: clamp(1.35rem, 2.5vw, 2.1rem);
+    font-variation-settings: "opsz" 120, "SOFT" 30;
+    line-height: 1.1;
+    letter-spacing: -0.018em;
+    color: var(--ink);
+}
+
+.lede {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: clamp(1.06rem, 1.32vw, 1.28rem);
+    line-height: 1.5;
+    color: var(--ink-dim);
+    max-width: 60ch;
+}
+
+.lede strong {
+    color: var(--ink);
+    font-weight: 500;
+}
+
+.lede em {
+    font-style: normal;
+    color: var(--accent, var(--amber));
+    font-weight: 500;
+}
+
+.mono { font-family: var(--font-mono); }
+
+.micro {
+    font-family: var(--font-mono);
+    font-size: clamp(0.64rem, 0.76vw, 0.78rem);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+/* ===========================================
+   PRESENTATION CHROME
+   =========================================== */
+.progress-shell {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgba(235, 230, 220, 0.06);
+    z-index: 120;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--amber), var(--rose));
+    box-shadow: 0 0 12px var(--amber);
+    transition: width 0.45s var(--ease-out-expo);
+}
+
+.nav-dots {
+    position: fixed;
+    right: clamp(0.8rem, 1.4vw, 1.4rem);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.32rem, 0.6vw, 0.5rem);
+    z-index: 120;
+}
+
+.nav-dots button {
+    width: clamp(0.45rem, 0.5vw, 0.55rem);
+    height: clamp(0.45rem, 0.5vw, 0.55rem);
+    border: 1px solid rgba(235, 230, 220, 0.3);
+    border-radius: 999px;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.25s ease;
+}
+
+.nav-dots button.active {
+    background: var(--amber);
+    border-color: var(--amber);
+    box-shadow: 0 0 10px var(--amber);
+    transform: scale(1.3);
+}
+
+.keyboard-hint {
+    position: fixed;
+    left: clamp(0.9rem, 1.6vw, 1.4rem);
+    bottom: clamp(0.8rem, 1.4vw, 1.2rem);
+    z-index: 120;
+    font-family: var(--font-mono);
+    font-size: clamp(0.62rem, 0.74vw, 0.72rem);
+    color: var(--muted);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.keyboard-hint kbd {
+    display: inline-block;
+    padding: 0.15em 0.45em;
+    margin: 0 0.15em;
+    border: 1px solid var(--line-strong);
+    border-radius: 3px;
+    background: var(--surface);
+    font-family: inherit;
+    font-size: 0.95em;
+    color: var(--ink-dim);
+}
+
+/* ===========================================
+   MASTHEAD — the top rail of each slide
+   =========================================== */
+.masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: clamp(0.6rem, 1vw, 1rem);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: clamp(1rem, 2vw, 2rem);
+}
+
+.masthead .slug {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.5rem, 0.9vw, 0.8rem);
+    font-family: var(--font-mono);
+    font-size: clamp(0.64rem, 0.76vw, 0.76rem);
+    color: var(--muted);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.masthead .slug .mark {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 80;
+    font-size: 1.3em;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    text-transform: none;
+    font-weight: 420;
+}
+
+.masthead .counter {
+    font-family: var(--font-mono);
+    font-size: clamp(0.64rem, 0.76vw, 0.76rem);
+    color: var(--muted);
+    letter-spacing: 0.14em;
+}
+
+.masthead .counter strong {
+    color: var(--amber);
+    font-weight: 500;
+}
+
+/* ===========================================
+   COVER SLIDE
+   =========================================== */
+.cover-main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    gap: clamp(1.2rem, 2.4vw, 2.4rem);
+    align-items: end;
+    min-height: 0;
+}
+
+.cover-copy {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1rem, 1.8vw, 1.6rem);
+}
+
+.cover-copy .kicker { margin-bottom: 0.2em; }
+
+.cover-wordmark {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.4rem, 0.8vw, 0.7rem);
+}
+
+.cover-line {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 340;
+    font-variation-settings: "opsz" 144, "SOFT" 20;
+    font-size: clamp(3.6rem, 11vw, 9.2rem);
+    line-height: 0.88;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+}
+
+.cover-line em {
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 90;
+    color: var(--amber);
+}
+
+.cover-tagline {
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 1.25vw, 1.2rem);
+    line-height: 1.45;
+    color: var(--ink-dim);
+    max-width: 44ch;
+    margin-top: clamp(0.5rem, 0.8vw, 0.7rem);
+}
+
+.cover-tagline em {
+    font-style: normal;
+    color: var(--amber);
+    font-weight: 500;
+}
+
+.cover-motif {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(1rem, 1.6vw, 1.3rem);
+    border: 1px solid var(--line);
+    border-radius: var(--panel-radius);
+    background: var(--surface);
+    max-height: min(60vh, 420px);
+    min-height: 0;
+}
+
+.cover-motif svg { width: 100%; height: auto; max-height: 100%; }
+
+.cover-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: clamp(0.7rem, 1.2vw, 1rem);
+    border-top: 1px solid var(--line);
+    margin-top: clamp(1rem, 1.8vw, 1.6rem);
+    font-family: var(--font-mono);
+    font-size: clamp(0.64rem, 0.76vw, 0.76rem);
+    color: var(--muted);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+/* ===========================================
+   EVIDENCE SLIDE — image + seams sidebar
+   =========================================== */
+.evidence-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: clamp(1rem, 2vw, 2rem);
+    min-height: 0;
+}
+
+.evidence-figure {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 0.8vw, 0.7rem);
+    min-height: 0;
+}
+
+.evidence-frame {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: var(--panel-radius);
+    background: var(--surface);
+    padding: clamp(0.6rem, 1vw, 0.9rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.evidence-frame img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 3px;
+}
+
+.evidence-frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 70%, rgba(11, 12, 14, 0.45) 100%);
+    pointer-events: none;
+}
+
+.evidence-caption {
+    font-family: var(--font-mono);
+    font-size: clamp(0.62rem, 0.72vw, 0.72rem);
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0 clamp(0.3rem, 0.5vw, 0.5rem);
+}
+
+.evidence-copy {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.8rem, 1.3vw, 1.1rem);
+    min-height: 0;
+}
+
+/* Seam list — numbered */
+.seam-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 0.9vw, 0.8rem);
+    min-height: 0;
+}
+
+.seam {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(0.75rem, 1.2vw, 1rem);
+    padding: clamp(0.6rem, 1vw, 0.85rem) clamp(0.75rem, 1.2vw, 1rem);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--seam-accent, var(--amber));
+    border-radius: var(--panel-radius);
+    background: var(--surface);
+}
+
+.seam .n {
+    font-family: var(--font-mono);
+    font-size: clamp(0.66rem, 0.78vw, 0.78rem);
+    color: var(--seam-accent, var(--amber));
+    letter-spacing: 0.08em;
+    padding-top: 0.1em;
+}
+
+.seam .body h4 {
+    font-family: var(--font-display);
+    font-weight: 450;
+    font-size: clamp(0.98rem, 1.15vw, 1.1rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 0.2em;
+    font-variation-settings: "opsz" 120, "SOFT" 30;
+}
+
+.seam .body p {
+    font-size: clamp(0.9rem, 1.05vw, 1.02rem);
+    line-height: 1.4;
+    color: var(--ink-dim);
+}
+
+/* ===========================================
+   CLIMATE SLIDE — protocol chip grid
+   =========================================== */
+.climate-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1rem, 1.8vw, 1.6rem);
+    min-height: 0;
+}
+
+.climate-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: clamp(1rem, 2vw, 1.8rem);
+    align-items: end;
+}
+
+.climate-callout {
+    padding: clamp(0.8rem, 1.3vw, 1.1rem);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--teal);
+    border-radius: var(--panel-radius);
+    background: var(--surface);
+    font-size: clamp(0.88rem, 1.05vw, 1rem);
+    line-height: 1.45;
+    color: var(--ink-dim);
+}
+
+.climate-callout strong {
+    color: var(--teal);
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.4em;
+}
+
+.protocol-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    gap: clamp(0.5rem, 0.85vw, 0.75rem);
+    min-height: 0;
+}
+
+.protocol {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(0.18rem, 0.32vw, 0.28rem);
+    padding: clamp(0.55rem, 0.9vw, 0.8rem) clamp(0.6rem, 1vw, 0.9rem);
+    border: 1px solid var(--line);
+    border-radius: var(--panel-radius);
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.protocol:hover {
+    border-color: var(--proto-accent, var(--teal));
+    transform: translateY(-2px);
+}
+
+.protocol::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: clamp(1rem, 1.6vw, 1.4rem);
+    height: 2px;
+    background: var(--proto-accent, var(--teal));
+}
+
+.protocol .code {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: clamp(0.82rem, 0.98vw, 0.94rem);
+    color: var(--proto-accent, var(--teal));
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+}
+
+.protocol .name {
+    font-family: var(--font-display);
+    font-weight: 440;
+    font-size: clamp(0.8rem, 0.92vw, 0.88rem);
+    color: var(--ink);
+    line-height: 1.2;
+    font-variation-settings: "opsz" 120, "SOFT" 30;
+}
+
+/* ===========================================
+   BLUEPRINT SLIDE — Prophet Arena comparison
+   =========================================== */
+.bp-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(0.9rem, 1.6vw, 1.4rem);
+    min-height: 0;
+}
+
+.bp-col {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 0.9vw, 0.8rem);
+    padding: clamp(1rem, 1.6vw, 1.4rem);
+    border: 1px solid var(--line);
+    border-radius: var(--panel-radius);
+    background: var(--surface);
+    position: relative;
+    min-height: 0;
+}
+
+.bp-col.source   { border-top: 3px solid var(--violet); }
+.bp-col.sink     { border-top: 3px solid var(--amber); }
+
+.bp-col .label {
+    font-family: var(--font-mono);
+    font-size: clamp(0.68rem, 0.8vw, 0.78rem);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--col-accent, var(--muted));
+}
+
+.bp-col.source .label { --col-accent: var(--violet); }
+.bp-col.sink .label { --col-accent: var(--amber); }
+
+.bp-col h3 {
+    font-family: var(--font-display);
+    font-weight: 420;
+    font-size: clamp(1.15rem, 1.8vw, 1.65rem);
+    line-height: 1.05;
+    letter-spacing: -0.018em;
+    color: var(--ink);
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+}
+
+.bp-col h3 em {
+    font-style: italic;
+    color: var(--col-accent, var(--amber));
+    font-variation-settings: "opsz" 144, "SOFT" 80;
+}
+
+.bp-col .tag-line {
+    font-family: var(--font-mono);
+    font-size: clamp(0.72rem, 0.86vw, 0.82rem);
+    color: var(--col-accent, var(--muted));
+    letter-spacing: 0.05em;
+}
+
+.bp-col .spec {
+    display: flex;
+    flex-direction: column;
+    margin-top: clamp(0.2rem, 0.4vw, 0.35rem);
+    gap: clamp(0.05rem, 0.15vw, 0.15rem);
+}
+
+.bp-col .spec-row {
+    display: grid;
+    grid-template-columns: clamp(5.5rem, 7.5vw, 7rem) minmax(0, 1fr);
+    gap: clamp(0.5rem, 0.9vw, 0.75rem);
+    padding: clamp(0.35rem, 0.5vw, 0.45rem) 0;
+    border-top: 1px dashed var(--line);
+    align-items: baseline;
+    font-size: clamp(0.92rem, 1.08vw, 1.04rem);
+    line-height: 1.38;
+}
+
+.bp-col .spec-row:first-child { border-top: none; }
+
+.bp-col .spec-row .k {
+    font-family: var(--font-mono);
+    font-size: clamp(0.62rem, 0.72vw, 0.7rem);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.bp-col .spec-row .v { color: var(--ink-dim); }
+
+.bp-col .spec-row .v code {
+    font-family: var(--font-mono);
+    color: var(--col-accent, var(--ink));
+    background: rgba(235, 230, 220, 0.05);
+    padding: 0.06em 0.4em;
+    border-radius: 3px;
+    font-size: 0.92em;
+}
+
+.bp-note {
+    grid-column: 1 / -1;
+    padding: clamp(0.7rem, 1vw, 0.9rem) clamp(0.9rem, 1.3vw, 1.1rem);
+    border: 1px solid var(--line);
+    border-radius: var(--panel-radius);
+    background: linear-gradient(135deg, var(--violet-dim), var(--amber-dim));
+    font-size: clamp(0.96rem, 1.15vw, 1.1rem);
+    color: var(--ink);
+    line-height: 1.5;
+}
+
+.bp-note strong {
+    font-family: var(--font-mono);
+    font-size: 0.82em;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--amber);
+    display: block;
+    margin-bottom: 0.25em;
+}
+
+/* ===========================================
+   PROPOSAL SLIDE — hero + commands
+   =========================================== */
+.prop-wrap {
+    flex: 1;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: clamp(1rem, 1.6vw, 1.4rem);
+    min-height: 0;
+}
+
+.prop-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(1rem, 2vw, 1.8rem);
+    align-items: end;
+}
+
+.prop-thesis {
+    padding: clamp(0.8rem, 1.3vw, 1.1rem);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--amber);
+    border-radius: var(--panel-radius);
+    background: var(--surface);
+}
+
+.prop-thesis .label {
+    font-family: var(--font-mono);
+    font-size: clamp(0.68rem, 0.78vw, 0.76rem);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 0.4em;
+}
+
+.prop-thesis p {
+    font-size: clamp(1rem, 1.2vw, 1.15rem);
+    line-height: 1.5;
+    color: var(--ink-dim);
+}
+
+.prop-thesis p em {
+    font-style: normal;
+    color: var(--amber);
+    font-weight: 500;
+}
+
+.cmd-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(0.8rem, 1.4vw, 1.2rem);
+    min-height: 0;
+}
+
+.cmd {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.45rem, 0.8vw, 0.65rem);
+    padding: clamp(1rem, 1.5vw, 1.3rem);
+    border: 1px solid var(--line);
+    border-radius: var(--panel-radius);
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.cmd::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--cmd-accent, var(--amber));
+    box-shadow: 0 0 16px var(--cmd-accent, var(--amber));
+}
+
+.cmd.gen    { --cmd-accent: var(--teal); }
+.cmd.review { --cmd-accent: var(--rose); }
+
+.cmd-head {
+    display: flex;
+    align-items: baseline;
+    gap: clamp(0.55rem, 1vw, 0.85rem);
+}
+
+.cmd-head .n {
+    font-family: var(--font-mono);
+    font-size: clamp(0.72rem, 0.85vw, 0.82rem);
+    color: var(--cmd-accent, var(--amber));
+    letter-spacing: 0.1em;
+}
+
+.cmd-head .name {
+    font-family: var(--font-display);
+    font-weight: 460;
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+    font-size: clamp(1.1rem, 1.6vw, 1.5rem);
+    color: var(--ink);
+    line-height: 1;
+    letter-spacing: -0.01em;
+}
+
+.cmd-code {
+    font-family: var(--font-mono);
+    font-size: clamp(0.82rem, 1vw, 0.98rem);
+    color: var(--cmd-accent, var(--amber));
+    background: rgba(11, 12, 14, 0.5);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: clamp(0.35rem, 0.55vw, 0.5rem) clamp(0.55rem, 0.85vw, 0.75rem);
+    align-self: flex-start;
+}
+
+.cmd-code::before {
+    content: "$ ";
+    color: var(--muted);
+}
+
+.cmd-io {
+    display: grid;
+    grid-template-columns: clamp(2.4rem, 3.6vw, 3.2rem) minmax(0, 1fr);
+    gap: clamp(0.5rem, 0.8vw, 0.7rem);
+    align-items: baseline;
+    font-size: clamp(0.95rem, 1.12vw, 1.08rem);
+    line-height: 1.45;
+}
+
+.cmd-io .k {
+    font-family: var(--font-mono);
+    font-size: clamp(0.64rem, 0.75vw, 0.72rem);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-top: 0.1em;
+}
+
+.cmd-io .v { color: var(--ink-dim); }
+
+/* ===========================================
+   PIPELINE SLIDE — 4-stage tick
+   =========================================== */
+.pipe-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1rem, 1.8vw, 1.6rem);
+    min-height: 0;
+}
+
+.pipe-track {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(0.5rem, 1vw, 0.9rem);
+    min-height: 0;
+    position: relative;
+}
+
+.pipe-stage {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 0.9vw, 0.75rem);
+    padding: clamp(1rem, 1.5vw, 1.3rem);
+    border: 1px solid var(--line);
+    border-radius: var(--panel-radius);
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.pipe-stage::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--stage-accent, var(--amber)) 0%, transparent 100%);
+}
+
+.pipe-stage.s1 { --stage-accent: var(--teal); }
+.pipe-stage.s2 { --stage-accent: var(--amber); }
+.pipe-stage.s3 { --stage-accent: var(--rose); }
+.pipe-stage.s4 { --stage-accent: var(--lime); }
+
+.pipe-stage .n {
+    font-family: var(--font-mono);
+    font-size: clamp(0.68rem, 0.82vw, 0.8rem);
+    color: var(--stage-accent, var(--amber));
+    letter-spacing: 0.2em;
+    font-weight: 600;
+}
+
+.pipe-stage .name {
+    font-family: var(--font-display);
+    font-weight: 440;
+    font-size: clamp(1.1rem, 1.5vw, 1.4rem);
+    line-height: 1;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+}
+
+.pipe-stage .detail {
+    font-size: clamp(0.82rem, 0.95vw, 0.92rem);
+    line-height: 1.4;
+    color: var(--ink-dim);
+}
+
+.pipe-stage .tool {
+    margin-top: auto;
+    font-family: var(--font-mono);
+    font-size: clamp(0.66rem, 0.78vw, 0.74rem);
+    color: var(--stage-accent, var(--amber));
+    letter-spacing: 0.06em;
+    padding-top: clamp(0.4rem, 0.7vw, 0.6rem);
+    border-top: 1px dashed var(--line);
+}
+
+.pipe-arrow {
+    position: absolute;
+    top: 50%;
+    right: -14px;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 10px;
+    pointer-events: none;
+    opacity: 0.5;
+    z-index: 2;
+}
+
+.pipe-stage:last-child .pipe-arrow { display: none; }
+
+.pipe-legend {
+    display: flex;
+    justify-content: space-between;
+    gap: clamp(1rem, 2vw, 2rem);
+    padding: clamp(0.7rem, 1vw, 0.9rem) clamp(0.9rem, 1.3vw, 1.1rem);
+    border: 1px solid var(--line);
+    border-radius: var(--panel-radius);
+    background: var(--surface);
+    font-family: var(--font-mono);
+    font-size: clamp(0.68rem, 0.8vw, 0.76rem);
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.pipe-legend strong {
+    color: var(--ink);
+    font-weight: 500;
+}
+
+/* ===========================================
+   FLOW FRAME — embedded flowchart SVG
+   =========================================== */
+.flow-frame {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(0.7rem, 1.1vw, 1rem);
+    border: 1px solid var(--line);
+    border-radius: var(--panel-radius);
+    background: var(--surface);
+    overflow: hidden;
+    position: relative;
+}
+
+.flow-frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 8% 10%, var(--teal-dim), transparent 40%);
+    opacity: 0.5;
+}
+
+.flow-svg {
+    width: 100%;
+    height: auto;
+    max-height: min(86vh, 880px);
+    position: relative;
+    z-index: 1;
+}
+
+/* ===========================================
+   METRICS SLIDE — two scoring families
+   =========================================== */
+.metric-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1rem, 1.6vw, 1.4rem);
+    min-height: 0;
+}
+
+.metric {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 0.9vw, 0.75rem);
+    padding: clamp(1.2rem, 1.8vw, 1.6rem);
+    border: 1px solid var(--line);
+    border-radius: var(--panel-radius);
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.metric::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 100% 0%, var(--m-accent-dim, var(--teal-dim)) 0%, transparent 45%);
+}
+
+.metric.calibration { --m-accent: var(--teal); --m-accent-dim: var(--teal-dim); }
+.metric.market { --m-accent: var(--rose); --m-accent-dim: var(--rose-dim); }
+
+.metric .m-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.metric .m-label {
+    font-family: var(--font-mono);
+    font-size: clamp(0.68rem, 0.8vw, 0.76rem);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--m-accent, var(--teal));
+}
+
+.metric .m-analog {
+    font-family: var(--font-mono);
+    font-size: clamp(0.62rem, 0.72vw, 0.7rem);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.metric h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+    font-size: clamp(1.3rem, 2vw, 1.9rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    position: relative;
+    z-index: 1;
+}
+
+.metric h3 em {
+    font-style: italic;
+    color: var(--m-accent, var(--teal));
+    font-variation-settings: "opsz" 144, "SOFT" 90;
+}
+
+.metric .m-def {
+    font-size: clamp(0.9rem, 1.05vw, 1rem);
+    line-height: 1.45;
+    color: var(--ink-dim);
+    position: relative;
+    z-index: 1;
+}
+
+.metric .m-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.28rem, 0.5vw, 0.4rem);
+    margin-top: auto;
+    padding-top: clamp(0.5rem, 0.9vw, 0.75rem);
+    border-top: 1px dashed var(--line);
+    position: relative;
+    z-index: 1;
+}
+
+.metric .m-list li {
+    display: grid;
+    grid-template-columns: clamp(1.2rem, 1.6vw, 1.5rem) minmax(0, 1fr);
+    gap: clamp(0.4rem, 0.6vw, 0.55rem);
+    align-items: baseline;
+    font-size: clamp(0.86rem, 1vw, 0.96rem);
+    line-height: 1.4;
+    color: var(--ink-dim);
+}
+
+.metric .m-list li::before {
+    content: "·";
+    color: var(--m-accent, var(--teal));
+    font-family: var(--font-mono);
+    font-size: 1.5em;
+    line-height: 0.8;
+}
+
+.metric .m-list b {
+    color: var(--ink);
+    font-weight: 500;
+}
+
+/* ===========================================
+   ASK SLIDE — three deliverables + thesis
+   =========================================== */
+.ask-wrap {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(1rem, 2vw, 1.8rem);
+    min-height: 0;
+}
+
+.ask-copy {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.8rem, 1.4vw, 1.2rem);
+    min-height: 0;
+}
+
+.ask-head {
+    font-family: var(--font-display);
+    font-weight: 380;
+    font-size: clamp(2rem, 4.2vw, 3.4rem);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+}
+
+.ask-head em {
+    font-style: italic;
+    color: var(--amber);
+    font-variation-settings: "opsz" 144, "SOFT" 90;
+}
+
+.ask-thesis {
+    padding: clamp(1rem, 1.5vw, 1.3rem);
+    border: 1px solid var(--line);
+    border-radius: var(--panel-radius);
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+}
+
+.ask-thesis::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--amber-dim), transparent 60%);
+    pointer-events: none;
+}
+
+.ask-thesis p {
+    position: relative;
+    font-family: var(--font-display);
+    font-weight: 380;
+    font-size: clamp(1rem, 1.3vw, 1.2rem);
+    line-height: 1.4;
+    color: var(--ink);
+    font-variation-settings: "opsz" 120, "SOFT" 50;
+    font-style: italic;
+}
+
+.ask-thesis p b {
+    color: var(--amber);
+    font-weight: 500;
+    font-style: normal;
+}
+
+.ask-list {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.7rem, 1vw, 0.85rem);
+    min-height: 0;
+}
+
+.ask-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(0.9rem, 1.4vw, 1.2rem);
+    padding: clamp(0.9rem, 1.3vw, 1.15rem);
+    border: 1px solid var(--line);
+    border-radius: var(--panel-radius);
+    background: var(--surface);
+    align-items: start;
+}
+
+.ask-item.a1 { border-left: 3px solid var(--teal); }
+.ask-item.a2 { border-left: 3px solid var(--amber); }
+.ask-item.a3 { border-left: 3px solid var(--rose); }
+
+.ask-item .n {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 90;
+    font-size: clamp(2rem, 3vw, 2.7rem);
+    line-height: 0.85;
+    color: var(--ask-accent, var(--amber));
+    padding-top: 0.05em;
+}
+
+.ask-item.a1 .n { color: var(--teal); }
+.ask-item.a2 .n { color: var(--amber); }
+.ask-item.a3 .n { color: var(--rose); }
+
+.ask-item h4 {
+    font-family: var(--font-display);
+    font-weight: 440;
+    font-size: clamp(1rem, 1.25vw, 1.2rem);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 0.25em;
+    font-variation-settings: "opsz" 120, "SOFT" 30;
+}
+
+.ask-item p {
+    font-size: clamp(0.84rem, 0.98vw, 0.94rem);
+    line-height: 1.42;
+    color: var(--ink-dim);
+}
+
+.ask-item p code {
+    font-family: var(--font-mono);
+    font-size: 0.92em;
+    color: var(--ink);
+    background: rgba(235, 230, 220, 0.06);
+    padding: 0.06em 0.38em;
+    border-radius: 3px;
+}
+
+/* ===========================================
+   REVEAL ANIMATION
+   =========================================== */
+.reveal {
+    opacity: 0;
+    transform: translateY(clamp(0.5rem, 0.9vw, 0.8rem));
+    transition:
+        opacity var(--dur) var(--ease-out-expo),
+        transform var(--dur) var(--ease-out-expo);
+}
+
+.slide.visible .reveal {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-1 { transition-delay: 0.06s; }
+.reveal-2 { transition-delay: 0.14s; }
+.reveal-3 { transition-delay: 0.22s; }
+.reveal-4 { transition-delay: 0.3s; }
+.reveal-5 { transition-delay: 0.38s; }
+.reveal-6 { transition-delay: 0.46s; }
+.reveal-7 { transition-delay: 0.54s; }
+
+/* ===========================================
+   RESPONSIVE — viewport guards
+   =========================================== */
+@media (max-height: 720px) {
+    :root { --slide-padding: clamp(1rem, 2.6vw, 2.4rem); }
+}
+@media (max-height: 620px) {
+    :root { --slide-padding: clamp(0.7rem, 2vw, 1.6rem); }
+    .keyboard-hint, .nav-dots { display: none; }
+}
+@media (max-width: 960px) {
+    .cover-main, .evidence-grid, .climate-head, .prop-head, .ask-wrap {
+        grid-template-columns: 1fr;
+    }
+    .bp-grid, .cmd-grid, .metric-grid { grid-template-columns: 1fr; }
+    .protocol-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; }
+    .pipe-track { grid-template-columns: 1fr; }
+    .pipe-arrow { display: none; }
+}
+@media (max-width: 640px) {
+    .protocol-grid { grid-template-columns: 1fr; }
+    .masthead { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+    }
+    html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- CHROME -->
+<div class="progress-shell" aria-hidden="true"><div class="progress-bar"></div></div>
+<nav class="nav-dots" aria-label="Slide navigation"></nav>
+<div class="keyboard-hint"><kbd>←</kbd> <kbd>→</kbd> nav · <kbd>1</kbd>–<kbd>6</kbd> jump</div>
+
+<!-- ===========================================
+     SLIDE 1 · COVER
+     =========================================== -->
+<section class="slide slide-amber">
+  <div class="slide-content">
+    <div class="cover-main">
+      <div class="cover-copy">
+        <span class="kicker reveal reveal-1"><span class="dot"></span>VIS × GenAI Workshop</span>
+        <div class="cover-wordmark">
+          <span class="cover-line reveal reveal-2">VIS</span>
+          <span class="cover-line reveal reveal-3"><em>Arena</em>.</span>
+        </div>
+        <p class="cover-tagline reveal reveal-4">A live arena for data storytelling. Every submission both <em>generates</em> reports and <em>reviews</em> peers.</p>
+      </div>
+
+      <aside class="cover-motif reveal reveal-5" aria-hidden="true">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Four agent nodes in a ring, fully connected (cross-review graph) -->
+          <defs>
+            <radialGradient id="nodeG" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#e89142" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#e89142" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <!-- edges -->
+          <g stroke="#5bd5c2" stroke-width="0.6" opacity="0.45" fill="none">
+            <line x1="40" y1="55" x2="160" y2="55"/>
+            <line x1="40" y1="55" x2="40" y2="145"/>
+            <line x1="40" y1="55" x2="160" y2="145"/>
+            <line x1="160" y1="55" x2="40" y2="145"/>
+            <line x1="160" y1="55" x2="160" y2="145"/>
+            <line x1="40" y1="145" x2="160" y2="145"/>
+          </g>
+          <!-- nodes -->
+          <g>
+            <circle cx="40" cy="55" r="18" fill="url(#nodeG)"/>
+            <circle cx="40" cy="55" r="5.5" fill="#e89142"/>
+            <circle cx="160" cy="55" r="18" fill="url(#nodeG)"/>
+            <circle cx="160" cy="55" r="5.5" fill="#5bd5c2"/>
+            <circle cx="40" cy="145" r="18" fill="url(#nodeG)"/>
+            <circle cx="40" cy="145" r="5.5" fill="#f06b5e"/>
+            <circle cx="160" cy="145" r="18" fill="url(#nodeG)"/>
+            <circle cx="160" cy="145" r="5.5" fill="#a78bfa"/>
+          </g>
+          <!-- center label -->
+          <text x="100" y="96" text-anchor="middle" fill="#7a7368" font-family="'JetBrains Mono',monospace" font-size="6.5" letter-spacing="2">N × N</text>
+          <text x="100" y="110" text-anchor="middle" fill="#ebe6dc" font-family="'Fraunces',serif" font-size="10.5" font-style="italic" font-weight="450">cross-review</text>
+          <!-- agent labels -->
+          <text x="40" y="33" text-anchor="middle" fill="#7a7368" font-family="'JetBrains Mono',monospace" font-size="5.5" letter-spacing="1.4">AGENT·A</text>
+          <text x="160" y="33" text-anchor="middle" fill="#7a7368" font-family="'JetBrains Mono',monospace" font-size="5.5" letter-spacing="1.4">AGENT·B</text>
+          <text x="40" y="176" text-anchor="middle" fill="#7a7368" font-family="'JetBrains Mono',monospace" font-size="5.5" letter-spacing="1.4">AGENT·C</text>
+          <text x="160" y="176" text-anchor="middle" fill="#7a7368" font-family="'JetBrains Mono',monospace" font-size="5.5" letter-spacing="1.4">AGENT·D</text>
+        </svg>
+      </aside>
+    </div>
+
+    <div class="cover-footer reveal reveal-6">
+      <span>Agentic visualization · 2026</span>
+      <span>01 / 06</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 2 · EVIDENCE / 2025 CHALLENGE
+     =========================================== -->
+<section class="slide slide-rose">
+  <div class="slide-content">
+    <div class="masthead reveal reveal-1">
+      <span class="slug"><span class="mark">VIS Arena</span> · Evidence</span>
+      <span class="counter">02 <strong>/</strong> 06</span>
+    </div>
+
+    <div class="evidence-grid">
+      <figure class="evidence-figure">
+        <div class="evidence-frame reveal reveal-2">
+          <img src="./img/challenge-2025.png" alt="Agentic VIS Challenge 2025 — grid of participant submissions, each a PDF or HTML report.">
+        </div>
+        <figcaption class="evidence-caption reveal reveal-3">Fig. 01 — 2025 Challenge submissions · agentic-vis-challenge.org/2025</figcaption>
+      </figure>
+
+      <div class="evidence-copy">
+        <span class="kicker reveal reveal-2" style="--kicker-dot: var(--rose);"><span class="dot"></span>2025 challenge · what worked, what didn't</span>
+        <h1 class="title reveal reveal-3" style="--accent: var(--rose);">Pending <em>todos.</em></h1>
+        <p class="lede reveal reveal-4">Agents submitted reports on a fixed dataset. Humans reviewed. A year of running it surfaced three constraints.</p>
+
+        <ul class="seam-list reveal reveal-5">
+          <li class="seam" style="--seam-accent: var(--rose);">
+            <span class="n">01</span>
+            <div class="body">
+              <h4>Manual review doesn't scale</h4>
+              <p>Reviewer hours gate every iteration — the bottleneck is humans downstream, not the agents.</p>
+            </div>
+          </li>
+          <li class="seam" style="--seam-accent: var(--amber);">
+            <span class="n">02</span>
+            <div class="body">
+              <h4>Datasets stay narrow</h4>
+              <p>One fixed dataset privileges agents tuned to its shape. Generalization goes untested.</p>
+            </div>
+          </li>
+          <li class="seam" style="--seam-accent: var(--violet);">
+            <span class="n">03</span>
+            <div class="body">
+              <h4>Rubrics drift</h4>
+              <p>"What makes a good report?" is genuinely open. Implicit standards diverge; scores don't compose.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 3 · CLIMATE / FOR-AGENTS SHIFT
+     =========================================== -->
+<section class="slide slide-teal">
+  <div class="slide-content">
+    <div class="masthead reveal reveal-1">
+      <span class="slug"><span class="mark">VIS Arena</span> · Climate</span>
+      <span class="counter">03 <strong>/</strong> 06</span>
+    </div>
+
+    <div class="climate-wrap">
+      <div>
+        <span class="kicker reveal reveal-2" style="--kicker-dot: var(--teal);"><span class="dot"></span>2026 · why this is solvable now</span>
+        <h1 class="title reveal reveal-3" style="--accent: var(--teal); margin-top: 0.5em;">Built for <em>agents.</em></h1>
+        <p class="lede reveal reveal-4" style="margin-top: 0.6em; max-width: 72ch;">Live benchmarks — <b style="color: var(--teal);">Prophet Arena</b>, <b style="color: var(--teal);">LMSYS</b>, <b style="color: var(--teal);">Agent Arena</b> — are the agent-first rebuild of the evaluation layer. VIS Arena applies the same move to data storytelling. Twelve primitives make this possible:</p>
+      </div>
+
+      <div class="protocol-grid reveal reveal-5">
+        <div class="protocol" style="--proto-accent: var(--teal);">
+          <span class="code">MCP</span>
+          <span class="name">Model Context Protocol</span>
+        </div>
+        <div class="protocol" style="--proto-accent: var(--amber);">
+          <span class="code">A2A</span>
+          <span class="name">Agent-to-Agent</span>
+        </div>
+        <div class="protocol" style="--proto-accent: var(--rose);">
+          <span class="code">ACP · AP2</span>
+          <span class="name">Agent payments</span>
+        </div>
+        <div class="protocol" style="--proto-accent: var(--violet);">
+          <span class="code">x402</span>
+          <span class="name">Pay-per-call</span>
+        </div>
+        <div class="protocol" style="--proto-accent: var(--lime);">
+          <span class="code">WebMCP</span>
+          <span class="name">Capability-first web</span>
+        </div>
+        <div class="protocol" style="--proto-accent: var(--teal);">
+          <span class="code">llms.txt</span>
+          <span class="name">Site manifests</span>
+        </div>
+        <div class="protocol" style="--proto-accent: var(--amber);">
+          <span class="code">Harness</span>
+          <span class="name">Eval + sandboxing</span>
+        </div>
+        <div class="protocol" style="--proto-accent: var(--rose);">
+          <span class="code">Memory</span>
+          <span class="name">Persistent context</span>
+        </div>
+        <div class="protocol" style="--proto-accent: var(--violet);">
+          <span class="code">Tools</span>
+          <span class="name">Typed callable skills</span>
+        </div>
+        <div class="protocol" style="--proto-accent: var(--lime);">
+          <span class="code">API</span>
+          <span class="name">Programmatic surfaces</span>
+        </div>
+        <div class="protocol" style="--proto-accent: var(--teal);">
+          <span class="code">CLI</span>
+          <span class="name">Agent-invocable</span>
+        </div>
+        <div class="protocol" style="--proto-accent: var(--amber);">
+          <span class="code">SDKs</span>
+          <span class="name">Agent frameworks</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 4 · BLUEPRINT / PROPHET ARENA
+     =========================================== -->
+<section class="slide slide-violet">
+  <div class="slide-content">
+    <div class="masthead reveal reveal-1">
+      <span class="slug"><span class="mark">VIS Arena</span> · Blueprint</span>
+      <span class="counter">04 <strong>/</strong> 06</span>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap: clamp(0.8rem, 1.4vw, 1.2rem); margin-bottom: clamp(0.8rem, 1.4vw, 1.2rem);">
+      <span class="kicker reveal reveal-2" style="--kicker-dot: var(--violet);"><span class="dot"></span>Sibling benchmark · UChicago × Kalshi</span>
+      <h1 class="title reveal reveal-3" style="--accent: var(--violet); max-width: 30ch;">Borrow the <em>pattern.</em></h1>
+    </div>
+
+    <div class="bp-grid">
+      <div class="bp-col source reveal reveal-4">
+        <span class="label">Prophet Arena</span>
+        <h3>Forecasting live <em>events</em>.</h3>
+        <span class="tag-line">Calibrated probabilities · real markets</span>
+        <div class="spec">
+          <div class="spec-row"><span class="k">Task</span><span class="v">Predict live prediction-market outcomes</span></div>
+          <div class="spec-row"><span class="k">Ground truth</span><span class="v">Kalshi / Polymarket resolution</span></div>
+          <div class="spec-row"><span class="k">Two boards</span><span class="v"><code>/leaderboard</code> · <code>/agent-leaderboard</code></span></div>
+          <div class="spec-row"><span class="k">Metrics</span><span class="v">Brier score · Average Return</span></div>
+          <div class="spec-row"><span class="k">Submission</span><span class="v"><code>prophet forecast submit</code></span></div>
+        </div>
+      </div>
+
+      <div class="bp-col sink reveal reveal-5">
+        <span class="label">VIS Arena</span>
+        <h3>Reviewing data <em>reports</em>.</h3>
+        <span class="tag-line">Streaming datasets · peer review</span>
+        <div class="spec">
+          <div class="spec-row"><span class="k">Task</span><span class="v">Generate an interactive report on a streaming dataset</span></div>
+          <div class="spec-row"><span class="k">Ground truth</span><span class="v">Archived bundles + deferred human preference</span></div>
+          <div class="spec-row"><span class="k">Two boards</span><span class="v">Constrained harness · Open harness</span></div>
+          <div class="spec-row"><span class="k">Metrics</span><span class="v">Faithfulness · Reader-utility · Consensus</span></div>
+          <div class="spec-row"><span class="k">Submission</span><span class="v"><code>vis-arena generate</code> + <code>review</code></span></div>
+        </div>
+      </div>
+
+      <div class="bp-note reveal reveal-6">
+        <strong>The novel move</strong>
+        Prophet gives every model the same context to isolate retrieval. We go further — <b>every agent both generates reports and reviews peers</b>. Review behavior becomes an observable signal.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 5 · PROPOSAL
+     =========================================== -->
+<section class="slide slide-amber">
+  <div class="slide-content">
+    <div class="masthead reveal reveal-1">
+      <span class="slug"><span class="mark">VIS Arena</span> · Proposal</span>
+      <span class="counter">05 <strong>/</strong> 06</span>
+    </div>
+
+    <div class="prop-wrap">
+      <div class="prop-head" style="grid-template-columns: 1fr;">
+        <div>
+          <span class="kicker reveal reveal-2"><span class="dot"></span>Submission format</span>
+          <h1 class="title reveal reveal-3" style="margin-top: 0.5em; max-width: 20ch;">One submission. <em>Two modes.</em></h1>
+        </div>
+      </div>
+
+      <div class="cmd-grid">
+        <article class="cmd gen reveal reveal-5">
+          <div class="cmd-head">
+            <span class="n">Mode 01</span>
+            <span class="name">Generate</span>
+          </div>
+          <code class="cmd-code">vis-arena generate --dataset &lt;slug&gt;</code>
+          <div class="cmd-io"><span class="k">In</span><span class="v">Streaming dataset + task prompt.</span></div>
+          <div class="cmd-io"><span class="k">Out</span><span class="v">An <b style="color: var(--teal);">interactive HTML report</b>.</span></div>
+          <div class="cmd-io"><span class="k">Role</span><span class="v">Produce a report and declare what it sees.</span></div>
+        </article>
+
+        <article class="cmd review reveal reveal-6">
+          <div class="cmd-head">
+            <span class="n">Mode 02</span>
+            <span class="name">Review</span>
+          </div>
+          <code class="cmd-code">vis-arena review --bundle &lt;peer&gt;</code>
+          <div class="cmd-io"><span class="k">In</span><span class="v">A peer's report bundle.</span></div>
+          <div class="cmd-io"><span class="k">Out</span><span class="v">Structured critique along the agent's <b style="color: var(--rose);">own dimensions</b>, with rationale anchored to regions of the report.</span></div>
+          <div class="cmd-io"><span class="k">Role</span><span class="v">Score peers and explain every score.</span></div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 6 · PIPELINE / TICK
+     =========================================== -->
+<section class="slide slide-teal" style="--slide-padding: clamp(0.8rem, 2vw, 2rem);">
+  <div class="slide-content">
+    <div class="masthead reveal reveal-1">
+      <span class="slug"><span class="mark">VIS Arena</span> · Flow</span>
+      <span class="counter">06 <strong>/</strong> 06</span>
+    </div>
+
+    <div class="pipe-wrap" style="gap: clamp(0.4rem, 0.8vw, 0.8rem);">
+      <div style="display: flex; align-items: baseline; gap: clamp(0.8rem, 1.6vw, 1.4rem); flex-wrap: wrap;">
+        <h1 class="title reveal reveal-2" style="--accent: var(--teal); font-size: clamp(1.4rem, 2.6vw, 2.2rem); line-height: 1; max-width: none;">Arena <em>infra.</em></h1>
+        <span class="kicker reveal reveal-3" style="--kicker-dot: var(--teal);"><span class="dot"></span>Submissions in · ranked reports out</span>
+      </div>
+
+      <div class="flow-frame reveal reveal-4">
+        <svg class="flow-svg" viewBox="0 0 800 510" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="VIS Arena flow: submissions to arena pipeline to public showcase, with a separate human-feedback loop below.">
+
+          <!-- Column headers -->
+          <text x="88" y="18" font-family="'JetBrains Mono',monospace" font-size="9" fill="#7a7368" text-anchor="middle" font-weight="600" letter-spacing="2">SUBMISSIONS</text>
+          <text x="310" y="18" font-family="'JetBrains Mono',monospace" font-size="9" fill="#7a7368" text-anchor="middle" font-weight="600" letter-spacing="2">ARENA PIPELINE</text>
+          <text x="625" y="18" font-family="'JetBrains Mono',monospace" font-size="9" fill="#7a7368" text-anchor="middle" font-weight="600" letter-spacing="2">PUBLIC SHOWCASE</text>
+
+          <!-- Agent A · teal -->
+          <rect x="14" y="30" width="148" height="46" rx="4" fill="#1c1f25" stroke="rgba(235,230,220,0.1)" stroke-width="1"/>
+          <circle cx="34" cy="53" r="10" fill="#5bd5c2" opacity="0.22"/>
+          <text x="34" y="57" font-size="10" fill="#5bd5c2" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">A</text>
+          <text x="110" y="57" font-size="10.5" fill="#ebe6dc" text-anchor="middle" font-weight="500">Agent A</text>
+
+          <!-- Agent B · amber -->
+          <rect x="14" y="86" width="148" height="46" rx="4" fill="#1c1f25" stroke="rgba(235,230,220,0.1)" stroke-width="1"/>
+          <circle cx="34" cy="109" r="10" fill="#e89142" opacity="0.22"/>
+          <text x="34" y="113" font-size="10" fill="#e89142" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">B</text>
+          <text x="110" y="113" font-size="10.5" fill="#ebe6dc" text-anchor="middle" font-weight="500">Agent B</text>
+
+          <!-- Agent C · rose -->
+          <rect x="14" y="142" width="148" height="46" rx="4" fill="#1c1f25" stroke="rgba(235,230,220,0.1)" stroke-width="1"/>
+          <circle cx="34" cy="165" r="10" fill="#f06b5e" opacity="0.22"/>
+          <text x="34" y="169" font-size="10" fill="#f06b5e" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">C</text>
+          <text x="110" y="169" font-size="10.5" fill="#ebe6dc" text-anchor="middle" font-weight="500">Agent C</text>
+
+          <!-- Agent D · violet -->
+          <rect x="14" y="198" width="148" height="46" rx="4" fill="#1c1f25" stroke="rgba(235,230,220,0.1)" stroke-width="1"/>
+          <circle cx="34" cy="221" r="10" fill="#a78bfa" opacity="0.22"/>
+          <text x="34" y="225" font-size="10" fill="#a78bfa" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">D</text>
+          <text x="110" y="225" font-size="10.5" fill="#ebe6dc" text-anchor="middle" font-weight="500">Agent D</text>
+
+          <!-- Open submissions indicator -->
+          <text x="88" y="268" font-size="12" fill="#7a7368" text-anchor="middle">· · ·</text>
+          <text x="88" y="284" font-size="8" fill="#7a7368" text-anchor="middle" font-style="italic" font-family="'Fraunces',serif">open submissions</text>
+
+          <!-- Arrows agent → arena -->
+          <line x1="162" y1="53" x2="214" y2="134" stroke="#5bd5c2" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#mTeal)"/>
+          <line x1="162" y1="109" x2="214" y2="142" stroke="#e89142" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#mAmber)"/>
+          <line x1="162" y1="165" x2="214" y2="152" stroke="#f06b5e" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#mRose)"/>
+          <line x1="162" y1="221" x2="214" y2="162" stroke="#a78bfa" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#mViolet)"/>
+
+          <!-- Arena box -->
+          <rect x="212" y="54" width="196" height="326" rx="6" fill="rgba(91,213,194,0.04)" stroke="#5bd5c2" stroke-width="1.6"/>
+          <text x="310" y="74" font-size="10" fill="#5bd5c2" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace" letter-spacing="1.4">VIS ARENA</text>
+          <line x1="228" y1="82" x2="392" y2="82" stroke="#5bd5c2" stroke-width="0.5" opacity="0.35"/>
+
+          <!-- Dataset chip -->
+          <rect x="232" y="92" width="156" height="22" rx="4" fill="rgba(91,213,194,0.14)"/>
+          <text x="310" y="107" font-size="9" fill="#5bd5c2" text-anchor="middle" font-weight="500">Streaming dataset</text>
+
+          <!-- Step 1 -->
+          <rect x="228" y="124" width="164" height="50" rx="5" fill="#1c1f25" stroke="rgba(235,230,220,0.09)" stroke-width="1"/>
+          <text x="310" y="142" font-size="9" fill="#ebe6dc" text-anchor="middle" font-weight="600">① Agents generate</text>
+          <text x="310" y="156" font-size="8" fill="#7a7368" text-anchor="middle">interactive report</text>
+          <text x="310" y="168" font-size="8" fill="#7a7368" text-anchor="middle">+ insights manifest</text>
+
+          <line x1="310" y1="174" x2="310" y2="186" stroke="#7a7368" stroke-width="1" marker-end="url(#mDim)"/>
+
+          <!-- Step 2 -->
+          <rect x="228" y="186" width="164" height="50" rx="5" fill="#1c1f25" stroke="rgba(235,230,220,0.09)" stroke-width="1"/>
+          <text x="310" y="204" font-size="9" fill="#ebe6dc" text-anchor="middle" font-weight="600">② Cross-review</text>
+          <text x="310" y="218" font-size="8" fill="#7a7368" text-anchor="middle">every agent reviews</text>
+          <text x="310" y="230" font-size="8" fill="#7a7368" text-anchor="middle">every peer</text>
+
+          <line x1="310" y1="236" x2="310" y2="248" stroke="#7a7368" stroke-width="1" marker-end="url(#mDim)"/>
+
+          <!-- Step 3 (highlight) -->
+          <rect x="228" y="248" width="164" height="46" rx="5" fill="rgba(91,213,194,0.14)" stroke="#5bd5c2" stroke-width="1"/>
+          <text x="310" y="268" font-size="9" fill="#5bd5c2" text-anchor="middle" font-weight="700">③ Consensus ranking</text>
+          <text x="310" y="282" font-size="8" fill="#5bd5c2" text-anchor="middle" opacity="0.8">column means · audit trail</text>
+
+          <!-- Output arrow to showcase -->
+          <line x1="392" y1="270" x2="460" y2="180" stroke="#e89142" stroke-width="1.4" marker-end="url(#mAmber)"/>
+
+          <!-- Showcase panel (top-right · Gallery + Leaderboard only) -->
+          <rect x="462" y="54" width="326" height="236" rx="6" fill="rgba(232,145,66,0.04)" stroke="#e89142" stroke-width="1.6"/>
+          <rect x="462" y="54" width="326" height="28" rx="6" fill="#e89142"/>
+          <text x="625" y="73" font-size="10" fill="#0b0c0e" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace" letter-spacing="1.4">SHOWCASE STAGE</text>
+
+          <!-- · · · SECTION A · PUBLIC GALLERY · · · -->
+          <text x="478" y="102" font-size="7.5" fill="#e89142" font-family="'JetBrains Mono',monospace" font-weight="700" letter-spacing="2" opacity="0.75">PUBLIC GALLERY</text>
+          <text x="478" y="120" font-size="9.5" fill="#ebe6dc" font-weight="500">People browse ranked reports</text>
+          <text x="478" y="134" font-size="8" fill="#7a7368">upvote · annotate · tune the rubric</text>
+
+          <!-- · · · Ranked report thumbnails · · · -->
+
+          <!-- Report card 1 · Agent A · #1 (teal) -->
+          <rect x="486" y="142" width="62" height="32" rx="2.5" fill="#1c1f25" stroke="rgba(232,145,66,0.25)" stroke-width="0.6"/>
+          <rect x="486" y="142" width="62" height="2.5" fill="#5bd5c2"/>
+          <rect x="490" y="149" width="30" height="1.5" fill="#7a7368" opacity="0.75"/>
+          <rect x="490" y="153" width="20" height="1.2" fill="#7a7368" opacity="0.45"/>
+          <rect x="490" y="164" width="2" height="6" fill="#5bd5c2" opacity="0.7"/>
+          <rect x="494" y="162" width="2" height="8" fill="#5bd5c2" opacity="0.75"/>
+          <rect x="498" y="159" width="2" height="11" fill="#5bd5c2" opacity="0.9"/>
+          <rect x="502" y="164" width="2" height="6" fill="#5bd5c2" opacity="0.7"/>
+          <rect x="506" y="157" width="2" height="13" fill="#5bd5c2" opacity="0.95"/>
+          <rect x="510" y="161" width="2" height="9" fill="#5bd5c2" opacity="0.8"/>
+          <rect x="514" y="163" width="2" height="7" fill="#5bd5c2" opacity="0.7"/>
+          <circle cx="540" cy="151" r="5.5" fill="#5bd5c2" opacity="0.2"/>
+          <text x="540" y="153" font-size="6" fill="#5bd5c2" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">#1</text>
+          <text x="544" y="171" font-size="5.5" fill="#5bd5c2" text-anchor="end" font-weight="700" font-family="'JetBrains Mono',monospace">A</text>
+
+          <!-- Report card 2 · Agent B · #2 (amber) -->
+          <rect x="554" y="142" width="62" height="32" rx="2.5" fill="#1c1f25" stroke="rgba(232,145,66,0.25)" stroke-width="0.6"/>
+          <rect x="554" y="142" width="62" height="2.5" fill="#e89142"/>
+          <rect x="558" y="149" width="26" height="1.5" fill="#7a7368" opacity="0.75"/>
+          <rect x="558" y="153" width="16" height="1.2" fill="#7a7368" opacity="0.45"/>
+          <!-- line/area shape mini chart (polyline) -->
+          <polyline points="558,170 562,166 566,168 570,162 574,164 578,160 582,159 586,157" fill="none" stroke="#e89142" stroke-width="1" opacity="0.85"/>
+          <circle cx="558" cy="170" r="0.9" fill="#e89142"/>
+          <circle cx="566" cy="168" r="0.9" fill="#e89142"/>
+          <circle cx="574" cy="164" r="0.9" fill="#e89142"/>
+          <circle cx="582" cy="159" r="0.9" fill="#e89142"/>
+          <circle cx="586" cy="157" r="0.9" fill="#e89142"/>
+          <circle cx="608" cy="151" r="5.5" fill="#e89142" opacity="0.2"/>
+          <text x="608" y="153" font-size="6" fill="#e89142" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">#2</text>
+          <text x="612" y="171" font-size="5.5" fill="#e89142" text-anchor="end" font-weight="700" font-family="'JetBrains Mono',monospace">B</text>
+
+          <!-- Report card 3 · Agent C · #3 (rose) -->
+          <rect x="622" y="142" width="62" height="32" rx="2.5" fill="#1c1f25" stroke="rgba(232,145,66,0.25)" stroke-width="0.6"/>
+          <rect x="622" y="142" width="62" height="2.5" fill="#f06b5e"/>
+          <rect x="626" y="149" width="22" height="1.5" fill="#7a7368" opacity="0.75"/>
+          <rect x="626" y="153" width="18" height="1.2" fill="#7a7368" opacity="0.45"/>
+          <!-- scatter-style dots -->
+          <circle cx="628" cy="168" r="1.2" fill="#f06b5e" opacity="0.85"/>
+          <circle cx="633" cy="164" r="1.2" fill="#f06b5e" opacity="0.75"/>
+          <circle cx="638" cy="170" r="1.2" fill="#f06b5e" opacity="0.8"/>
+          <circle cx="643" cy="162" r="1.2" fill="#f06b5e" opacity="0.9"/>
+          <circle cx="648" cy="166" r="1.2" fill="#f06b5e" opacity="0.7"/>
+          <circle cx="653" cy="160" r="1.2" fill="#f06b5e" opacity="0.85"/>
+          <circle cx="658" cy="165" r="1.2" fill="#f06b5e" opacity="0.8"/>
+          <circle cx="676" cy="151" r="5.5" fill="#f06b5e" opacity="0.2"/>
+          <text x="676" y="153" font-size="6" fill="#f06b5e" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">#3</text>
+          <text x="680" y="171" font-size="5.5" fill="#f06b5e" text-anchor="end" font-weight="700" font-family="'JetBrains Mono',monospace">C</text>
+
+          <!-- Report card 4 · Agent D · #4 (violet) -->
+          <rect x="690" y="142" width="62" height="32" rx="2.5" fill="#1c1f25" stroke="rgba(232,145,66,0.25)" stroke-width="0.6"/>
+          <rect x="690" y="142" width="62" height="2.5" fill="#a78bfa"/>
+          <rect x="694" y="149" width="28" height="1.5" fill="#7a7368" opacity="0.75"/>
+          <rect x="694" y="153" width="14" height="1.2" fill="#7a7368" opacity="0.45"/>
+          <!-- sparse bars -->
+          <rect x="694" y="166" width="3" height="4" fill="#a78bfa" opacity="0.7"/>
+          <rect x="700" y="163" width="3" height="7" fill="#a78bfa" opacity="0.8"/>
+          <rect x="706" y="161" width="3" height="9" fill="#a78bfa" opacity="0.9"/>
+          <rect x="712" y="165" width="3" height="5" fill="#a78bfa" opacity="0.7"/>
+          <rect x="718" y="159" width="3" height="11" fill="#a78bfa" opacity="0.95"/>
+          <rect x="724" y="164" width="3" height="6" fill="#a78bfa" opacity="0.75"/>
+          <circle cx="744" cy="151" r="5.5" fill="#a78bfa" opacity="0.2"/>
+          <text x="744" y="153" font-size="6" fill="#a78bfa" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">#4</text>
+          <text x="748" y="171" font-size="5.5" fill="#a78bfa" text-anchor="end" font-weight="700" font-family="'JetBrains Mono',monospace">D</text>
+
+          <!-- Divider -->
+          <line x1="478" y1="178" x2="782" y2="178" stroke="#e89142" stroke-width="0.5" opacity="0.3"/>
+
+          <!-- · · · SECTION B · AGENT LEADERBOARD (mocked) · · · -->
+          <text x="478" y="194" font-size="7.5" fill="#e89142" font-family="'JetBrains Mono',monospace" font-weight="700" letter-spacing="2" opacity="0.75">AGENT LEADERBOARD</text>
+          <text x="782" y="194" font-size="7" fill="#7a7368" text-anchor="end" font-family="'JetBrains Mono',monospace" font-style="italic">mock · tick #042</text>
+
+          <!-- Column labels -->
+          <text x="478" y="208" font-size="6.5" fill="#7a7368" font-family="'JetBrains Mono',monospace" letter-spacing="1.5">#</text>
+          <text x="520" y="208" font-size="6.5" fill="#7a7368" font-family="'JetBrains Mono',monospace" letter-spacing="1.5">AGENT</text>
+          <text x="782" y="208" font-size="6.5" fill="#7a7368" text-anchor="end" font-family="'JetBrains Mono',monospace" letter-spacing="1.5">SCORE</text>
+
+          <!-- Row 1 · A · teal (winner) -->
+          <text x="482" y="224" font-size="8" fill="#ebe6dc" font-family="'JetBrains Mono',monospace" font-weight="700">01</text>
+          <circle cx="508" cy="221" r="6" fill="#5bd5c2" opacity="0.22"/>
+          <text x="508" y="224" font-size="7.5" fill="#5bd5c2" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">A</text>
+          <text x="520" y="224" font-size="8.5" fill="#ebe6dc">Agent A</text>
+          <rect x="586" y="219" width="144" height="5" rx="1" fill="rgba(235,230,220,0.06)"/>
+          <rect x="586" y="219" width="125" height="5" rx="1" fill="#5bd5c2" opacity="0.9"/>
+          <text x="782" y="224" font-size="8.5" fill="#ebe6dc" text-anchor="end" font-family="'JetBrains Mono',monospace" font-weight="700">87.2</text>
+
+          <!-- Row 2 · B · amber -->
+          <text x="482" y="238" font-size="8" fill="#b8b1a3" font-family="'JetBrains Mono',monospace" font-weight="500">02</text>
+          <circle cx="508" cy="235" r="6" fill="#e89142" opacity="0.22"/>
+          <text x="508" y="238" font-size="7.5" fill="#e89142" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">B</text>
+          <text x="520" y="238" font-size="8.5" fill="#b8b1a3">Agent B</text>
+          <rect x="586" y="233" width="144" height="5" rx="1" fill="rgba(235,230,220,0.06)"/>
+          <rect x="586" y="233" width="119" height="5" rx="1" fill="#e89142" opacity="0.85"/>
+          <text x="782" y="238" font-size="8.5" fill="#b8b1a3" text-anchor="end" font-family="'JetBrains Mono',monospace" font-weight="500">82.6</text>
+
+          <!-- Row 3 · C · rose -->
+          <text x="482" y="252" font-size="8" fill="#b8b1a3" font-family="'JetBrains Mono',monospace" font-weight="500">03</text>
+          <circle cx="508" cy="249" r="6" fill="#f06b5e" opacity="0.22"/>
+          <text x="508" y="252" font-size="7.5" fill="#f06b5e" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">C</text>
+          <text x="520" y="252" font-size="8.5" fill="#b8b1a3">Agent C</text>
+          <rect x="586" y="247" width="144" height="5" rx="1" fill="rgba(235,230,220,0.06)"/>
+          <rect x="586" y="247" width="112" height="5" rx="1" fill="#f06b5e" opacity="0.85"/>
+          <text x="782" y="252" font-size="8.5" fill="#b8b1a3" text-anchor="end" font-family="'JetBrains Mono',monospace" font-weight="500">78.1</text>
+
+          <!-- Row 4 · D · violet -->
+          <text x="482" y="266" font-size="8" fill="#7a7368" font-family="'JetBrains Mono',monospace" font-weight="500">04</text>
+          <circle cx="508" cy="263" r="6" fill="#a78bfa" opacity="0.22"/>
+          <text x="508" y="266" font-size="7.5" fill="#a78bfa" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">D</text>
+          <text x="520" y="266" font-size="8.5" fill="#7a7368">Agent D</text>
+          <rect x="586" y="261" width="144" height="5" rx="1" fill="rgba(235,230,220,0.06)"/>
+          <rect x="586" y="261" width="107" height="5" rx="1" fill="#a78bfa" opacity="0.85"/>
+          <text x="782" y="266" font-size="8.5" fill="#7a7368" text-anchor="end" font-family="'JetBrains Mono',monospace" font-weight="500">74.4</text>
+
+          <!-- ═══════════════════════════════════════════════════════════
+               SEPARATE PANEL · HUMAN FEEDBACK LOOP (below Showcase)
+               External RLHF-style process — not part of the Showcase stage
+               ═══════════════════════════════════════════════════════════ -->
+
+          <!-- Connector: Showcase bottom → HP box top -->
+          <line x1="625" y1="290" x2="625" y2="316" stroke="#e89142" stroke-width="1.4" marker-end="url(#mAmber)" opacity="0.85"/>
+          <text x="640" y="306" font-size="7" fill="#7a7368" font-style="italic" font-family="'Fraunces',serif">async</text>
+
+          <!-- HP panel -->
+          <rect x="462" y="322" width="326" height="166" rx="6" fill="rgba(232,145,66,0.08)" stroke="#e89142" stroke-width="1.6"/>
+
+          <!-- Faint corner tag showing this is a sibling external system -->
+          <text x="462" y="314" font-family="'JetBrains Mono',monospace" font-size="7" fill="#7a7368" letter-spacing="1.8" font-weight="600">— EXTERNAL —</text>
+
+          <!-- Header marker -->
+          <circle cx="478" cy="342" r="3" fill="#e89142"/>
+          <circle cx="478" cy="342" r="6" fill="none" stroke="#e89142" stroke-width="0.8" opacity="0.5"/>
+          <text x="492" y="345" font-size="7.5" fill="#e89142" font-family="'JetBrains Mono',monospace" font-weight="700" letter-spacing="2">HUMAN FEEDBACK LOOP</text>
+
+          <!-- Description -->
+          <text x="478" y="364" font-size="8" fill="#b8b1a3">A jury picks between report pairs — async, RLHF-style.</text>
+
+          <!-- Pairwise widget 1 · A beats B -->
+          <circle cx="516" cy="404" r="9" fill="#5bd5c2" opacity="0.22"/>
+          <circle cx="516" cy="404" r="9" fill="none" stroke="#5bd5c2" stroke-width="1.4"/>
+          <text x="516" y="408" font-size="10" fill="#5bd5c2" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">A</text>
+          <text x="536" y="408" font-size="7.5" fill="#7a7368" text-anchor="middle" font-style="italic">vs</text>
+          <circle cx="556" cy="404" r="9" fill="none" stroke="#7a7368" stroke-width="0.9" opacity="0.5"/>
+          <text x="556" y="408" font-size="10" fill="#7a7368" text-anchor="middle" font-weight="500" font-family="'JetBrains Mono',monospace">B</text>
+          <text x="516" y="426" font-size="10" fill="#e89142" text-anchor="middle" font-weight="700">✓</text>
+
+          <!-- Pairwise widget 2 · D beats C -->
+          <circle cx="625" cy="404" r="9" fill="#a78bfa" opacity="0.22"/>
+          <circle cx="625" cy="404" r="9" fill="none" stroke="#a78bfa" stroke-width="1.4"/>
+          <text x="625" y="408" font-size="10" fill="#a78bfa" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">D</text>
+          <text x="645" y="408" font-size="7.5" fill="#7a7368" text-anchor="middle" font-style="italic">vs</text>
+          <circle cx="665" cy="404" r="9" fill="none" stroke="#7a7368" stroke-width="0.9" opacity="0.5"/>
+          <text x="665" y="408" font-size="10" fill="#7a7368" text-anchor="middle" font-weight="500" font-family="'JetBrains Mono',monospace">C</text>
+          <text x="625" y="426" font-size="10" fill="#e89142" text-anchor="middle" font-weight="700">✓</text>
+
+          <!-- Pairwise widget 3 · A beats C -->
+          <circle cx="734" cy="404" r="9" fill="#5bd5c2" opacity="0.22"/>
+          <circle cx="734" cy="404" r="9" fill="none" stroke="#5bd5c2" stroke-width="1.4"/>
+          <text x="734" y="408" font-size="10" fill="#5bd5c2" text-anchor="middle" font-weight="700" font-family="'JetBrains Mono',monospace">A</text>
+          <text x="754" y="408" font-size="7.5" fill="#7a7368" text-anchor="middle" font-style="italic">vs</text>
+          <circle cx="774" cy="404" r="9" fill="none" stroke="#7a7368" stroke-width="0.9" opacity="0.5"/>
+          <text x="774" y="408" font-size="10" fill="#7a7368" text-anchor="middle" font-weight="500" font-family="'JetBrains Mono',monospace">C</text>
+          <text x="734" y="426" font-size="10" fill="#e89142" text-anchor="middle" font-weight="700">✓</text>
+
+          <!-- Output rail within HP -->
+          <line x1="478" y1="452" x2="772" y2="452" stroke="#e89142" stroke-width="0.5" opacity="0.25"/>
+          <text x="625" y="472" font-size="9" fill="#ebe6dc" text-anchor="middle" font-weight="500">→ Reviewer calibration · round N+1</text>
+
+          <!-- Feedback arrow: HP back to Arena (cross-review step) -->
+          <path d="M462 430 Q 260 500 180 340 Q 160 220 212 210" stroke="#e89142" stroke-width="1.1" stroke-dasharray="5 3" fill="none" opacity="0.65" marker-end="url(#mAmber)"/>
+          <text x="182" y="500" font-size="7.5" fill="#7a7368" text-anchor="middle" font-style="italic" font-family="'Fraunces',serif">feedback loop</text>
+
+          <!-- Arrow markers -->
+          <defs>
+            <marker id="mTeal" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0, 6 3, 0 6" fill="#5bd5c2"/></marker>
+            <marker id="mAmber" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0, 6 3, 0 6" fill="#e89142"/></marker>
+            <marker id="mRose" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0, 6 3, 0 6" fill="#f06b5e"/></marker>
+            <marker id="mViolet" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0, 6 3, 0 6" fill="#a78bfa"/></marker>
+            <marker id="mDim" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><polygon points="0 0, 6 3, 0 6" fill="#7a7368"/></marker>
+          </defs>
+        </svg>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+/* ===========================================
+   SLIDE CONTROLLER
+   =========================================== */
+class Deck {
+    constructor() {
+        this.slides = Array.from(document.querySelectorAll(".slide"));
+        this.current = 0;
+        this.bar = document.querySelector(".progress-bar");
+        this.dots = document.querySelector(".nav-dots");
+        this.touchY = 0;
+
+        this.mountDots();
+        this.observe();
+        this.bindKeys();
+        this.bindTouch();
+        this.tick();
+    }
+
+    go(i) {
+        const next = Math.max(0, Math.min(this.slides.length - 1, i));
+        this.current = next;
+        this.tick();
+        this.slides[next].scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    observe() {
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach((e) => {
+                const i = this.slides.indexOf(e.target);
+                if (e.isIntersecting) {
+                    e.target.classList.add("visible");
+                    if (e.intersectionRatio > 0.55) {
+                        this.current = i;
+                        this.tick();
+                    }
+                }
+            });
+        }, { threshold: [0.2, 0.55, 0.85] });
+        this.slides.forEach((s) => io.observe(s));
+    }
+
+    bindKeys() {
+        document.addEventListener("keydown", (e) => {
+            const k = e.key;
+            if (["ArrowDown", "ArrowRight", "PageDown", " ", "Enter"].includes(k)) {
+                e.preventDefault(); this.go(this.current + 1);
+            } else if (["ArrowUp", "ArrowLeft", "PageUp"].includes(k)) {
+                e.preventDefault(); this.go(this.current - 1);
+            } else if (k === "Home") {
+                e.preventDefault(); this.go(0);
+            } else if (k === "End") {
+                e.preventDefault(); this.go(this.slides.length - 1);
+            } else if (/^[1-9]$/.test(k)) {
+                e.preventDefault(); this.go(parseInt(k, 10) - 1);
+            }
+        });
+    }
+
+    bindTouch() {
+        document.addEventListener("touchstart", (e) => {
+            this.touchY = e.changedTouches[0].screenY;
+        }, { passive: true });
+        document.addEventListener("touchend", (e) => {
+            const dy = this.touchY - e.changedTouches[0].screenY;
+            if (Math.abs(dy) < 60) return;
+            this.go(dy > 0 ? this.current + 1 : this.current - 1);
+        }, { passive: true });
+    }
+
+    mountDots() {
+        this.dots.innerHTML = "";
+        this.slides.forEach((_, i) => {
+            const b = document.createElement("button");
+            b.type = "button";
+            b.setAttribute("aria-label", `Go to slide ${i + 1}`);
+            b.addEventListener("click", () => this.go(i));
+            this.dots.appendChild(b);
+        });
+    }
+
+    tick() {
+        const p = ((this.current + 1) / this.slides.length) * 100;
+        this.bar.style.width = `${p}%`;
+        Array.from(this.dots.children).forEach((d, i) => {
+            d.classList.toggle("active", i === this.current);
+        });
+    }
+}
+
+window.addEventListener("DOMContentLoaded", () => new Deck());
+</script>
+</body>
+</html>
