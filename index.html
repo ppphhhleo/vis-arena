@@ -1399,6 +1399,27 @@ h2.subtitle {
     background: color-mix(in srgb, var(--amber) 10%, transparent);
 }
 
+/* Compact mono equation block above a chart (slide 8) */
+.chart-pane .chart-formula {
+    margin: 0;
+    padding: clamp(0.3rem, 0.5vw, 0.45rem) clamp(0.55rem, 0.8vw, 0.7rem);
+    font-family: var(--font-mono);
+    font-size: clamp(0.64rem, 0.8vw, 0.76rem);
+    line-height: 1.35;
+    color: var(--ink-dim);
+    background: rgba(241, 232, 214, 0.04);
+    border: 1px solid rgba(241, 232, 214, 0.08);
+    border-radius: 4px;
+    letter-spacing: 0.01em;
+}
+.chart-pane .chart-formula code { font-family: inherit; background: none; padding: 0; }
+.chart-pane .chart-formula b {
+    color: var(--amber);
+    font-weight: 600;
+    font-style: italic;
+}
+.chart-pane .chart-formula sub { font-size: 0.78em; color: var(--muted); }
+
 .chart-pane .chart-read {
     margin: 0;
     font-family: var(--font-body);
@@ -1549,7 +1570,80 @@ h2.subtitle {
     border: 1.5px solid rgba(235, 230, 220, 0.4);
 }
 
-/* Two-chart grid for slide 7 — both charts are square 420×420 */
+/* Slide 7 — four-chart analysis grid */
+.three-charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: clamp(0.5rem, 0.9vw, 0.9rem);
+    min-height: 0;
+    flex: 1;
+}
+.three-charts .chart-pane {
+    padding: clamp(0.55rem, 0.9vw, 0.8rem);
+    gap: clamp(0.25rem, 0.45vw, 0.4rem);
+}
+.three-charts .chart-pane .chart-title {
+    font-size: clamp(0.85rem, 1.05vw, 1rem);
+}
+.three-charts .chart-pane .chart-meta {
+    font-size: clamp(0.55rem, 0.68vw, 0.65rem);
+}
+
+/* Shared caption below the chart grid */
+.quad-caption {
+    margin: clamp(0.35rem, 0.6vw, 0.55rem) 0 0;
+    font-family: var(--font-body);
+    font-size: clamp(0.7rem, 0.88vw, 0.82rem);
+    line-height: 1.45;
+    color: var(--ink-dim);
+    padding: clamp(0.4rem, 0.6vw, 0.55rem) clamp(0.6rem, 0.9vw, 0.8rem);
+    border-left: 2px solid var(--rose);
+    background: rgba(240, 107, 94, 0.06);
+    border-radius: 0 4px 4px 0;
+}
+.quad-caption b { color: var(--ink); font-weight: 600; }
+
+/* Slide 7 — rank ladder + leader band stacked vertically, sharing x-axis */
+.rank-stack {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: clamp(0.6rem, 1vw, 1rem);
+    min-height: 0;
+    flex: 1;
+}
+.rank-stack .leader-band-pane {
+    flex: 0 0 auto;
+}
+.rank-stack .leader-band-pane .chart-svg-wrap {
+    min-height: 0;
+    height: clamp(60px, 9vh, 90px);
+    flex: none;
+}
+
+/* Rank ladder: bigger dots on hover, colored polylines */
+.score-chart .rank-line {
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.85;
+    transition: opacity 0.18s ease, stroke-width 0.18s ease;
+}
+.score-chart.hovering .rank-line        { opacity: 0.15; }
+.score-chart.hovering .rank-line.highlighted {
+    opacity: 1;
+    stroke-width: 3.2;
+}
+.score-chart .rank-dot {
+    stroke: #0b0c0e;
+    stroke-width: 1;
+    transition: opacity 0.18s ease, r 0.18s ease;
+}
+.score-chart.hovering .rank-dot            { opacity: 0.18; }
+.score-chart.hovering .rank-dot.highlighted { opacity: 1; }
+
+/* Two-chart grid for slide 9 — both charts are square 420×420 */
 .two-charts {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -2260,7 +2354,7 @@ h2.subtitle {
 
     <div class="cover-footer reveal reveal-6">
       <!-- <span></span> -->
-      <span>01 / 06</span>
+      <span>01 / 08</span>
     </div>
   </div>
 </section>
@@ -2272,7 +2366,7 @@ h2.subtitle {
   <div class="slide-content">
     <div class="masthead reveal reveal-1">
       <span class="slug"><span class="mark">VIS Arena</span> · Evidence</span>
-      <span class="counter">02 <strong>/</strong> 07</span>
+      <span class="counter">02 <strong>/</strong> 08</span>
     </div>
 
     <div class="evidence-grid">
@@ -2283,7 +2377,7 @@ h2.subtitle {
       </figure>
 
       <div class="evidence-copy">
-        <h1 class="title reveal reveal-3" style="--accent: var(--rose);">Pending <em>todos.</em></h1>
+        <h1 class="title reveal reveal-3" style="--accent: var(--rose);">Reflection <em></em></h1>
         <p class="lede reveal reveal-4">Agents submitted reports on a fixed dataset. Humans reviewed.</p>
 
         <ul class="seam-list reveal reveal-5">
@@ -2321,7 +2415,7 @@ h2.subtitle {
   <div class="slide-content">
     <div class="masthead reveal reveal-1">
       <span class="slug"><span class="mark">VIS Arena</span> · Climate</span>
-      <span class="counter">03 <strong>/</strong> 07</span>
+      <span class="counter">03 <strong>/</strong> 08</span>
     </div>
 
     <div class="climate-wrap">
@@ -2413,7 +2507,7 @@ h2.subtitle {
   <div class="slide-content">
     <div class="masthead reveal reveal-1">
       <span class="slug"><span class="mark">VIS Arena</span> · Blueprint</span>
-      <span class="counter">04 <strong>/</strong> 07</span>
+      <span class="counter">04 <strong>/</strong> 08</span>
     </div>
 
     <div class="workshop-wrap">
@@ -2512,7 +2606,7 @@ h2.subtitle {
   <div class="slide-content">
     <div class="masthead reveal reveal-1">
       <span class="slug"><span class="mark">VIS Arena</span> · Flow</span>
-      <span class="counter">05 <strong>/</strong> 07</span>
+      <span class="counter">05 <strong>/</strong> 08</span>
     </div>
 
     <div class="pipe-wrap" style="gap: clamp(0.4rem, 0.8vw, 0.8rem);">
@@ -2918,7 +3012,7 @@ h2.subtitle {
   <div class="slide-content">
     <div class="masthead reveal reveal-1">
       <span class="slug"><span class="mark">VIS Arena</span> · Proposal</span>
-      <span class="counter">06 <strong>/</strong> 07</span>
+      <span class="counter">06 <strong>/</strong> 08</span>
     </div>
 
     <div class="prop-wrap">
@@ -2999,7 +3093,94 @@ h2.subtitle {
 </section>
 
 <!-- ===========================================================
-     SLIDE 7 · TWO AGGREGATE VIEWS
+     SLIDE 7 · RANK + REVIEWER DRIFT + ELO
+     2×2 grid: rank ladder · leniency · agreement · skill curves
+     =========================================================== -->
+<section class="slide slide-violet">
+  <div class="slide-content">
+    <div class="masthead reveal reveal-1">
+      <span class="slug"><span class="mark">VIS Arena</span> · Proposal</span>
+      <span class="counter">07 <strong>/</strong> 08</span>
+    </div>
+
+    <div class="prop-wrap">
+      <div class="prop-head" style="grid-template-columns: 1fr; margin-bottom: clamp(0.3rem, 0.6vw, 0.55rem);">
+        <div style="display: flex; align-items: baseline; gap: 1.2em; flex-wrap: wrap;">
+          <h1 class="title reveal reveal-2" style="margin: 0; font-size: clamp(1.3rem, 2.1vw, 1.9rem);">Who <em>leads</em>, how does judgment <em>drift</em>, and who <em>climbs</em>?</h1>
+          <span class="reveal reveal-3" style="font-family: var(--font-mono); font-size: clamp(0.6rem, 0.85vw, 0.72rem); color: var(--muted); letter-spacing: 0.06em;">rank · leniency · consensus · Elo · 12 intervals · 7 reviewers</span>
+          <span class="reveal reveal-3" style="display: inline-flex; gap: clamp(0.6rem, 1vw, 0.9rem); align-items: center; font-family: var(--font-mono); font-size: clamp(0.6rem, 0.8vw, 0.7rem); color: var(--ink-dim); letter-spacing: 0.04em;">
+            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#56B4E9;display:inline-block;"></span>A</span>
+            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#E69F00;display:inline-block;"></span>B</span>
+            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#D55E00;display:inline-block;"></span>C</span>
+            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#CC79A7;display:inline-block;"></span>D</span>
+            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#009E73;display:inline-block;"></span>E</span>
+            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#0072B2;display:inline-block;"></span>F</span>
+            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#F0E442;display:inline-block;"></span>G</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="three-charts reveal reveal-4">
+        <article class="chart-pane">
+          <div class="chart-head">
+            <span class="chart-title">Rank <em>ladder</em></span>
+            <span class="chart-meta">per-interval rank · 1 = best</span>
+          </div>
+          <div class="chart-formula">
+            <code>rank(<b>r</b>, <b>t</b>) = position of <b>r</b> when agents are ordered by score at <b>t</b></code>
+          </div>
+          <div class="chart-svg-wrap">
+            <svg class="score-chart" id="rankLadder" viewBox="0 0 420 260" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+        </article>
+
+        <article class="chart-pane">
+          <div class="chart-head">
+            <span class="chart-title">Leniency <em>drift</em></span>
+            <span class="chart-meta">score given − crowd mean</span>
+          </div>
+          <div class="chart-formula">
+            <code>L(<b>r</b>, <b>t</b>) = mean(scores <b>r</b> gives at <b>t</b>) − crowd mean at <b>t</b></code>
+          </div>
+          <div class="chart-svg-wrap">
+            <svg class="score-chart" id="leniencyLine" viewBox="0 0 420 260" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+        </article>
+
+        <article class="chart-pane">
+          <div class="chart-head">
+            <span class="chart-title">Consensus <em>agreement</em></span>
+            <span class="chart-meta">rank-corr vs. crowd ordering</span>
+          </div>
+          <div class="chart-formula">
+            <code>A(<b>r</b>, <b>t</b>) = ρ<sub>spearman</sub>(ranks <b>r</b> gives, crowd-mean ranks)</code>
+          </div>
+          <div class="chart-svg-wrap">
+            <svg class="score-chart" id="agreementLine" viewBox="0 0 420 260" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+        </article>
+
+        <article class="chart-pane">
+          <div class="chart-head">
+            <span class="chart-title">Elo <em>skill curves</em></span>
+            <span class="chart-meta">per-interval rating · start 1500 · K = 32</span>
+          </div>
+          <div class="chart-formula">
+            <code>
+              Elo<sub>i</sub> ← Elo<sub>i</sub> + K · (<b>actual</b> − <b>expected</b>)    ·    E(i,j) = 1 / (1 + 10<sup>(Elo<sub>j</sub> − Elo<sub>i</sub>) / 400</sup>)
+            </code>
+          </div>
+          <div class="chart-svg-wrap">
+            <svg class="score-chart" id="eloLines" viewBox="0 0 420 260" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================================================
+     SLIDE 8 · TWO AGGREGATE VIEWS
      (a) participant scatter: alignment × quality (final latest)
      (b) pairwise win matrix: preference rates
      =========================================================== -->
@@ -3007,7 +3188,7 @@ h2.subtitle {
   <div class="slide-content">
     <div class="masthead reveal reveal-1">
       <span class="slug"><span class="mark">VIS Arena</span> · Proposal</span>
-      <span class="counter">07 <strong>/</strong> 07</span>
+      <span class="counter">08 <strong>/</strong> 08</span>
     </div>
 
     <div class="prop-wrap">
@@ -3229,6 +3410,10 @@ class Deck {
 window.addEventListener("DOMContentLoaded", () => {
     new Deck();
     renderPeerFrontierChart();
+    renderRankLadder();
+    renderLeniencyLine();
+    renderAgreementLine();
+    renderEloLines();
     renderParticipantScatter();
     renderPairwiseMatrix();
 });
@@ -3474,6 +3659,713 @@ function renderPeerFrontierChart() {
     svg.selectAll("[data-agent]")
         .on("mouseenter", function () {
             setHover(this.getAttribute("data-agent"));
+        })
+        .on("mouseleave", () => setHover(null));
+}
+
+/* ===========================================
+   HELPERS · per-interval expansion + running-best
+   (shared by rank ladder and leader band)
+   =========================================== */
+function buildIntervalSeries() {
+    const raw = DECK_DATA.peerFrontier;
+    const xMax = d3.max(raw, (r) => r[0]);
+    const allTicks = d3.range(1, xMax + 1);
+
+    const subsByAgent = new Map();
+    raw.forEach(([t, a, s]) => {
+        if (!subsByAgent.has(a)) subsByAgent.set(a, []);
+        subsByAgent.get(a).push({ tick: t, score: s });
+    });
+    subsByAgent.forEach((arr) => arr.sort((x, y) => x.tick - y.tick));
+
+    // For each interval: list of {agent, score, joined} for agents that exist by t
+    const byInterval = new Map();
+    allTicks.forEach((t) => {
+        const entries = [];
+        subsByAgent.forEach((subs, a) => {
+            let latest = null;
+            for (const s of subs) {
+                if (s.tick <= t) latest = s;
+                else break;
+            }
+            if (latest) entries.push({ agent: a, score: latest.score });
+        });
+        byInterval.set(t, entries);
+    });
+
+    // Running-max holder per interval (ties: the agent that FIRST set that max)
+    let runningMax = -Infinity;
+    let holder = null;
+    const leaderByInterval = new Map();
+    allTicks.forEach((t) => {
+        const entries = byInterval.get(t);
+        const top = entries.reduce((a, b) => (b.score > a.score ? b : a));
+        if (top.score > runningMax) {
+            runningMax = top.score;
+            holder = top.agent;
+        }
+        leaderByInterval.set(t, { agent: holder, score: runningMax });
+    });
+
+    return { allTicks, byInterval, leaderByInterval };
+}
+
+/* ===========================================
+   D3 · RANK LADDER (SLIDE 7a)
+   One line per agent, y = rank within that interval
+   =========================================== */
+function renderRankLadder() {
+    const host = document.getElementById("rankLadder");
+    if (!host || typeof d3 === "undefined") return;
+
+    const colors = DECK_DATA.agentColors;
+    const agents = Object.keys(colors);
+    const { allTicks, byInterval } = buildIntervalSeries();
+
+    // rankByAgent[agent] = array of { tick, rank } sorted by tick
+    const rankByAgent = new Map();
+    agents.forEach((a) => rankByAgent.set(a, []));
+    allTicks.forEach((t) => {
+        const entries = byInterval.get(t);
+        if (entries.length === 0) return;
+        // Rank: highest score → 1; ties broken by alphabetical agent id for stability
+        const sorted = [...entries].sort((a, b) => b.score - a.score || a.agent.localeCompare(b.agent));
+        sorted.forEach((e, i) => {
+            rankByAgent.get(e.agent).push({ tick: t, rank: i + 1, score: e.score });
+        });
+    });
+
+    const W = 420, H = 260;
+    const m = { top: 18, right: 16, bottom: 34, left: 40 };
+    const iw = W - m.left - m.right;
+    const ih = H - m.top - m.bottom;
+
+    const svg = d3.select(host);
+    svg.selectAll("*").remove();
+    const g = svg.append("g").attr("transform", `translate(${m.left}, ${m.top})`);
+
+    const x = d3.scaleLinear().domain([1, allTicks.length]).range([0, iw]);
+    const maxRank = agents.length;
+    const y = d3.scaleLinear().domain([1, maxRank]).range([0, ih]); // rank 1 at top
+
+    // Grid rows for each rank
+    g.append("g").attr("class", "grid").selectAll("line")
+        .data(d3.range(1, maxRank + 1)).enter().append("line")
+        .attr("x1", 0).attr("x2", iw)
+        .attr("y1", (d) => y(d)).attr("y2", (d) => y(d));
+
+    // X-axis: intervals
+    const xAxis = d3.axisBottom(x)
+        .tickValues(allTicks)
+        .tickFormat((d) => `${d}`)
+        .tickSize(4).tickPadding(6);
+    const xg = g.append("g").attr("class", "x-axis")
+        .attr("transform", `translate(0, ${ih})`).call(xAxis);
+    xg.select(".domain").attr("stroke", "rgba(235,230,220,0.4)");
+    xg.selectAll(".tick line").attr("stroke", "rgba(235,230,220,0.45)");
+
+    // Y-axis: rank
+    const yAxis = d3.axisLeft(y).tickValues(d3.range(1, maxRank + 1))
+        .tickFormat((d) => `#${d}`).tickSize(4).tickPadding(8);
+    const yg = g.append("g").attr("class", "y-axis").call(yAxis);
+    yg.select(".domain").attr("stroke", "rgba(235,230,220,0.4)");
+    yg.selectAll(".tick line").attr("stroke", "rgba(235,230,220,0.45)");
+
+    // Axis labels
+    g.append("text").attr("class", "axis-label")
+        .attr("x", iw / 2).attr("y", ih + 32).attr("text-anchor", "middle")
+        .text("time interval →");
+    g.append("text").attr("class", "axis-label")
+        .attr("x", -4).attr("y", -8).attr("text-anchor", "start")
+        .text("↑ rank (1 = best)");
+
+    // Lines + dots per agent
+    const line = d3.line()
+        .x((d) => x(d.tick))
+        .y((d) => y(d.rank))
+        .curve(d3.curveMonotoneX);
+
+    agents.forEach((a) => {
+        const pts = rankByAgent.get(a);
+        if (pts.length === 0) return;
+        g.append("path")
+            .datum(pts)
+            .attr("class", "rank-line")
+            .attr("data-agent-line", a)
+            .attr("stroke", colors[a])
+            .attr("d", line);
+        g.append("g").selectAll("circle.rank-dot")
+            .data(pts).enter().append("circle")
+            .attr("class", "rank-dot")
+            .attr("data-agent", a)
+            .attr("cx", (d) => x(d.tick)).attr("cy", (d) => y(d.rank))
+            .attr("r", 4.2)
+            .attr("fill", colors[a]);
+    });
+
+    // Hover interaction — highlight a single agent's line + dots
+    const setHover = (agent) => {
+        svg.classed("hovering", !!agent);
+        svg.selectAll(".highlighted").classed("highlighted", false);
+        if (!agent) return;
+        svg.selectAll(`[data-agent="${agent}"]`).classed("highlighted", true);
+        svg.select(`.rank-line[data-agent-line="${agent}"]`).classed("highlighted", true);
+    };
+    svg.selectAll("[data-agent], [data-agent-line]")
+        .on("mouseenter", function () {
+            setHover(this.getAttribute("data-agent") || this.getAttribute("data-agent-line"));
+        })
+        .on("mouseleave", () => setHover(null));
+}
+
+/* ===========================================
+   D3 · LEADER BAND (SLIDE 7b)
+   Thin timeline: who holds the running-best score per interval
+   =========================================== */
+function renderLeaderBand() {
+    const host = document.getElementById("leaderBand");
+    if (!host || typeof d3 === "undefined") return;
+
+    const colors = DECK_DATA.agentColors;
+    const { allTicks, leaderByInterval } = buildIntervalSeries();
+
+    const W = 700, H = 110;
+    const m = { top: 14, right: 26, bottom: 30, left: 52 };
+    const iw = W - m.left - m.right;
+    const ih = H - m.top - m.bottom;
+    const cellW = iw / allTicks.length;
+
+    const svg = d3.select(host);
+    svg.selectAll("*").remove();
+    const g = svg.append("g").attr("transform", `translate(${m.left}, ${m.top})`);
+
+    // One colored rect per interval, colored by record-holder
+    allTicks.forEach((t, i) => {
+        const hold = leaderByInterval.get(t);
+        g.append("rect")
+            .attr("x", i * cellW + 1.5).attr("y", 0)
+            .attr("width", cellW - 3).attr("height", ih)
+            .attr("fill", colors[hold.agent])
+            .attr("opacity", 0.82)
+            .attr("rx", 3);
+        // Holder letter label
+        g.append("text")
+            .attr("x", i * cellW + cellW / 2).attr("y", ih / 2 + 5)
+            .attr("text-anchor", "middle")
+            .attr("font-family", "'JetBrains Mono', monospace")
+            .attr("font-size", 14).attr("font-weight", 700)
+            .attr("fill", "#0b0c0e")
+            .text(hold.agent);
+    });
+
+    // Interval numbers along the bottom
+    allTicks.forEach((t, i) => {
+        g.append("text")
+            .attr("x", i * cellW + cellW / 2).attr("y", ih + 18)
+            .attr("text-anchor", "middle")
+            .attr("font-family", "'JetBrains Mono', monospace")
+            .attr("font-size", 10).attr("fill", "var(--muted)")
+            .text(t);
+    });
+
+    // Left-side caption
+    g.append("text")
+        .attr("x", -8).attr("y", ih / 2 + 4)
+        .attr("text-anchor", "end")
+        .attr("font-family", "'JetBrains Mono', monospace")
+        .attr("font-size", 10).attr("fill", "var(--ink-dim)")
+        .attr("letter-spacing", "0.08em")
+        .text("HOLDER");
+}
+
+/* ===========================================
+   HELPERS · Synthetic reviewer data (SLIDE 8)
+   =========================================== */
+function buildReviewerData() {
+    const { allTicks, byInterval } = buildIntervalSeries();
+    const agents = Object.keys(DECK_DATA.agentColors);
+
+    // Deterministic hash in [0, 1) so charts render identically each load
+    const hash = (s) => {
+        let h = 2166136261;
+        for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+        return ((h >>> 0) % 10000) / 10000;
+    };
+
+    // Per-reviewer slow-drifting bias (sinusoid, unique phase/freq/amp per reviewer)
+    const biasAt = (reviewer, t) => {
+        const phase = hash(`${reviewer}|phase`) * Math.PI * 2;
+        const freq  = 0.25 + hash(`${reviewer}|freq`) * 0.45;
+        const amp   = 0.55 + hash(`${reviewer}|amp`)  * 1.25;
+        return amp * Math.sin(phase + freq * t);
+    };
+
+    // scoresGiven[t] → Map<reviewer, Map<reviewee, score 0-10>>
+    const scoresGiven = new Map();
+    allTicks.forEach((t) => {
+        const entries = byInterval.get(t);
+        const scoresForT = new Map();
+        entries.forEach(({ agent: reviewer }) => {
+            const given = new Map();
+            entries.forEach(({ agent: reviewee, score: trueScore }) => {
+                if (reviewer === reviewee) return;
+                // Map true quality (~55–95) onto 0–10
+                const base  = (trueScore - 50) / 5;
+                const bias  = biasAt(reviewer, t);
+                const noise = (hash(`${reviewer}|${reviewee}|n${t}`) - 0.5) * 1.1;
+                given.set(reviewee, Math.max(0, Math.min(10, base + bias + noise)));
+            });
+            scoresForT.set(reviewer, given);
+        });
+        scoresGiven.set(t, scoresForT);
+    });
+
+    // Derived metrics
+    const leniency = new Map();
+    const agreement = new Map();
+    agents.forEach((a) => { leniency.set(a, []); agreement.set(a, []); });
+
+    const spearman = (a, b) => {
+        const rank = (arr) => {
+            const sorted = arr.map((v, i) => ({ v, i })).sort((x, y) => x.v - y.v);
+            const r = Array(arr.length);
+            sorted.forEach(({ i }, k) => { r[i] = k + 1; });
+            return r;
+        };
+        const ra = rank(a), rb = rank(b);
+        const mean = (xs) => xs.reduce((s, x) => s + x, 0) / xs.length;
+        const ma = mean(ra), mb = mean(rb);
+        let num = 0, da = 0, db = 0;
+        for (let i = 0; i < a.length; i++) {
+            const x = ra[i] - ma, y = rb[i] - mb;
+            num += x * y; da += x * x; db += y * y;
+        }
+        return da && db ? num / Math.sqrt(da * db) : 0;
+    };
+
+    allTicks.forEach((t) => {
+        const scoresForT = scoresGiven.get(t);
+        if (!scoresForT || scoresForT.size === 0) return;
+
+        // Crowd mean per reviewee + overall crowd mean
+        const crowdByReviewee = new Map();
+        let sumAll = 0, nAll = 0;
+        scoresForT.forEach((given) => {
+            given.forEach((v, e) => {
+                crowdByReviewee.set(e, (crowdByReviewee.get(e) || []).concat(v));
+                sumAll += v; nAll += 1;
+            });
+        });
+        const crowdMeanByReviewee = new Map();
+        crowdByReviewee.forEach((arr, e) => {
+            crowdMeanByReviewee.set(e, arr.reduce((s, v) => s + v, 0) / arr.length);
+        });
+        const crowdMean = nAll > 0 ? sumAll / nAll : 0;
+
+        scoresForT.forEach((given, reviewer) => {
+            // Leniency
+            let s = 0, n = 0;
+            given.forEach((v) => { s += v; n += 1; });
+            leniency.get(reviewer).push({ t, value: n > 0 ? s / n - crowdMean : null });
+
+            // Spearman correlation against crowd mean for the set of reviewees
+            const pairs = [];
+            given.forEach((v, e) => {
+                if (crowdMeanByReviewee.has(e)) pairs.push([v, crowdMeanByReviewee.get(e)]);
+            });
+            let rho = null;
+            if (pairs.length >= 3) {
+                rho = spearman(pairs.map((p) => p[0]), pairs.map((p) => p[1]));
+            }
+            agreement.get(reviewer).push({ t, value: rho });
+        });
+    });
+
+    return { allTicks, agents, scoresGiven, leniency, agreement };
+}
+
+/* Shared line-chart primitive used by leniency & agreement panels */
+function drawLineChart(hostId, series, { yDomain, yLabel, zeroLine, colors, yFormat, annotations }) {
+    const host = document.getElementById(hostId);
+    if (!host || typeof d3 === "undefined") return;
+    const svg = d3.select(host);
+    svg.selectAll("*").remove();
+
+    const W = 420, H = 260;
+    const m = { top: 22, right: 18, bottom: 34, left: 42 };
+    const iw = W - m.left - m.right;
+    const ih = H - m.top - m.bottom;
+    const g = svg.append("g").attr("transform", `translate(${m.left}, ${m.top})`);
+
+    const allTicks = series[0].points.map((p) => p.t);
+    const x = d3.scaleLinear().domain([1, d3.max(allTicks)]).range([0, iw]);
+    const y = d3.scaleLinear().domain(yDomain).range([ih, 0]);
+
+    // Grid
+    g.append("g").attr("class", "grid").selectAll("line")
+        .data(y.ticks(4)).enter().append("line")
+        .attr("x1", 0).attr("x2", iw)
+        .attr("y1", (d) => y(d)).attr("y2", (d) => y(d));
+
+    // Axes
+    const xAxis = d3.axisBottom(x).tickValues(allTicks).tickFormat((d) => `${d}`).tickSize(4).tickPadding(5);
+    const xg = g.append("g").attr("class", "x-axis").attr("transform", `translate(0, ${ih})`).call(xAxis);
+    xg.select(".domain").attr("stroke", "rgba(235,230,220,0.4)");
+    xg.selectAll(".tick line").attr("stroke", "rgba(235,230,220,0.45)");
+
+    const yAxis = d3.axisLeft(y).ticks(4).tickFormat(yFormat || d3.format(".1f")).tickSize(4).tickPadding(5);
+    const yg = g.append("g").attr("class", "y-axis").call(yAxis);
+    yg.select(".domain").attr("stroke", "rgba(235,230,220,0.4)");
+    yg.selectAll(".tick line").attr("stroke", "rgba(235,230,220,0.45)");
+
+    // Y label (inline at top)
+    g.append("text").attr("class", "axis-label")
+        .attr("x", -4).attr("y", -7).attr("text-anchor", "start").text(yLabel);
+
+    // Zero reference line (leniency panel)
+    if (zeroLine !== undefined) {
+        g.append("line")
+            .attr("x1", 0).attr("x2", iw)
+            .attr("y1", y(zeroLine)).attr("y2", y(zeroLine))
+            .attr("stroke", "rgba(235,230,220,0.45)")
+            .attr("stroke-width", 1).attr("stroke-dasharray", "3 3");
+    }
+
+    // Lines + dots
+    const line = d3.line()
+        .defined((d) => d.value !== null && d.value !== undefined)
+        .x((d) => x(d.t)).y((d) => y(d.value))
+        .curve(d3.curveMonotoneX);
+
+    series.forEach((s) => {
+        g.append("path")
+            .datum(s.points)
+            .attr("class", "rank-line")
+            .attr("data-agent-line", s.agent)
+            .attr("stroke", colors[s.agent])
+            .attr("d", line);
+        g.append("g").selectAll("circle.rank-dot")
+            .data(s.points.filter((p) => p.value !== null && p.value !== undefined))
+            .enter().append("circle")
+            .attr("class", "rank-dot")
+            .attr("data-agent", s.agent)
+            .attr("cx", (d) => x(d.t)).attr("cy", (d) => y(d.value))
+            .attr("r", 3.2)
+            .attr("fill", colors[s.agent]);
+    });
+
+    // Inline annotations (interpret-in-chart text labels)
+    (annotations || []).forEach((a) => {
+        const px = a.xFrac !== undefined ? a.xFrac * iw : (a.xPx !== undefined ? a.xPx : iw - 6);
+        const py = a.yVal !== undefined ? y(a.yVal) : (a.yFrac !== undefined ? a.yFrac * ih : 0);
+        const anchor = a.anchor || "end";
+        g.append("text")
+            .attr("x", px).attr("y", py + (a.dy || 0))
+            .attr("text-anchor", anchor)
+            .attr("font-family", "'JetBrains Mono', monospace")
+            .attr("font-size", 10)
+            .attr("font-weight", 700)
+            .attr("letter-spacing", "0.06em")
+            .attr("fill", a.color || "var(--ink-dim)")
+            .attr("pointer-events", "none")
+            .text(a.text);
+    });
+
+    // Hover isolate
+    const setHover = (agent) => {
+        svg.classed("hovering", !!agent);
+        svg.selectAll(".highlighted").classed("highlighted", false);
+        if (!agent) return;
+        svg.selectAll(`[data-agent="${agent}"]`).classed("highlighted", true);
+        svg.select(`.rank-line[data-agent-line="${agent}"]`).classed("highlighted", true);
+    };
+    svg.selectAll("[data-agent], [data-agent-line]")
+        .on("mouseenter", function () {
+            setHover(this.getAttribute("data-agent") || this.getAttribute("data-agent-line"));
+        })
+        .on("mouseleave", () => setHover(null));
+}
+
+/* ===========================================
+   D3 · LENIENCY DRIFT LINE (SLIDE 8a)
+   =========================================== */
+function renderLeniencyLine() {
+    const { agents, leniency } = buildReviewerData();
+    const colors = DECK_DATA.agentColors;
+    const series = agents.map((a) => ({ agent: a, points: leniency.get(a) }));
+    drawLineChart("leniencyLine", series, {
+        yDomain: [-2, 2],
+        yLabel: "↑ score − crowd mean",
+        zeroLine: 0,
+        colors,
+        yFormat: d3.format("+.1f"),
+        annotations: [
+            { text: "▲ LENIENT", yVal: 1.85, xFrac: 0.02, anchor: "start", color: "#e89142" },
+            { text: "▼ HARSH",   yVal: -1.8, xFrac: 0.02, anchor: "start", color: "#4a90b8" }
+        ]
+    });
+}
+
+/* ===========================================
+   D3 · CONSENSUS AGREEMENT LINE (SLIDE 8b)
+   =========================================== */
+function renderAgreementLine() {
+    const { agents, agreement } = buildReviewerData();
+    const colors = DECK_DATA.agentColors;
+    const series = agents.map((a) => ({ agent: a, points: agreement.get(a) }));
+    drawLineChart("agreementLine", series, {
+        yDomain: [0.5, 1],
+        yLabel: "↑ rank-corr vs. crowd",
+        colors,
+        yFormat: d3.format(".2f"),
+        annotations: [
+            { text: "▲ ALIGNED",      yVal: 0.98, xFrac: 0.02, anchor: "start", color: "#009E73" },
+            { text: "▼ IDIOSYNCRATIC", yVal: 0.53, xFrac: 0.02, anchor: "start", color: "#CC79A7" }
+        ]
+    });
+}
+
+/* ===========================================
+   D3 · CALIBRATION HEATMAP (SLIDE 8c)
+   rows = reviewers, cols = intervals, color = leniency delta
+   =========================================== */
+function renderCalibrationHeatmap() {
+    const host = document.getElementById("calibrationHeatmap");
+    if (!host || typeof d3 === "undefined") return;
+    const svg = d3.select(host);
+    svg.selectAll("*").remove();
+
+    const { allTicks, agents, leniency } = buildReviewerData();
+    const colors = DECK_DATA.agentColors;
+
+    const W = 500, H = 260;
+    const m = { top: 22, right: 60, bottom: 32, left: 36 };
+    const iw = W - m.left - m.right;
+    const ih = H - m.top - m.bottom;
+    const cellW = iw / allTicks.length;
+    const cellH = ih / agents.length;
+
+    const g = svg.append("g").attr("transform", `translate(${m.left}, ${m.top})`);
+
+    // Diverging: lenient (positive) = amber, harsh (negative) = steel blue
+    const colorOf = d3.scaleLinear()
+        .domain([-2, 0, 2])
+        .range(["#4a90b8", "#ebe6dc", "#e89142"])
+        .interpolate(d3.interpolateRgb);
+
+    agents.forEach((a, r) => {
+        const pts = leniency.get(a);
+        pts.forEach((p, c) => {
+            const v = p.value;
+            g.append("rect")
+                .attr("x", c * cellW + 0.5).attr("y", r * cellH + 0.5)
+                .attr("width", cellW - 1).attr("height", cellH - 1)
+                .attr("fill", v === null ? "#14161a" : colorOf(v))
+                .attr("stroke", "rgba(235,230,220,0.08)").attr("stroke-width", 1);
+        });
+    });
+
+    // Row labels (reviewer)
+    agents.forEach((a, r) => {
+        g.append("text")
+            .attr("x", -8).attr("y", r * cellH + cellH / 2 + 4)
+            .attr("text-anchor", "end")
+            .attr("font-family", "'JetBrains Mono', monospace")
+            .attr("font-size", 12).attr("font-weight", 700)
+            .attr("fill", colors[a]).text(a);
+    });
+
+    // Column labels (interval)
+    allTicks.forEach((t, c) => {
+        g.append("text")
+            .attr("x", c * cellW + cellW / 2).attr("y", ih + 18)
+            .attr("text-anchor", "middle")
+            .attr("font-family", "'JetBrains Mono', monospace")
+            .attr("font-size", 9).attr("fill", "var(--muted)").text(t);
+    });
+
+    // Legend scale on right side
+    const legendX = iw + 16;
+    const legendW = 12;
+    const defs = svg.append("defs");
+    const grad = defs.append("linearGradient").attr("id", "lenGrad")
+        .attr("x1", "0%").attr("y1", "0%").attr("x2", "0%").attr("y2", "100%");
+    grad.append("stop").attr("offset", "0%").attr("stop-color", "#e89142");
+    grad.append("stop").attr("offset", "50%").attr("stop-color", "#ebe6dc");
+    grad.append("stop").attr("offset", "100%").attr("stop-color", "#4a90b8");
+    g.append("rect")
+        .attr("x", legendX).attr("y", 0)
+        .attr("width", legendW).attr("height", ih)
+        .attr("fill", "url(#lenGrad)")
+        .attr("stroke", "rgba(235,230,220,0.14)");
+    [{ at: 0, label: "+2", sub: "lenient", color: "#e89142" },
+     { at: 0.5, label: "0", sub: "fair", color: "var(--ink-dim)" },
+     { at: 1, label: "−2", sub: "harsh", color: "#4a90b8" }].forEach((tk) => {
+        g.append("text")
+            .attr("x", legendX + legendW + 6).attr("y", tk.at * ih + 4)
+            .attr("font-family", "'JetBrains Mono', monospace")
+            .attr("font-size", 10).attr("font-weight", 700)
+            .attr("fill", tk.color).text(tk.label);
+        g.append("text")
+            .attr("x", legendX + legendW + 6).attr("y", tk.at * ih + 16)
+            .attr("font-family", "'JetBrains Mono', monospace")
+            .attr("font-size", 8).attr("fill", "var(--muted)")
+            .attr("letter-spacing", "0.06em").text(tk.sub);
+    });
+
+    g.append("text").attr("class", "axis-label")
+        .attr("x", -4).attr("y", -8).attr("text-anchor", "start")
+        .text("↓ reviewer · interval →");
+}
+
+/* ===========================================
+   HELPERS · Elo ratings derived from per-interval
+   pairwise score comparisons (SLIDE 8)
+   =========================================== */
+function buildEloRatings() {
+    const { allTicks, byInterval } = buildIntervalSeries();
+    const K = 32;
+    const START = 1500;
+
+    const elo = new Map();                         // current rating per agent
+    const history = new Map();                     // agent → [{t, rating}]
+
+    allTicks.forEach((t) => {
+        const entries = byInterval.get(t);
+        // Initialize new entrants
+        entries.forEach(({ agent }) => {
+            if (!elo.has(agent)) elo.set(agent, START);
+        });
+
+        // Play all unique pairs present at this interval.
+        // A pair "match" = higher score wins (ties = 0.5 each).
+        for (let i = 0; i < entries.length; i++) {
+            for (let j = i + 1; j < entries.length; j++) {
+                const { agent: ai, score: si } = entries[i];
+                const { agent: aj, score: sj } = entries[j];
+                const actualI = si > sj ? 1 : si < sj ? 0 : 0.5;
+                const Ei = elo.get(ai), Ej = elo.get(aj);
+                const expI = 1 / (1 + Math.pow(10, (Ej - Ei) / 400));
+                elo.set(ai, Ei + K * (actualI - expI));
+                elo.set(aj, Ej + K * ((1 - actualI) - (1 - expI)));
+            }
+        }
+
+        // Record end-of-interval ratings for agents present this tick
+        entries.forEach(({ agent }) => {
+            if (!history.has(agent)) history.set(agent, []);
+            history.get(agent).push({ t, rating: elo.get(agent) });
+        });
+    });
+
+    return { allTicks, history };
+}
+
+/* ===========================================
+   D3 · ELO SKILL CURVES (SLIDE 8a)
+   =========================================== */
+function renderEloLines() {
+    const host = document.getElementById("eloLines");
+    if (!host || typeof d3 === "undefined") return;
+    const svg = d3.select(host);
+    svg.selectAll("*").remove();
+
+    const { allTicks, history } = buildEloRatings();
+    const colors = DECK_DATA.agentColors;
+    const agents = Array.from(history.keys());
+
+    const W = 420, H = 260;
+    const m = { top: 22, right: 20, bottom: 34, left: 44 };
+    const iw = W - m.left - m.right;
+    const ih = H - m.top - m.bottom;
+    const g = svg.append("g").attr("transform", `translate(${m.left}, ${m.top})`);
+
+    const allVals = agents.flatMap((a) => history.get(a).map((d) => d.rating));
+    const vmin = d3.min(allVals), vmax = d3.max(allVals);
+    const pad = Math.max(25, (vmax - vmin) * 0.12);
+    const x = d3.scaleLinear().domain([1, allTicks.length]).range([0, iw]);
+    const y = d3.scaleLinear().domain([vmin - pad, vmax + pad]).range([ih, 0]);
+
+    // Grid
+    g.append("g").attr("class", "grid").selectAll("line")
+        .data(y.ticks(5)).enter().append("line")
+        .attr("x1", 0).attr("x2", iw)
+        .attr("y1", (d) => y(d)).attr("y2", (d) => y(d));
+
+    // Start-rating reference line
+    g.append("line")
+        .attr("x1", 0).attr("x2", iw)
+        .attr("y1", y(1500)).attr("y2", y(1500))
+        .attr("stroke", "rgba(235,230,220,0.35)")
+        .attr("stroke-width", 1).attr("stroke-dasharray", "3 3");
+    g.append("text")
+        .attr("x", iw - 6).attr("y", y(1500) - 4)
+        .attr("text-anchor", "end")
+        .attr("font-family", "'JetBrains Mono', monospace")
+        .attr("font-size", 9).attr("fill", "var(--muted)")
+        .text("start · 1500");
+
+    // Axes
+    const xAxis = d3.axisBottom(x).tickValues(allTicks).tickFormat((d) => `${d}`).tickSize(4).tickPadding(5);
+    const xg = g.append("g").attr("class", "x-axis").attr("transform", `translate(0, ${ih})`).call(xAxis);
+    xg.select(".domain").attr("stroke", "rgba(235,230,220,0.4)");
+    xg.selectAll(".tick line").attr("stroke", "rgba(235,230,220,0.45)");
+
+    const yAxis = d3.axisLeft(y).ticks(5).tickFormat(d3.format("d")).tickSize(4).tickPadding(5);
+    const yg = g.append("g").attr("class", "y-axis").call(yAxis);
+    yg.select(".domain").attr("stroke", "rgba(235,230,220,0.4)");
+    yg.selectAll(".tick line").attr("stroke", "rgba(235,230,220,0.45)");
+
+    // Axis labels
+    g.append("text").attr("class", "axis-label")
+        .attr("x", iw / 2).attr("y", ih + 28).attr("text-anchor", "middle")
+        .text("time interval →");
+    g.append("text").attr("class", "axis-label")
+        .attr("x", -4).attr("y", -8).attr("text-anchor", "start")
+        .text("↑ Elo rating");
+
+    // Lines + dots per agent
+    const line = d3.line()
+        .x((d) => x(d.t)).y((d) => y(d.rating))
+        .curve(d3.curveMonotoneX);
+
+    agents.forEach((a) => {
+        const pts = history.get(a);
+        if (pts.length === 0) return;
+        g.append("path")
+            .datum(pts)
+            .attr("class", "rank-line")
+            .attr("data-agent-line", a)
+            .attr("stroke", colors[a])
+            .attr("d", line);
+        g.append("g").selectAll("circle.rank-dot")
+            .data(pts).enter().append("circle")
+            .attr("class", "rank-dot")
+            .attr("data-agent", a)
+            .attr("cx", (d) => x(d.t)).attr("cy", (d) => y(d.rating))
+            .attr("r", 3.4).attr("fill", colors[a]);
+
+        // End-of-series letter label
+        const last = pts[pts.length - 1];
+        g.append("text")
+            .attr("x", x(last.t) + 6).attr("y", y(last.rating) + 4)
+            .attr("font-family", "'JetBrains Mono', monospace")
+            .attr("font-size", 11).attr("font-weight", 700)
+            .attr("fill", colors[a]).text(a);
+    });
+
+    // Hover isolation
+    const setHover = (agent) => {
+        svg.classed("hovering", !!agent);
+        svg.selectAll(".highlighted").classed("highlighted", false);
+        if (!agent) return;
+        svg.selectAll(`[data-agent="${agent}"]`).classed("highlighted", true);
+        svg.select(`.rank-line[data-agent-line="${agent}"]`).classed("highlighted", true);
+    };
+    svg.selectAll("[data-agent], [data-agent-line]")
+        .on("mouseenter", function () {
+            setHover(this.getAttribute("data-agent") || this.getAttribute("data-agent-line"));
         })
         .on("mouseleave", () => setHover(null));
 }
