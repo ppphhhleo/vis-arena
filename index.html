@@ -1589,6 +1589,11 @@ h2.subtitle {
 .three-charts .chart-pane .chart-meta {
     font-size: clamp(0.55rem, 0.68vw, 0.65rem);
 }
+.three-charts .chart-pane .chart-read {
+    font-size: clamp(0.68rem, 0.82vw, 0.78rem);
+    line-height: 1.4;
+    padding: clamp(0.38rem, 0.55vw, 0.48rem) clamp(0.5rem, 0.7vw, 0.62rem);
+}
 
 /* Shared caption below the chart grid */
 .quad-caption {
@@ -3093,94 +3098,7 @@ h2.subtitle {
 </section>
 
 <!-- ===========================================================
-     SLIDE 7 · RANK + REVIEWER DRIFT + ELO
-     2×2 grid: rank ladder · leniency · agreement · skill curves
-     =========================================================== -->
-<section class="slide slide-violet">
-  <div class="slide-content">
-    <div class="masthead reveal reveal-1">
-      <span class="slug"><span class="mark">VIS Arena</span> · Proposal</span>
-      <span class="counter">07 <strong>/</strong> 08</span>
-    </div>
-
-    <div class="prop-wrap">
-      <div class="prop-head" style="grid-template-columns: 1fr; margin-bottom: clamp(0.3rem, 0.6vw, 0.55rem);">
-        <div style="display: flex; align-items: baseline; gap: 1.2em; flex-wrap: wrap;">
-          <h1 class="title reveal reveal-2" style="margin: 0; font-size: clamp(1.3rem, 2.1vw, 1.9rem);">Who <em>leads</em>, how does judgment <em>drift</em>, and who <em>climbs</em>?</h1>
-          <span class="reveal reveal-3" style="font-family: var(--font-mono); font-size: clamp(0.6rem, 0.85vw, 0.72rem); color: var(--muted); letter-spacing: 0.06em;">rank · leniency · consensus · Elo · 12 intervals · 7 reviewers</span>
-          <span class="reveal reveal-3" style="display: inline-flex; gap: clamp(0.6rem, 1vw, 0.9rem); align-items: center; font-family: var(--font-mono); font-size: clamp(0.6rem, 0.8vw, 0.7rem); color: var(--ink-dim); letter-spacing: 0.04em;">
-            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#56B4E9;display:inline-block;"></span>A</span>
-            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#E69F00;display:inline-block;"></span>B</span>
-            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#D55E00;display:inline-block;"></span>C</span>
-            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#CC79A7;display:inline-block;"></span>D</span>
-            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#009E73;display:inline-block;"></span>E</span>
-            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#0072B2;display:inline-block;"></span>F</span>
-            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#F0E442;display:inline-block;"></span>G</span>
-          </span>
-        </div>
-      </div>
-
-      <div class="three-charts reveal reveal-4">
-        <article class="chart-pane">
-          <div class="chart-head">
-            <span class="chart-title">Rank <em>ladder</em></span>
-            <span class="chart-meta">per-interval rank · 1 = best</span>
-          </div>
-          <div class="chart-formula">
-            <code>rank(<b>r</b>, <b>t</b>) = position of <b>r</b> when agents are ordered by score at <b>t</b></code>
-          </div>
-          <div class="chart-svg-wrap">
-            <svg class="score-chart" id="rankLadder" viewBox="0 0 420 260" preserveAspectRatio="xMidYMid meet"></svg>
-          </div>
-        </article>
-
-        <article class="chart-pane">
-          <div class="chart-head">
-            <span class="chart-title">Leniency <em>drift</em></span>
-            <span class="chart-meta">score given − crowd mean</span>
-          </div>
-          <div class="chart-formula">
-            <code>L(<b>r</b>, <b>t</b>) = mean(scores <b>r</b> gives at <b>t</b>) − crowd mean at <b>t</b></code>
-          </div>
-          <div class="chart-svg-wrap">
-            <svg class="score-chart" id="leniencyLine" viewBox="0 0 420 260" preserveAspectRatio="xMidYMid meet"></svg>
-          </div>
-        </article>
-
-        <article class="chart-pane">
-          <div class="chart-head">
-            <span class="chart-title">Consensus <em>agreement</em></span>
-            <span class="chart-meta">rank-corr vs. crowd ordering</span>
-          </div>
-          <div class="chart-formula">
-            <code>A(<b>r</b>, <b>t</b>) = ρ<sub>spearman</sub>(ranks <b>r</b> gives, crowd-mean ranks)</code>
-          </div>
-          <div class="chart-svg-wrap">
-            <svg class="score-chart" id="agreementLine" viewBox="0 0 420 260" preserveAspectRatio="xMidYMid meet"></svg>
-          </div>
-        </article>
-
-        <article class="chart-pane">
-          <div class="chart-head">
-            <span class="chart-title">Elo <em>skill curves</em></span>
-            <span class="chart-meta">per-interval rating · start 1500 · K = 32</span>
-          </div>
-          <div class="chart-formula">
-            <code>
-              Elo<sub>i</sub> ← Elo<sub>i</sub> + K · (<b>actual</b> − <b>expected</b>)    ·    E(i,j) = 1 / (1 + 10<sup>(Elo<sub>j</sub> − Elo<sub>i</sub>) / 400</sup>)
-            </code>
-          </div>
-          <div class="chart-svg-wrap">
-            <svg class="score-chart" id="eloLines" viewBox="0 0 420 260" preserveAspectRatio="xMidYMid meet"></svg>
-          </div>
-        </article>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===========================================================
-     SLIDE 8 · TWO AGGREGATE VIEWS
+     SLIDE 7 · TWO AGGREGATE VIEWS
      (a) participant scatter: alignment × quality (final latest)
      (b) pairwise win matrix: preference rates
      =========================================================== -->
@@ -3188,7 +3106,7 @@ h2.subtitle {
   <div class="slide-content">
     <div class="masthead reveal reveal-1">
       <span class="slug"><span class="mark">VIS Arena</span> · Proposal</span>
-      <span class="counter">08 <strong>/</strong> 08</span>
+      <span class="counter">07 <strong>/</strong> 08</span>
     </div>
 
     <div class="prop-wrap">
@@ -3237,6 +3155,105 @@ h2.subtitle {
           </p>
           <div class="chart-svg-wrap">
             <svg class="score-chart" id="pairwiseMatrix" viewBox="0 0 500 420" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================================================
+     SLIDE 8 · RANK + REVIEWER DRIFT + ELO
+     2×2 grid: rank ladder · leniency · agreement · skill curves
+     =========================================================== -->
+<section class="slide slide-violet">
+  <div class="slide-content">
+    <div class="masthead reveal reveal-1">
+      <span class="slug"><span class="mark">VIS Arena</span> · Proposal</span>
+      <span class="counter">08 <strong>/</strong> 08</span>
+    </div>
+
+    <div class="prop-wrap">
+      <div class="prop-head" style="grid-template-columns: 1fr; margin-bottom: clamp(0.3rem, 0.6vw, 0.55rem);">
+        <div style="display: flex; align-items: baseline; gap: 1.2em; flex-wrap: wrap;">
+          <h1 class="title reveal reveal-2" style="margin: 0; font-size: clamp(1.3rem, 2.1vw, 1.9rem);">Who <em>leads</em>, how does judgment <em>drift</em>, and who <em>climbs</em>?</h1>
+          <span class="reveal reveal-3" style="font-family: var(--font-mono); font-size: clamp(0.6rem, 0.85vw, 0.72rem); color: var(--muted); letter-spacing: 0.06em;">rank · leniency · consensus · Elo · 12 intervals · 7 reviewers</span>
+          <span class="reveal reveal-3" style="display: inline-flex; gap: clamp(0.6rem, 1vw, 0.9rem); align-items: center; font-family: var(--font-mono); font-size: clamp(0.6rem, 0.8vw, 0.7rem); color: var(--ink-dim); letter-spacing: 0.04em;">
+            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#56B4E9;display:inline-block;"></span>A</span>
+            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#E69F00;display:inline-block;"></span>B</span>
+            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#D55E00;display:inline-block;"></span>C</span>
+            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#CC79A7;display:inline-block;"></span>D</span>
+            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#009E73;display:inline-block;"></span>E</span>
+            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#0072B2;display:inline-block;"></span>F</span>
+            <span style="display:inline-flex;align-items:center;gap:0.35em;"><span style="width:0.75em;height:0.75em;border-radius:999px;background:#F0E442;display:inline-block;"></span>G</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="three-charts reveal reveal-4">
+        <article class="chart-pane">
+          <div class="chart-head">
+            <span class="chart-title">Rank <em>ladder</em></span>
+            <span class="chart-meta">per-interval rank · 1 = best</span>
+          </div>
+          <div class="chart-formula">
+            <code>rank(<b>r</b>, <b>t</b>) = position of <b>r</b> when agents are ordered by score at <b>t</b></code>
+          </div>
+          <p class="chart-read">
+            Each colored line traces one participant's standing over time. Higher on the chart means better rank, so upward moves indicate overtaking others and downward moves indicate slipping behind.
+          </p>
+          <div class="chart-svg-wrap">
+            <svg class="score-chart" id="rankLadder" viewBox="0 0 420 260" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+        </article>
+
+        <article class="chart-pane">
+          <div class="chart-head">
+            <span class="chart-title">Leniency <em>drift</em></span>
+            <span class="chart-meta">score given − crowd mean</span>
+          </div>
+          <div class="chart-formula">
+            <code>L(<b>r</b>, <b>t</b>) = mean(scores <b>r</b> gives at <b>t</b>) − crowd mean at <b>t</b></code>
+          </div>
+          <p class="chart-read">
+            Values above zero mean a reviewer is scoring peers more generously than the group at that interval; values below zero mean they are harsher. The farther a line sits from zero, the stronger that reviewer's bias relative to the crowd.
+          </p>
+          <div class="chart-svg-wrap">
+            <svg class="score-chart" id="leniencyLine" viewBox="0 0 420 260" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+        </article>
+
+        <article class="chart-pane">
+          <div class="chart-head">
+            <span class="chart-title">Consensus <em>agreement</em></span>
+            <span class="chart-meta">rank-corr vs. crowd ordering</span>
+          </div>
+          <div class="chart-formula">
+            <code>A(<b>r</b>, <b>t</b>) = ρ<sub>spearman</sub>(ranks <b>r</b> gives, crowd-mean ranks)</code>
+          </div>
+          <p class="chart-read">
+            Higher values mean a reviewer's ordering of submissions closely matches the crowd's ordering; lower values mean their judgments are more idiosyncratic. This chart is about agreement in relative ranking, not generosity or harshness.
+          </p>
+          <div class="chart-svg-wrap">
+            <svg class="score-chart" id="agreementLine" viewBox="0 0 420 260" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+        </article>
+
+        <article class="chart-pane">
+          <div class="chart-head">
+            <span class="chart-title">Elo <em>skill curves</em></span>
+            <span class="chart-meta">per-interval rating · start 1500 · K = 32</span>
+          </div>
+          <div class="chart-formula">
+            <code>
+              Elo<sub>i</sub> ← Elo<sub>i</sub> + K · (<b>actual</b> − <b>expected</b>)    ·    E(i,j) = 1 / (1 + 10<sup>(Elo<sub>j</sub> − Elo<sub>i</sub>) / 400</sup>)
+            </code>
+          </div>
+          <p class="chart-read">
+            Elo summarizes repeated pairwise wins and losses into one running skill score. Rising lines indicate a participant is outperforming expectation over time, while falling lines indicate they are losing ground relative to the field.
+          </p>
+          <div class="chart-svg-wrap">
+            <svg class="score-chart" id="eloLines" viewBox="0 0 420 260" preserveAspectRatio="xMidYMid meet"></svg>
           </div>
         </article>
       </div>
