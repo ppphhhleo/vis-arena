@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VISxGenAI 2026 — DD Editorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+    --brown:   #653819;   /* DD Brown — hero band */
+    --paper:   #FBEDD9;   /* warm peach — middle band */
+    --cream:   #FFF8F0;   /* lightest — footer band */
+    --orange:  #FF671F;   /* DD Orange — primary accent */
+    --magenta: #DA1884;   /* DD Magenta — secondary accent */
+    --muted:   #A88A6E;   /* warm muted brown */
+    --ink:     #2A1810;   /* near-black with brown undertone */
+}
+@media print { body { padding: 0 !important; margin: 0 !important; background: white !important; } .flyer { box-shadow: none !important; } }
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #ddd; }
+body {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+    font-family: "Bricolage Grotesque", system-ui, sans-serif;
+}
+.flyer {
+    width: 210mm;
+    height: 297mm;
+    background: var(--cream);
+    color: var(--ink);
+    overflow: hidden;
+    box-shadow: 0 6px 40px rgba(0,0,0,0.18);
+    display: flex;
+    flex-direction: column;
+}
+
+/* HEADER — brown band */
+.hero {
+    background: var(--brown);
+    color: var(--cream);
+    padding: 16mm 14mm 9mm;
+}
+.title {
+    font-family: "Instrument Serif", serif;
+    font-weight: 400;
+    font-size: 42pt;
+    line-height: 0.98;
+    letter-spacing: -0.015em;
+    color: var(--cream);
+    margin-bottom: 5mm;
+}
+.title em {
+    font-style: italic;
+    color: var(--orange);
+}
+.venue {
+    font-family: "Instrument Serif", serif;
+    font-style: italic;
+    font-size: 22pt;
+    color: var(--paper);
+    line-height: 1.15;
+}
+.date {
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-weight: 500;
+    font-size: 17pt;
+    color: var(--orange);
+    margin-top: 2mm;
+    letter-spacing: -0.005em;
+}
+
+/* MIDDLE — paper band, tracks side-by-side */
+.middle {
+    background: var(--paper);
+    color: var(--brown);
+    padding: 8mm 14mm 6mm;
+    flex: 0 0 96mm;
+    display: flex;
+    flex-direction: column;
+}
+.middle-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1.5px solid var(--brown);
+    padding-bottom: 2mm;
+    margin-bottom: 5mm;
+}
+.middle-header h2 {
+    font-family: "Instrument Serif", serif;
+    font-weight: 400;
+    font-size: 22pt;
+    letter-spacing: -0.01em;
+}
+.middle-header .meta {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11pt;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--orange);
+}
+.tracks {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8mm;
+    margin-bottom: 6mm;
+}
+.track {
+    display: flex;
+    flex-direction: column;
+    gap: 3mm;
+}
+.track-num {
+    font-family: "Instrument Serif", serif;
+    font-style: italic;
+    font-size: 32pt;
+    line-height: 1;
+    color: var(--orange);
+}
+.track h3 {
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-weight: 700;
+    font-size: 19pt;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--brown);
+}
+.track p {
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-size: 15pt;
+    line-height: 1.4;
+    color: var(--ink);
+}
+.track p em { font-style: italic; color: var(--magenta); font-weight: 600; }
+.deadlines {
+    margin-top: auto;
+    border-top: 1px solid var(--brown);
+    padding-top: 4mm;
+    display: flex;
+    justify-content: space-between;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12pt;
+    letter-spacing: 0.04em;
+    color: var(--brown);
+}
+.deadlines b { font-weight: 600; color: var(--orange); }
+
+/* FOOTER — cream, organizers + QR */
+.footer {
+    background: var(--cream);
+    padding: 7mm 14mm 8mm;
+    color: var(--brown);
+}
+.footer h4 {
+    font-family: "Instrument Serif", serif;
+    font-weight: 400;
+    font-size: 18pt;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 3mm;
+    text-align: center;
+    border-bottom: 1px solid var(--brown);
+    padding-bottom: 2mm;
+}
+.org-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) 56mm;
+    gap: 4mm 5mm;
+    align-items: start;
+}
+.qr-pair {
+    grid-row: 1 / 3;
+    grid-column: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5mm;
+    align-items: stretch;
+}
+.qr-pair .sp-slot {
+    width: 100%;
+    height: 13mm;
+    border: 1px dashed var(--brown);
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Instrument Serif", serif;
+    font-style: italic;
+    font-size: 10pt;
+    color: var(--muted);
+}
+.qr-pair .qrs { display: flex; gap: 3mm; justify-content: center; }
+.org {
+    line-height: 1.25;
+}
+.org .name {
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-weight: 600;
+    font-size: 10.5pt;
+    color: var(--brown);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+}
+.org .aff {
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-weight: 400;
+    font-size: 6.5pt;
+    color: var(--muted);
+    margin-top: 0.5mm;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+}
+.qr { text-align: center; }
+.qr img {
+    width: 25mm;
+    height: 25mm;
+    background: white;
+    padding: 1.5mm;
+    border: 1px solid var(--brown);
+    display: block;
+}
+.qr-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 1.5mm;
+    color: var(--brown);
+    font-weight: 500;
+}
+.qr-label.discord { color: var(--magenta); }
+.contact {
+    margin-top: 3mm;
+    text-align: center;
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-weight: 500;
+    font-size: 12pt;
+    letter-spacing: 0.01em;
+    color: var(--brown);
+}
+.contact .acc { color: var(--magenta); }
+</style>
+</head>
+<body>
+<div class="flyer">
+    <header class="hero">
+        <h1 class="title">2nd GenAI, Agents,<br>&amp; the Future <em>of VIS</em></h1>
+        <div class="venue">@ IEEE VIS 2026 Workshop</div>
+        <div class="date">Nov 9, 2026 — Boston, MA</div>
+    </header>
+
+    <section class="middle">
+        <div class="middle-header">
+            <h2>Two ways to participate</h2>
+            <span class="meta">Tracks · 01 / 02</span>
+        </div>
+
+        <div class="tracks">
+            <article class="track">
+                <div class="track-num">i.</div>
+                <h3>Papers &<br>Position Talks</h3>
+                <p>Research papers, position pieces, and demos on GenAI, agents, and visualization. Short and long formats — bring early ideas, finished systems, or provocations.</p>
+            </article>
+            <article class="track">
+                <div class="track-num">ii.</div>
+                <h3>Agentic VIS<br>Challenge</h3>
+                <p>Build, adapt, and submit AI agents into the <em>VIS Arena</em> — agents that automatically analyze datasets and generate visual data reports.</p>
+            </article>
+        </div>
+
+        <div class="deadlines">
+            <span>CfP <b>May 30</b></span>
+            <span>Submit <b>Aug 15</b></span>
+            <span>Notify <b>Sept 10</b></span>
+            <span>Camera <b>Oct 1</b></span>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <h4>Organizers</h4>
+        <div class="org-grid">
+            <div class="org"><div class="name">Zhu-Tian Chen</div><div class="aff">U. Minnesota–Twin Cities</div></div>
+            <div class="org"><div class="name">Nam Wook Kim</div><div class="aff">Boston College</div></div>
+            <div class="org"><div class="name">Saeed Boorboor</div><div class="aff">U. Illinois Chicago</div></div>
+            <div class="org"><div class="name">Shivam Raval</div><div class="aff">Harvard University</div></div>
+            <div class="qr-pair">
+                <div class="sp-slot">sponsor logo</div>
+                <div class="qrs">
+                    <div class="qr"><img src="qr.png" alt="QR"><div class="qr-label">Website</div></div>
+                    <div class="qr"><img src="discord-qr.png" alt="Discord QR"><div class="qr-label discord">Discord</div></div>
+                </div>
+            </div>
+            <div class="org"><div class="name">Pan Hao</div><div class="aff">U. Minnesota–Twin Cities</div></div>
+            <div class="org"><div class="name">Qianwen Wang</div><div class="aff">U. Minnesota–Twin Cities</div></div>
+            <div class="org"><div class="name">Vidya Setlur</div><div class="aff">Tableau Research</div></div>
+            <div class="org"></div>
+        </div>
+    </footer>
+</div>
+</body>
+</html>

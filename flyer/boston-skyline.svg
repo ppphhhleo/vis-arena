@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="miter" stroke-linecap="square">
+  <!-- ground line -->
+  <line x1="0" y1="79" x2="800" y2="79"/>
+
+  <!-- Bunker Hill Monument (obelisk) -->
+  <path d="M 36 79 L 36 36 L 39 32 L 39 22 L 41 18 L 43 22 L 43 32 L 46 36 L 46 79"/>
+
+  <!-- low buildings -->
+  <path d="M 70 79 L 70 64 L 90 64 L 90 70 L 110 70 L 110 56 L 130 56 L 130 79"/>
+
+  <!-- Old State House with cupola -->
+  <path d="M 145 79 L 145 58 L 158 58 L 158 50 L 154 50 L 154 44 L 156 40 L 162 40 L 164 44 L 164 50 L 160 50 L 160 58 L 175 58 L 175 79"/>
+
+  <!-- Custom House Tower (clock tower) -->
+  <path d="M 195 79 L 195 32 L 215 32 L 215 27 L 205 22 L 195 27 L 195 32"/>
+  <circle cx="205" cy="44" r="3.5"/>
+  <line x1="205" y1="44" x2="205" y2="41.5"/>
+  <line x1="205" y1="44" x2="207" y2="44"/>
+
+  <!-- low fillers -->
+  <path d="M 235 79 L 235 62 L 255 62 L 255 52 L 275 52 L 275 67 L 295 67 L 295 79"/>
+
+  <!-- Prudential Tower -->
+  <rect x="310" y="22" width="38" height="57"/>
+  <line x1="310" y1="36" x2="348" y2="36"/>
+  <line x1="320" y1="22" x2="320" y2="79"/>
+  <line x1="329" y1="22" x2="329" y2="79"/>
+  <line x1="338" y1="22" x2="338" y2="79"/>
+
+  <!-- John Hancock Tower (tall, slim, with peaked corner) -->
+  <path d="M 365 79 L 365 28 L 380 21 L 395 28 L 395 79"/>
+  <line x1="380" y1="21" x2="380" y2="79"/>
+
+  <!-- mid -->
+  <path d="M 415 79 L 415 56 L 435 56 L 435 79"/>
+  <path d="M 445 79 L 445 50 L 462 50 L 462 79"/>
+
+  <!-- Zakim Bridge (cable-stayed) -->
+  <line x1="485" y1="79" x2="485" y2="40"/>
+  <line x1="555" y1="79" x2="555" y2="40"/>
+  <path d="M 485 40 L 488 32 L 485 24 L 482 32 Z"/>
+  <path d="M 555 40 L 558 32 L 555 24 L 552 32 Z"/>
+  <line x1="485" y1="50" x2="555" y2="50"/>
+  <line x1="488" y1="40" x2="478" y2="79"/>
+  <line x1="498" y1="40" x2="494" y2="79"/>
+  <line x1="510" y1="40" x2="514" y2="79"/>
+  <line x1="530" y1="40" x2="526" y2="79"/>
+  <line x1="540" y1="40" x2="544" y2="79"/>
+  <line x1="552" y1="40" x2="562" y2="79"/>
+
+  <!-- low buildings between Zakim and State House -->
+  <path d="M 580 79 L 580 65 L 600 65 L 600 55 L 620 55 L 620 68 L 640 68 L 640 79"/>
+
+  <!-- Massachusetts State House (gold dome) -->
+  <path d="M 658 79 L 658 58 L 670 58 L 670 52 C 670 46, 678 46, 678 52 L 678 58 L 690 58 L 690 79"/>
+  <line x1="674" y1="46" x2="674" y2="42"/>
+
+  <!-- right side fillers -->
+  <path d="M 710 79 L 710 66 L 730 66 L 730 79"/>
+  <path d="M 740 79 L 740 60 L 760 60 L 760 70 L 780 70 L 780 79"/>
+</svg>

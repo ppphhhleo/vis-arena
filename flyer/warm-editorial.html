@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VISxGenAI 2026 — Warm Editorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --paper:   #F8F2EC;   /* warm off-white */
+    --ink:     #5C361F;   /* deep warm brown */
+    --magenta: #C53A87;   /* vivid magenta */
+    --orange:  #DC833A;   /* warm orange */
+    --peach:   #EAA976;   /* peach tan */
+    --muted:   #9A7A66;   /* muted brown */
+}
+@media print { body { padding: 0 !important; margin: 0 !important; background: white !important; } .flyer { box-shadow: none !important; } }
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #ddd; }
+body {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+    font-family: "Work Sans", system-ui, sans-serif;
+    color: var(--ink);
+}
+.flyer {
+    width: 210mm;
+    height: 297mm;
+    background: var(--paper);
+    overflow: hidden;
+    box-shadow: 0 6px 40px rgba(0,0,0,0.18);
+    padding: 16mm 14mm 9mm;
+    display: flex;
+    flex-direction: column;
+}
+
+/* MASTHEAD */
+.masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 3mm;
+    font-family: "Work Sans", sans-serif;
+    font-size: 11pt;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+.masthead .vol {
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 13pt;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+/* TITLE */
+.title-block {
+    margin-top: 5mm;
+    text-align: center;
+}
+.title {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 400;
+    font-size: 38pt;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+}
+.title .underline-word {
+    position: relative;
+    display: inline-block;
+}
+.title .underline-word::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: -2px;
+    right: -2px;
+    height: 7px;
+    background: var(--orange);
+    z-index: -1;
+    opacity: 0.7;
+}
+.venue {
+    margin-top: 4mm;
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 22pt;
+    line-height: 1.2;
+    color: var(--ink);
+}
+.date {
+    margin-top: 1.5mm;
+    font-family: "Work Sans", sans-serif;
+    font-weight: 500;
+    font-size: 16pt;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+}
+.flourish {
+    display: block;
+    margin: 4mm auto 0;
+    width: 24mm;
+    height: 1px;
+    background: var(--ink);
+    position: relative;
+}
+.flourish::before {
+    content: '✦';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--paper);
+    padding: 0 4mm;
+    font-size: 11pt;
+    color: var(--ink);
+}
+
+/* TRACKS — side by side */
+.tracks {
+    margin-top: 6mm;
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+    gap: 8mm;
+}
+.tracks .rule { background: var(--ink); opacity: 0.6; }
+.track-tag {
+    font-family: "Work Sans", sans-serif;
+    font-size: 11pt;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 3mm;
+    display: flex;
+    align-items: center;
+    gap: 3mm;
+}
+.track-tag .pill {
+    width: 6mm; height: 6mm; border-radius: 50%;
+    display: inline-block;
+}
+.track.one .pill { background: var(--peach); }
+.track.two .pill { background: var(--magenta); }
+.track h3 {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 600;
+    font-size: 22pt;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 3mm;
+}
+.track p {
+    font-family: "Work Sans", sans-serif;
+    font-weight: 400;
+    font-size: 15pt;
+    line-height: 1.45;
+    color: var(--ink);
+}
+.track p em {
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-size: 17pt;
+}
+
+/* DEADLINES */
+.deadlines {
+    margin-top: 6mm;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 4mm 0;
+    display: flex;
+    justify-content: space-around;
+}
+.deadlines .item {
+    text-align: center;
+}
+.deadlines .lbl {
+    font-family: "Work Sans", sans-serif;
+    font-weight: 500;
+    font-size: 10pt;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink);
+    display: block;
+    margin-bottom: 1mm;
+}
+.deadlines .val {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 19pt;
+    font-weight: 500;
+}
+
+/* ORGANIZERS */
+.org-section {
+    margin-top: 8mm;
+    padding-top: 6mm;
+}
+.org-section h4 {
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 18pt;
+    text-align: center;
+    margin-bottom: 3mm;
+    color: var(--ink);
+}
+.org-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) 56mm;
+    gap: 3.5mm 5mm;
+    align-items: start;
+}
+.qr-pair {
+    grid-row: 1 / 3;
+    grid-column: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5mm;
+    align-items: stretch;
+}
+.qr-pair .sp-slot {
+    width: 100%;
+    height: 13mm;
+    border: 1px solid var(--ink);
+    background: rgba(255,255,255,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-size: 11pt;
+    color: var(--ink);
+    opacity: 0.6;
+}
+.qr-pair .qrs { display: flex; gap: 3mm; justify-content: center; }
+.org { line-height: 1.25; text-align: center; min-width: 0; }
+.org .avatar {
+    width: 12mm;
+    height: 12mm;
+    border-radius: 50%;
+    background: var(--peach);
+    border: 1px dashed var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 600;
+    font-size: 11pt;
+    color: var(--ink);
+    margin: 0 auto 2mm;
+    letter-spacing: 0.02em;
+}
+.org .name {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 600;
+    font-size: 10.5pt;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+}
+.org .aff {
+    font-family: "Work Sans", sans-serif;
+    font-weight: 400;
+    font-size: 6.5pt;
+    color: var(--muted);
+    margin-top: 0.5mm;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+}
+.qr { text-align: center; }
+.qr img {
+    width: 25mm;
+    height: 25mm;
+    background: white;
+    padding: 1.5mm;
+    border: 1px solid var(--ink);
+    display: block;
+}
+.qr-label {
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-size: 11pt;
+    margin-top: 2mm;
+    color: var(--ink);
+}
+.contact {
+    margin-top: 4mm;
+    text-align: center;
+    font-family: "Work Sans", sans-serif;
+    font-weight: 500;
+    font-size: 12pt;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+}
+.sponsors {
+    margin-top: 5mm;
+    padding-top: 3mm;
+    border-top: 1px solid var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 4mm;
+}
+.sponsors .sp-label {
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-size: 13pt;
+    color: var(--ink);
+    flex-shrink: 0;
+    opacity: 0.85;
+}
+.sponsors .sp-slots {
+    display: flex;
+    gap: 3mm;
+    flex: 1;
+    justify-content: flex-start;
+}
+.sponsors .sp-slot { width: 50mm; }
+.sponsors .sp-slot {
+    height: 11mm;
+    border: 1px solid var(--ink);
+    background: rgba(255,255,255,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-size: 11pt;
+    color: var(--ink);
+    opacity: 0.6;
+}
+</style>
+</head>
+<body>
+<div class="flyer">
+    <div class="title-block">
+        <h1 class="title">
+            2nd GenAI, Agents,<br>
+            &amp; the Future of <span class="underline-word">Visualization</span>
+        </h1>
+        <div class="venue">@ IEEE VIS 2026 Workshop</div>
+        <div class="date">Nov 9, 2026 · Boston, MA</div>
+        <span class="flourish"></span>
+    </div>
+
+    <div class="tracks">
+        <article class="track one">
+            <div class="track-tag"><span class="pill"></span>Track I</div>
+            <h3>Papers &<br>Position Talks</h3>
+            <p>Research papers, position pieces, and demos on GenAI, agents, and visualization. Short and long formats — bring <em>early ideas</em>, finished systems, or thoughtful provocations.</p>
+        </article>
+        <div class="rule"></div>
+        <article class="track two">
+            <div class="track-tag"><span class="pill"></span>Track II</div>
+            <h3>The Agentic<br>VIS Challenge</h3>
+            <p>Build, adapt, and submit AI agents into the <em>VIS Arena</em> — agents that automatically analyze datasets and generate visual data reports.</p>
+        </article>
+    </div>
+
+    <div class="deadlines">
+        <div class="item"><span class="lbl">CfP opens</span><span class="val">May 30</span></div>
+        <div class="item"><span class="lbl">Submissions</span><span class="val">Aug 15</span></div>
+        <div class="item"><span class="lbl">Decisions</span><span class="val">Sept 10</span></div>
+        <div class="item"><span class="lbl">Final</span><span class="val">Oct 1</span></div>
+    </div>
+
+    <div class="org-section">
+        <h4>Organizers</h4>
+        <div class="org-grid">
+            <div class="org"><div class="avatar">ZC</div><div class="name">Zhu-Tian Chen</div><div class="aff">U. Minnesota–Twin Cities</div></div>
+            <div class="org"><div class="avatar">NK</div><div class="name">Nam Wook Kim</div><div class="aff">Boston College</div></div>
+            <div class="org"><div class="avatar">SB</div><div class="name">Saeed Boorboor</div><div class="aff">U. Illinois Chicago</div></div>
+            <div class="org"><div class="avatar">SR</div><div class="name">Shivam Raval</div><div class="aff">Harvard University</div></div>
+            <div class="qr-pair">
+                <div class="sp-slot">sponsor logo</div>
+                <div class="qrs">
+                    <div class="qr"><img src="qr.png" alt="QR"><div class="qr-label">Website</div></div>
+                    <div class="qr"><img src="discord-qr.png" alt="Discord QR"><div class="qr-label">Discord</div></div>
+                </div>
+            </div>
+            <div class="org"><div class="avatar">PH</div><div class="name">Pan Hao</div><div class="aff">U. Minnesota–Twin Cities</div></div>
+            <div class="org"><div class="avatar">QW</div><div class="name">Qianwen Wang</div><div class="aff">U. Minnesota–Twin Cities</div></div>
+            <div class="org"><div class="avatar">VS</div><div class="name">Vidya Setlur</div><div class="aff">Tableau Research</div></div>
+            <div class="org"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

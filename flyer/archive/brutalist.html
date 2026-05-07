@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VISxGenAI 2026 — Brutalist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --paper: #ededed;
+    --ink:   #0a0a0a;
+    --accent: #ff4015;
+    --grid: rgba(10,10,10,0.08);
+}
+@media print { body { padding: 0 !important; margin: 0 !important; background: white !important; } .flyer { box-shadow: none !important; } }
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #ddd; }
+body {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+    font-family: "JetBrains Mono", monospace;
+    color: var(--ink);
+}
+.flyer {
+    width: 210mm;
+    height: 297mm;
+    background: var(--paper);
+    overflow: hidden;
+    box-shadow: 0 6px 40px rgba(0,0,0,0.18);
+    background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 6mm 6mm;
+    display: flex;
+    flex-direction: column;
+}
+
+/* TOP BAR */
+.bar {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3.5mm 10mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11pt;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+.bar .accent { color: var(--accent); }
+.bar .blink::after { content: '_'; animation: blink 1s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* HEADER block */
+.header {
+    padding: 7mm 12mm 3mm;
+}
+.title {
+    font-family: "Space Grotesk", "JetBrains Mono", monospace;
+    font-weight: 700;
+    font-size: 38pt;
+    line-height: 0.92;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+.title .small { font-size: 20pt; font-weight: 600; display: block; margin-bottom: 1.5mm; color: var(--ink); opacity: 0.55; }
+.title .x { color: var(--accent); }
+.venue {
+    margin-top: 5mm;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4mm;
+}
+.venue .row {
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    padding: 2.5mm 5mm;
+    display: flex;
+    align-items: baseline;
+    gap: 4mm;
+}
+.venue .k {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9.5pt;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    font-weight: 500;
+}
+.venue .v {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 15pt;
+    letter-spacing: -0.01em;
+}
+.venue .v.acc { color: var(--accent); }
+
+/* TRACKS */
+.tracks {
+    margin: 5mm 12mm 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5mm;
+}
+.track {
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+}
+.track .head {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2.5mm 5mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+.track .head .dots { display: flex; gap: 2mm; }
+.track .head .dots span {
+    width: 3mm; height: 3mm; border-radius: 50%; background: var(--paper); opacity: 0.5;
+}
+.track .head .dots span:first-child { background: var(--accent); opacity: 1; }
+.track .body {
+    padding: 5mm 6mm 6mm;
+    display: flex;
+    flex-direction: column;
+    gap: 3mm;
+    flex: 1;
+}
+.track .num {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11pt;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+}
+.track h3 {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 19pt;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+.track p {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11.5pt;
+    line-height: 1.5;
+    color: var(--ink);
+    opacity: 0.9;
+}
+.track .cmd {
+    margin-top: auto;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11pt;
+    background: var(--ink);
+    color: var(--accent);
+    padding: 2mm 3mm;
+    border-left: 3px solid var(--accent);
+}
+.track .cmd::before { content: '$ '; opacity: 0.6; color: var(--paper); }
+
+/* TIMELINE */
+.timeline {
+    margin: 5mm 12mm 0;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    padding: 3.5mm 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 13pt;
+    font-weight: 600;
+}
+.timeline .stop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1mm;
+}
+.timeline .stop .k {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 9.5pt;
+    opacity: 0.6;
+    font-weight: 500;
+}
+.timeline .stop .v { font-weight: 700; }
+.timeline .stop.now .v { color: var(--accent); }
+
+/* ORGANIZERS */
+.org-section {
+    margin: 5mm 12mm 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.org-section h4 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 18pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 3mm;
+    text-align: center;
+    color: var(--ink);
+    position: relative;
+}
+.org-section h4::before, .org-section h4::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 30%;
+    height: 1.5px;
+    background: var(--ink);
+}
+.org-section h4::before { left: 0; }
+.org-section h4::after { right: 0; }
+
+.org-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) 56mm;
+    gap: 3.5mm 5mm;
+    align-items: start;
+}
+.qr-pair {
+    grid-row: 1 / 3;
+    grid-column: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5mm;
+    align-items: stretch;
+    border-left: none !important;
+    padding-left: 0 !important;
+}
+.qr-pair .sp-slot {
+    width: 100%;
+    height: 13mm;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9pt;
+    color: var(--ink);
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+.qr-pair .sp-slot::before { content: '[ '; opacity: 0.5; }
+.qr-pair .sp-slot::after { content: ' ]'; opacity: 0.5; }
+.qr-pair .qrs { display: flex; gap: 3mm; justify-content: center; }
+.org {
+    line-height: 1.3;
+    border-left: 2px solid var(--accent);
+    padding-left: 3mm;
+}
+.org .name {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 600;
+    font-size: 13pt;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+}
+.org .aff {
+    font-family: "JetBrains Mono", monospace;
+    font-weight: 400;
+    font-size: 9.5pt;
+    color: var(--ink);
+    opacity: 0.7;
+    margin-top: 1mm;
+}
+.qr {
+    text-align: center;
+    border: none !important;
+    padding: 0 !important;
+}
+.qr img {
+    width: 25mm;
+    height: 25mm;
+    background: white;
+    padding: 1.5mm;
+    border: 2px solid var(--ink);
+    display: block;
+}
+.qr-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9.5pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 2mm;
+    color: var(--ink);
+    font-weight: 600;
+}
+.qr-label .acc { color: var(--accent); }
+.contact {
+    padding: 3mm 0 6mm;
+    text-align: center;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11pt;
+    font-weight: 500;
+    color: var(--ink);
+}
+.contact .acc { color: var(--accent); }
+.sponsors {
+    margin-top: auto;
+    padding: 3mm 0 0;
+    border-top: 2px solid var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 4mm;
+}
+.sponsors .sp-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10pt;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    flex-shrink: 0;
+}
+.sponsors .sp-slots {
+    display: flex;
+    gap: 3mm;
+    flex: 1;
+    justify-content: flex-start;
+}
+.sponsors .sp-slot { width: 50mm; }
+.sponsors .sp-slot {
+    height: 11mm;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 9pt;
+    color: var(--ink);
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+.sponsors .sp-slot::before { content: '[ '; opacity: 0.5; }
+.sponsors .sp-slot::after { content: ' ]'; opacity: 0.5; }
+</style>
+</head>
+<body>
+<div class="flyer">
+    <div class="header">
+        <h1 class="title">
+            2ND GenAI<span class="x">,</span> Agents<span class="x">,</span><br>
+            &amp; the Future of VIS
+        </h1>
+        <div class="venue">
+            <div class="row"><span class="k">venue</span><span class="v acc">@ IEEE VIS 2026 Workshop</span></div>
+            <div class="row"><span class="k">when</span><span class="v">Nov 9, 2026 · Boston, MA</span></div>
+        </div>
+    </div>
+
+    <div class="tracks">
+        <article class="track">
+            <div class="head"><span>track_01.md</span><span class="dots"><span></span><span></span><span></span></span></div>
+            <div class="body">
+                <div class="num">[ 01 / PAPERS ]</div>
+                <h3>Papers &<br>Position Talks</h3>
+                <p>Research papers, position pieces, and demos on GenAI, agents, and visualization. Short and long formats welcome.</p>
+                <div class="cmd">submit --type=paper --by=2026-08-15</div>
+            </div>
+        </article>
+        <article class="track">
+            <div class="head"><span>track_02.md</span><span class="dots"><span></span><span></span><span></span></span></div>
+            <div class="body">
+                <div class="num">[ 02 / CHALLENGE ]</div>
+                <h3>Agentic VIS<br>Challenge</h3>
+                <p>Build, adapt, and submit AI agents into the VIS Arena — agents that automatically analyze datasets and generate visual data reports.</p>
+                <div class="cmd">vis-arena register --agent=&lt;you&gt;</div>
+            </div>
+        </article>
+    </div>
+
+    <div class="timeline">
+        <div class="stop now"><span class="k">CfP</span><span class="v">May 30</span></div>
+        <div class="stop"><span class="k">Submit</span><span class="v">Aug 15</span></div>
+        <div class="stop"><span class="k">Notify</span><span class="v">Sept 10</span></div>
+        <div class="stop"><span class="k">Camera</span><span class="v">Oct 1</span></div>
+        <div class="stop"><span class="k">Workshop</span><span class="v">Nov 9</span></div>
+    </div>
+
+    <div class="org-section">
+        <h4>Organizers</h4>
+        <div class="org-grid">
+            <div class="org"><div class="name">Zhu-Tian Chen</div><div class="aff">U. Minnesota–Twin Cities</div></div>
+            <div class="org"><div class="name">Nam Wook Kim</div><div class="aff">Boston College</div></div>
+            <div class="org"><div class="name">Saeed Boorboor</div><div class="aff">U. Illinois Chicago</div></div>
+            <div class="org"><div class="name">Shivam Raval</div><div class="aff">Harvard University</div></div>
+            <div class="qr-pair">
+                <div class="sp-slot">sponsor</div>
+                <div class="qrs">
+                    <div class="qr"><img src="qr.png" alt="QR"><div class="qr-label"><span class="acc">→</span> Website</div></div>
+                    <div class="qr"><img src="discord-qr.png" alt="Discord QR"><div class="qr-label"><span class="acc">→</span> Discord</div></div>
+                </div>
+            </div>
+            <div class="org"><div class="name">Pan Hao</div><div class="aff">U. Minnesota–Twin Cities</div></div>
+            <div class="org"><div class="name">Qianwen Wang</div><div class="aff">U. Minnesota–Twin Cities</div></div>
+            <div class="org"><div class="name">Vidya Setlur</div><div class="aff">Tableau Research</div></div>
+            <div class="org" style="border-left:none;"></div>
+        </div>
+        <div class="contact"><span class="acc">→</span> visxgenai@ieeevis.org · visxgenai.github.io</div>
+    </div>
+</div>
+</body>
+</html>

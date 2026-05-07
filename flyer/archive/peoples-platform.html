@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VISxGenAI 2026 — People's Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Archivo+Narrow:wght@400;500;600;700&family=Caveat+Brush&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+    --blue:   #2C2CDC;
+    --orange: #F2A03A;
+    --red:    #E83A2A;
+    --cream:  #F4E9D6;
+    --ink:    #0E0E14;
+}
+@media print { body { padding: 0 !important; margin: 0 !important; background: white !important; } .flyer { box-shadow: none !important; } }
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #ddd; }
+body {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+    font-family: "Archivo Narrow", sans-serif;
+}
+.flyer {
+    width: 210mm;
+    height: 297mm;
+    background: var(--cream);
+    color: var(--ink);
+    overflow: hidden;
+    box-shadow: 0 6px 40px rgba(0,0,0,0.18);
+    padding: 9mm 12mm;
+    display: flex;
+    flex-direction: column;
+}
+
+/* HEADER */
+.stamp {
+    border-top: 3px solid var(--ink);
+    border-bottom: 3px solid var(--ink);
+    padding: 2.5mm 0;
+    font-family: "DM Mono", monospace;
+    font-weight: 500;
+    font-size: 11pt;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+}
+.stamp .right { color: var(--red); }
+.title-block {
+    margin-top: 4mm;
+}
+.slab {
+    font-family: "Alfa Slab One", serif;
+    font-size: 38pt;
+    line-height: 0.94;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+.slab .vis { color: var(--blue); }
+.slab .x { color: var(--red); display: inline-block; transform: rotate(-3deg); margin: 0 1pt; }
+.slab .gen { color: var(--orange); }
+.brush {
+    font-family: "Caveat Brush", cursive;
+    font-size: 22pt;
+    color: var(--red);
+    transform: rotate(-2deg);
+    display: inline-block;
+    margin-top: 2mm;
+    line-height: 1;
+}
+.venue {
+    margin-top: 4mm;
+    background: var(--blue);
+    color: var(--cream);
+    padding: 3mm 6mm;
+    font-family: "Alfa Slab One", serif;
+    font-size: 18pt;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.venue .date {
+    font-family: "Archivo Narrow", sans-serif;
+    font-weight: 700;
+    font-size: 16pt;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+/* TRACKS — side by side */
+.tracks {
+    margin-top: 5mm;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5mm;
+}
+.track {
+    padding: 4mm 5mm 5mm;
+    color: var(--cream);
+    display: flex;
+    flex-direction: column;
+    gap: 2mm;
+}
+.track.one { background: var(--orange); color: var(--ink); }
+.track.two { background: var(--red); }
+.track-num {
+    font-family: "Alfa Slab One", serif;
+    font-size: 32pt;
+    line-height: 1;
+}
+.track.one .track-num { color: var(--blue); }
+.track.two .track-num { color: var(--cream); }
+.track h3 {
+    font-family: "Alfa Slab One", serif;
+    font-size: 20pt;
+    line-height: 1;
+    text-transform: uppercase;
+}
+.track p {
+    font-family: "Archivo Narrow", sans-serif;
+    font-weight: 500;
+    font-size: 15pt;
+    line-height: 1.35;
+}
+.track p i { font-style: italic; }
+.track .stripe {
+    font-family: "DM Mono", monospace;
+    font-size: 11pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-top: 2px solid currentColor;
+    padding-top: 2mm;
+    margin-top: 2mm;
+}
+
+/* DEADLINES strip */
+.deadlines {
+    margin-top: 5mm;
+    display: flex;
+    justify-content: space-between;
+    border-top: 3px solid var(--ink);
+    border-bottom: 3px solid var(--ink);
+    padding: 3mm 0;
+    font-family: "DM Mono", monospace;
+    font-size: 13pt;
+    color: var(--ink);
+    font-weight: 500;
+}
+.deadlines b { color: var(--red); font-weight: 700; margin-left: 2mm; }
+
+/* ORGANIZERS */
+.org-section {
+    margin-top: 5mm;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.org-section h4 {
+    font-family: "Alfa Slab One", serif;
+    font-size: 18pt;
+    text-transform: uppercase;
+    color: var(--blue);
+    text-align: center;
+    margin-bottom: 3mm;
+    letter-spacing: 0.05em;
+}
+.org-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) 56mm;
+    gap: 3mm 5mm;
+    align-items: start;
+}
+.qr-pair {
+    grid-row: 1 / 3;
+    grid-column: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5mm;
+    align-items: stretch;
+}
+.qr-pair .sp-slot {
+    width: 100%;
+    height: 13mm;
+    border: 2px solid var(--ink);
+    background: rgba(255,255,255,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "DM Mono", monospace;
+    font-size: 9pt;
+    color: var(--ink);
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+.qr-pair .qrs { display: flex; gap: 3mm; justify-content: center; }
+.org { line-height: 1.2; }
+.org .name {
+    font-family: "Archivo Narrow", sans-serif;
+    font-weight: 700;
+    font-size: 14pt;
+    color: var(--ink);
+}
+.org .aff {
+    font-family: "Archivo Narrow", sans-serif;
+    font-weight: 500;
+    font-size: 10pt;
+    color: var(--red);
+    margin-top: 0.5mm;
+}
+.qr { text-align: center; }
+.qr img {
+    width: 25mm;
+    height: 25mm;
+    background: white;
+    padding: 1.5mm;
+    border: 2px solid var(--ink);
+    display: block;
+}
+.qr-label {
+    font-family: "DM Mono", monospace;
+    font-size: 9.5pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 1.5mm;
+    color: var(--ink);
+    font-weight: 600;
+}
+.contact {
+    padding-top: 3mm;
+    text-align: center;
+    font-family: "DM Mono", monospace;
+    font-size: 11pt;
+    font-weight: 500;
+    color: var(--blue);
+}
+.sponsors {
+    margin-top: auto;
+    padding-top: 4mm;
+    border-top: 2px solid var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 4mm;
+}
+.sponsors .sp-label {
+    font-family: "Alfa Slab One", serif;
+    font-size: 13pt;
+    text-transform: uppercase;
+    color: var(--blue);
+    flex-shrink: 0;
+}
+.sponsors .sp-slots {
+    display: flex;
+    gap: 3mm;
+    flex: 1;
+    justify-content: flex-start;
+}
+.sponsors .sp-slot { width: 50mm; }
+.sponsors .sp-slot {
+    height: 11mm;
+    border: 2px solid var(--ink);
+    background: rgba(255,255,255,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "DM Mono", monospace;
+    font-size: 9pt;
+    color: var(--ink);
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+</style>
+</head>
+<body>
+<div class="flyer">
+    <div class="title-block">
+        <h1 class="slab">2nd <span class="vis">GenAI</span><span class="x">,</span><br><span class="gen">Agents</span><span class="x">,</span> &amp; VIS</h1>
+        <div class="brush">live agents · real reports · no fixed rubric</div>
+    </div>
+
+    <div class="venue">
+        <span>@ IEEE VIS 2026</span>
+        <span class="date">Nov 9 · Boston, MA</span>
+    </div>
+
+    <div class="tracks">
+        <article class="track one">
+            <div class="track-num">01</div>
+            <h3>Papers &<br>Position Talks</h3>
+            <p>Research papers, position pieces, and demos on GenAI, agents, and visualization. Short or long. <i>Early ideas welcome.</i></p>
+            <div class="stripe">Submit · Aug 15</div>
+        </article>
+        <article class="track two">
+            <div class="track-num">02</div>
+            <h3>Agentic VIS<br>Challenge</h3>
+            <p>Build, adapt, and submit AI agents into the <i>VIS Arena</i> — agents that automatically analyze datasets and generate visual data reports.</p>
+            <div class="stripe">Live cross-eval</div>
+        </article>
+    </div>
+
+    <div class="deadlines">
+        <span>CfP <b>May 30</b></span>
+        <span>Submit <b>Aug 15</b></span>
+        <span>Notify <b>Sept 10</b></span>
+        <span>Camera <b>Oct 1</b></span>
+    </div>
+
+    <div class="org-section">
+        <h4>Organizers</h4>
+        <div class="org-grid">
+            <div class="org"><div class="name">Zhu-Tian Chen</div><div class="aff">U. Minnesota–Twin Cities</div></div>
+            <div class="org"><div class="name">Nam Wook Kim</div><div class="aff">Boston College</div></div>
+            <div class="org"><div class="name">Saeed Boorboor</div><div class="aff">U. Illinois Chicago</div></div>
+            <div class="org"><div class="name">Shivam Raval</div><div class="aff">Harvard University</div></div>
+            <div class="qr-pair">
+                <div class="sp-slot">sponsor logo</div>
+                <div class="qrs">
+                    <div class="qr"><img src="qr.png" alt="QR"><div class="qr-label">Website</div></div>
+                    <div class="qr"><img src="discord-qr.png" alt="Discord QR"><div class="qr-label">Discord</div></div>
+                </div>
+            </div>
+            <div class="org"><div class="name">Pan Hao</div><div class="aff">U. Minnesota–Twin Cities</div></div>
+            <div class="org"><div class="name">Qianwen Wang</div><div class="aff">U. Minnesota–Twin Cities</div></div>
+            <div class="org"><div class="name">Vidya Setlur</div><div class="aff">Tableau Research</div></div>
+            <div class="org"></div>
+        </div>
+        <div class="contact">visxgenai@ieeevis.org · visxgenai.github.io</div>
+    </div>
+</div>
+</body>
+</html>

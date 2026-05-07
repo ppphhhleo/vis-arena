@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VISxGenAI 2026 — Bold Poster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg:    #FFFFFF;
+    --light: #F5F2EF;
+    --dark:  #1C1410;
+    --red:   #D8000F;
+}
+@media print { body { padding: 0 !important; margin: 0 !important; background: white !important; } .flyer { box-shadow: none !important; } }
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #ddd; }
+body {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    color: var(--dark);
+}
+.flyer {
+    width: 210mm;
+    height: 297mm;
+    background: var(--bg);
+    overflow: hidden;
+    box-shadow: 0 6px 40px rgba(0,0,0,0.18);
+    padding: 16mm 14mm 9mm;
+    display: flex;
+    flex-direction: column;
+}
+
+/* TOP STRIP */
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 4px solid var(--dark);
+    border-bottom: 1px solid var(--dark);
+    padding: 2.5mm 0;
+}
+.top .left {
+    font-family: "Libre Baskerville", serif;
+    font-size: 11pt;
+    letter-spacing: 0.04em;
+}
+.top .right {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 10pt;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--red);
+}
+
+/* HERO */
+.hero {
+    margin-top: 6mm;
+}
+.kicker {
+    font-family: "Libre Baskerville", serif;
+    font-style: italic;
+    font-size: 14pt;
+    color: var(--dark);
+    margin-bottom: 4mm;
+}
+.poster-title {
+    font-family: "Shrikhand", "Libre Baskerville", serif;
+    font-weight: 400;
+    font-size: 52pt;
+    line-height: 0.95;
+    letter-spacing: -0.015em;
+    color: var(--dark);
+}
+.poster-title .red { color: var(--red); }
+.poster-title .ital {
+    font-family: "Libre Baskerville", serif;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--dark);
+}
+.venue-row {
+    margin-top: 6mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-top: 1px solid var(--dark);
+    padding-top: 3mm;
+}
+.venue {
+    font-family: "Libre Baskerville", serif;
+    font-style: italic;
+    font-size: 19pt;
+    color: var(--dark);
+}
+.date {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 600;
+    font-size: 17pt;
+    color: var(--red);
+    letter-spacing: 0.01em;
+}
+
+/* TRACKS */
+.tracks {
+    margin-top: 7mm;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6mm;
+}
+.track {
+    background: var(--light);
+    padding: 5mm 5mm 5mm;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 4mm;
+    row-gap: 3mm;
+    align-items: baseline;
+    border-top: 4px solid var(--dark);
+}
+.track > p { grid-column: 1 / -1; }
+.track.two { border-top-color: var(--red); }
+.track .num {
+    font-family: "Shrikhand", serif;
+    font-size: 30pt;
+    line-height: 1;
+    color: var(--dark);
+}
+.track.two .num { color: var(--red); }
+.track h3 {
+    font-family: "Libre Baskerville", serif;
+    font-weight: 700;
+    font-size: 19pt;
+    line-height: 1.05;
+    letter-spacing: -0.005em;
+    color: var(--dark);
+}
+.track p {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 400;
+    font-size: 15pt;
+    line-height: 1.4;
+    color: var(--dark);
+}
+.track p em {
+    font-family: "Libre Baskerville", serif;
+    font-style: italic;
+    color: var(--red);
+}
+
+/* DEADLINES */
+.deadlines {
+    margin-top: 6mm;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--dark);
+    border-bottom: 1px solid var(--dark);
+    padding: 3mm 0;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 13pt;
+}
+.deadlines .item .lbl {
+    font-family: "Libre Baskerville", serif;
+    font-style: italic;
+    font-size: 10pt;
+    color: var(--dark);
+    margin-right: 2mm;
+}
+.deadlines .item .val {
+    font-weight: 700;
+    color: var(--red);
+}
+
+/* ORGANIZERS */
+.org-section {
+    margin-top: 14mm;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.org-section h4 {
+    font-family: "Shrikhand", serif;
+    font-size: 22pt;
+    color: var(--dark);
+    text-align: center;
+    margin-bottom: 4mm;
+    letter-spacing: 0.005em;
+}
+.org-section h4 .red { color: var(--red); }
+.org-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) 56mm;
+    gap: 3.5mm 5mm;
+    align-items: start;
+}
+.org { line-height: 1.25; text-align: center; min-width: 0; }
+.org .avatar {
+    width: 12mm;
+    height: 12mm;
+    border-radius: 50%;
+    background: var(--light);
+    border: 1px dashed var(--dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Libre Baskerville", serif;
+    font-weight: 700;
+    font-size: 9pt;
+    color: var(--dark);
+    margin: 0 auto 2mm;
+    letter-spacing: 0.02em;
+}
+.org .name {
+    font-family: "Libre Baskerville", serif;
+    font-weight: 700;
+    font-size: 9.5pt;
+    color: var(--dark);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+}
+.org .aff {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 400;
+    font-size: 6.5pt;
+    color: var(--dark);
+    margin-top: 0.5mm;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+}
+.qr-pair {
+    grid-row: 1 / 3;
+    grid-column: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5mm;
+    align-items: stretch;
+}
+.qr-pair .sp-slot {
+    width: 100%;
+    height: 13mm;
+    border: 1px dashed var(--dark);
+    background: var(--light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Libre Baskerville", serif;
+    font-style: italic;
+    font-size: 10pt;
+    color: var(--dark);
+    opacity: 0.6;
+}
+.qr-pair .qrs { display: flex; gap: 3mm; justify-content: center; }
+.qr { text-align: center; }
+.qr img {
+    width: 25mm;
+    height: 25mm;
+    background: white;
+    padding: 1.5mm;
+    border: 1px solid var(--dark);
+    display: block;
+}
+.qr-label {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 9pt;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-top: 1.5mm;
+    color: var(--dark);
+    font-weight: 600;
+}
+.qr-label .red { color: var(--red); }
+.contact {
+    margin-top: 4mm;
+    text-align: center;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 500;
+    font-size: 12pt;
+    letter-spacing: 0.02em;
+    color: var(--dark);
+}
+</style>
+</head>
+<body>
+<div class="flyer">
+    <div class="hero">
+        <h1 class="poster-title">2nd GenAI, Agents,<br>&amp; the Future <span class="ital">of</span> <span class="red">VIS.</span></h1>
+        <div class="venue-row">
+            <span class="venue">@ IEEE VIS 2026 Workshop</span>
+            <span class="date">Nov 9, 2026 · Boston, MA</span>
+        </div>
+    </div>
+
+    <div class="tracks">
+        <article class="track one">
+            <div class="num">i.</div>
+            <h3>Papers & Position Talks</h3>
+            <p>Research papers, position pieces, and demos on GenAI, agents, and visualization. Short and long formats.</p>
+        </article>
+        <article class="track two">
+            <div class="num">ii.</div>
+            <h3>Agentic VIS Challenge</h3>
+            <p>Build, adapt, and submit AI agents into the <em>VIS Arena</em> — agents that automatically analyze datasets and generate visual data reports.</p>
+        </article>
+    </div>
+
+    <div class="deadlines">
+        <div class="item"><span class="lbl">CfP</span><span class="val">May 30</span></div>
+        <div class="item"><span class="lbl">Submissions</span><span class="val">Aug 15</span></div>
+        <div class="item"><span class="lbl">Decisions</span><span class="val">Sept 10</span></div>
+        <div class="item"><span class="lbl">Camera</span><span class="val">Oct 1</span></div>
+    </div>
+
+    <div class="org-section">
+        <h4>Organizers<span class="red">.</span></h4>
+        <div class="org-grid">
+            <div class="org"><div class="avatar">ZC</div><div class="name">Zhu-Tian Chen</div><div class="aff">U. Minnesota–Twin Cities</div></div>
+            <div class="org"><div class="avatar">NK</div><div class="name">Nam Wook Kim</div><div class="aff">Boston College</div></div>
+            <div class="org"><div class="avatar">SB</div><div class="name">Saeed Boorboor</div><div class="aff">U. Illinois Chicago</div></div>
+            <div class="org"><div class="avatar">SR</div><div class="name">Shivam Raval</div><div class="aff">Harvard University</div></div>
+            <div class="qr-pair">
+                <div class="sp-slot">sponsor logo</div>
+                <div class="qrs">
+                    <div class="qr"><img src="qr.png" alt="QR"><div class="qr-label">Website</div></div>
+                    <div class="qr"><img src="discord-qr.png" alt="Discord QR"><div class="qr-label"><span class="red">Discord</span></div></div>
+                </div>
+            </div>
+            <div class="org"><div class="avatar">PH</div><div class="name">Pan Hao</div><div class="aff">U. Minnesota–Twin Cities</div></div>
+            <div class="org"><div class="avatar">QW</div><div class="name">Qianwen Wang</div><div class="aff">U. Minnesota–Twin Cities</div></div>
+            <div class="org"><div class="avatar">VS</div><div class="name">Vidya Setlur</div><div class="aff">Tableau Research</div></div>
+            <div class="org"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

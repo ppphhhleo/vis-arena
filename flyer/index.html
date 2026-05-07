@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VISxGenAI 2026 — Flyer Review</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #f4f3ef;
+    --ink: #16181b;
+    --muted: #8a8780;
+    --line: rgba(20,22,26,0.12);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Geist", system-ui, sans-serif;
+    min-height: 100vh;
+}
+
+header {
+    padding: 28px 36px 18px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+header h1 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+header h1 span { color: var(--muted); font-weight: 400; }
+header .meta {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+header .controls {
+    display: flex;
+    gap: 8px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+}
+header .controls button {
+    background: white;
+    border: 1px solid var(--line);
+    padding: 6px 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink);
+    border-radius: 2px;
+    transition: background 0.15s;
+}
+header .controls button:hover { background: var(--ink); color: var(--bg); }
+header .controls button.active { background: var(--ink); color: var(--bg); }
+
+.grid {
+    padding: 32px 36px 64px;
+    display: grid;
+    gap: 32px 24px;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    transition: grid-template-columns 0.2s;
+}
+.grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.grid.cols-1 { grid-template-columns: 1fr; max-width: 900px; margin-left: auto; margin-right: auto; }
+
+.card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.card-head {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.card-head h2 {
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+}
+.card-head .tag {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.card-head a {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: var(--ink);
+    text-decoration: none;
+    border: 1px solid var(--line);
+    padding: 4px 8px;
+    border-radius: 2px;
+}
+.card-head a:hover { background: var(--ink); color: var(--bg); }
+.frame-wrap {
+    position: relative;
+    width: 100%;
+    /* A4 aspect ratio = 210/297 = 0.7071 */
+    aspect-ratio: 210 / 297;
+    overflow: hidden;
+    background: #ddd;
+}
+.frame-wrap iframe {
+    /* iframe at native A4 size, scaled down to fit container width */
+    width: 210mm;
+    height: 297mm;
+    border: 0;
+    transform-origin: top left;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.card-foot {
+    padding: 12px 18px;
+    border-top: 1px solid var(--line);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+}
+</style>
+</head>
+<body>
+<header>
+    <div>
+        <h1>VISxGenAI 2026 <span>· flyer review</span></h1>
+        <div class="meta">A4 portrait · 210 × 297 mm · scaled previews</div>
+    </div>
+    <div class="controls">
+        <button data-cols="1">1 col</button>
+        <button data-cols="2" class="active">2 col</button>
+        <button data-cols="4">4 col</button>
+    </div>
+</header>
+
+<main class="grid cols-2" id="grid">
+    <article class="card">
+        <div class="card-head">
+            <div>
+                <h2><span style="color:var(--muted);font-weight:700;margin-right:6px;">01</span>Editorial Tri-Tone</h2>
+            </div>
+            <a href="editorial-tri-tone.html" target="_blank">open ↗</a>
+        </div>
+        <div class="frame-wrap"><iframe src="editorial-tri-tone.html"></iframe></div>
+    </article>
+
+    <article class="card">
+        <div class="card-head">
+            <div>
+                <h2><span style="color:var(--muted);font-weight:700;margin-right:6px;">02</span>DD Editorial</h2>
+            </div>
+            <a href="dd-editorial.html" target="_blank">open ↗</a>
+        </div>
+        <div class="frame-wrap"><iframe src="dd-editorial.html"></iframe></div>
+    </article>
+
+    <article class="card">
+        <div class="card-head">
+            <div>
+                <h2><span style="color:var(--muted);font-weight:700;margin-right:6px;">03</span>Soft Editorial</h2>
+            </div>
+            <a href="soft-editorial.html" target="_blank">open ↗</a>
+        </div>
+        <div class="frame-wrap"><iframe src="soft-editorial.html"></iframe></div>
+    </article>
+
+    <article class="card">
+        <div class="card-head">
+            <div>
+                <h2><span style="color:var(--muted);font-weight:700;margin-right:6px;">04</span>Warm Editorial</h2>
+            </div>
+            <a href="warm-editorial.html" target="_blank">open ↗</a>
+        </div>
+        <div class="frame-wrap"><iframe src="warm-editorial.html"></iframe></div>
+    </article>
+
+    <article class="card">
+        <div class="card-head">
+            <div>
+                <h2><span style="color:var(--muted);font-weight:700;margin-right:6px;">05</span>Bold Poster</h2>
+            </div>
+            <a href="bold-poster.html" target="_blank">open ↗</a>
+        </div>
+        <div class="frame-wrap"><iframe src="bold-poster.html"></iframe></div>
+    </article>
+
+    <article class="card">
+        <div class="card-head">
+            <div>
+                <h2><span style="color:var(--muted);font-weight:700;margin-right:6px;">06</span>Bold Mono</h2>
+            </div>
+            <a href="bold-mono.html" target="_blank">open ↗</a>
+        </div>
+        <div class="frame-wrap"><iframe src="bold-mono.html"></iframe></div>
+    </article>
+
+    <article class="card">
+        <div class="card-head">
+            <div>
+                <h2><span style="color:var(--muted);font-weight:700;margin-right:6px;">08</span>Soft Systems</h2>
+            </div>
+            <a href="soft-systems.html" target="_blank">open ↗</a>
+        </div>
+        <div class="frame-wrap"><iframe src="soft-systems.html"></iframe></div>
+    </article>
+
+    <article class="card">
+        <div class="card-head">
+            <div>
+                <h2><span style="color:var(--muted);font-weight:700;margin-right:6px;">09</span>Future Nostalgia</h2>
+            </div>
+            <a href="future-nostalgia.html" target="_blank">open ↗</a>
+        </div>
+        <div class="frame-wrap"><iframe src="future-nostalgia.html"></iframe></div>
+    </article>
+
+</main>
+
+<script>
+// Scale iframes to fit their container width
+function scaleFrames() {
+    document.querySelectorAll('.frame-wrap').forEach(wrap => {
+        const iframe = wrap.querySelector('iframe');
+        if (!iframe) return;
+        // 210mm at 96dpi ≈ 793.7px
+        const A4_W = 210 * 96 / 25.4;
+        const scale = wrap.clientWidth / A4_W;
+        iframe.style.transform = `scale(${scale})`;
+    });
+}
+
+window.addEventListener('load', scaleFrames);
+window.addEventListener('resize', scaleFrames);
+
+// Column toggles
+document.querySelectorAll('.controls button').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const grid = document.getElementById('grid');
+        grid.classList.remove('cols-1', 'cols-2', 'cols-4');
+        grid.classList.add('cols-' + btn.dataset.cols);
+        // wait for layout, then rescale
+        requestAnimationFrame(scaleFrames);
+        setTimeout(scaleFrames, 50);
+    });
+});
+</script>
+</body>
+</html>
